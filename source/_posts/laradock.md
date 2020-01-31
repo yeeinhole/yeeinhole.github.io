@@ -1,7 +1,13 @@
 ---
-title: Laradock - 更快速的建立Laravel
+title: Laradock - 更快速優雅的建立Laravel
 date: 2020-01-27 17:35:51
-tags: laravel
+categories:
+    - devops
+tags: 
+     - laravel
+     - docker
+     - laradock
+     - devops
 ---
 
 嗨～ 大家好～ 先跟大家拜個年～  新年快樂

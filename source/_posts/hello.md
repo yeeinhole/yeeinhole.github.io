@@ -1,7 +1,10 @@
 ---
 title: hello
 date: 2020-01-10 21:32:20
-tags: hi
+tags: 
+    -hi
+categories: 
+    -其他
 thumbnailImage: ../../../../image/1.jpg
 thumbnailImagePosition: right
 autoThumbnailImage: yes

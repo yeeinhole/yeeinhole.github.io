@@ -3,7 +3,7 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Yee的學習筆記
+title: Yee的補坑筆記
 subtitle: 所採過的坑都紀錄起來～
 description: 所採過的坑都紀錄起來～
 keywords:
@@ -64,7 +64,14 @@ index_generator:
 # Category & Tag
 default_category: uncategorized
 category_map:
+    devops: devops
+    laravel: laravel
+    其他: other
 tag_map:
+    laravel: laravel
+    docker: docker
+    laradock: laradock
+    devops: devops
 
 # Metadata elements
 ## https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta
