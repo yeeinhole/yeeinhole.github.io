@@ -7,6 +7,8 @@ title: Yee的補坑筆記
 subtitle: 所採過的坑都紀錄起來～
 description: 所採過的坑都紀錄起來～
 keywords:
+  - laravel
+  - docker
 author: Yee
 language: zh-tw
 timezone: 'Asia/Taipei'

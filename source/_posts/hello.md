@@ -2,9 +2,9 @@
 title: hello
 date: 2020-01-10 21:32:20
 tags: 
-    -hi
+    - hi
 categories: 
-    -其他
+    - 其他
 thumbnailImage: ../../../../image/1.jpg
 thumbnailImagePosition: right
 autoThumbnailImage: yes
@@ -18,13 +18,13 @@ Hi ~ Welcome , 歡迎各位來到這裡
 
 我將整理近期研究的技術，
 
-將一些混亂的筆記整理成有序的文章，
+整理研究過程記錄的混亂筆記，
 
 一來再複習一次，也提供自己查詢的地方。
 
-大概會有 Laravel、Docker、Line Chatbot、Python、Hexo ... 等，
+大概會有 Laravel、Docker、Line Chatbot、Python、Hexo ... 等
 
-將過程中遇到的坑記錄下來，
+也會把過程中遇到的坑記錄下來，
 
 避免再次踩坑，
 

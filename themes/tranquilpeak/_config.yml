@@ -46,6 +46,10 @@ sidebar:
             title: global.archives
             url: /all-archives
             icon: fa fa-archive
+        friend:
+            title: global.friend
+            url: /friend
+            icon: fas fa-link
         # search:
         #     title: global.search
         #     url: /#search
