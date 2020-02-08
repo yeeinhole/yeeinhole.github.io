@@ -13,7 +13,7 @@
     
     
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg"},"articleBody":"嗨～ 大家好～ 先跟大家拜個年～  新年快樂\n首先要來跟大家介紹的是Laradock，\n\n\nLaradock是一套很方便建立Laravel環境的工具，\n它採用docker-compose的方式，\n將建立container要做的事情都規劃好了，\n開發者就不需要在苦惱docker、container這一部分，\n建議日後也是要了解docker的運作～～\nLaradock也收錄了很多的工具，\n像是常見的 Apache、Nginx、Phpmyadmin…等\n甚至連Gitlab都有了，\n功能非常的齊全，所以也有點肥大！？！？\n話不多說我們開始吧～～\n\n本文所採用的環境\b\n\nMax OSX 10.15\nDocker version 19.03.5\n\n已知可用的環境\n\nCentos7\n\n\n首先先到Laradock的官網下載整個包 Laradock，\n1git clone https:&#x2F;&#x2F;github.com&#x2F;Laradock&#x2F;laradock.git\n\n接著複製env.example存成.env\n12cp env-example .envvim .env\n\n打開.env後發現有很多設定，\n跟環境比較有關係的是這些\n\n12345678910111213141516### Paths ################################################## Point to the path of your applications code on your host# 專案要放在本機的哪個資料夾中APP_CODE_PATH_HOST&#x3D;.&#x2F;www&#x2F;# Point to where the &#96;APP_CODE_PATH_HOST&#96; should be in the container# 在container中，專案的資料夾名稱，這裡會跟上面的地方做對應APP_CODE_PATH_CONTAINER&#x3D;&#x2F;var&#x2F;www# You may add flags to the path &#96;:cached&#96;, &#96;:delegated&#96;. When using Docker Sync add &#96;:nocopy&#96;# 還不知道可以做什麼.....APP_CODE_CONTAINER_FLAG&#x3D;:cached# Choose storage path on your machine. For all storage systems# \b\b系統檔案的路徑，有些工具會有一些非專案的檔案，就會存放在此DATA_PATH_HOST&#x3D;~&#x2F;.laradock&#x2F;data\n\n除了基本的環境設定外，\n.env檔裡存放著各個工具的預設帳號密碼與相關設定，\n只要修改欲使用工具的設定值即可\n，在此以phpmyadmin做演示，\n\n1234# Accepted values: mariadb - mysql# phpmyadmin搭配的sql是誰PMA_DB_ENGINE&#x3D;mysql\n\n注意者裡一定要設定，\n屆時開啟phpmyadmin就會自動啟動sql\n1234567891011# phpmyadmin的預設使用者PMA_USER&#x3D;default# 預設使用者的密碼PMA_PASSWORD&#x3D;secret# sql root帳號的密碼PMA_ROOT_PASSWORD&#x3D;secret# phpmyadmin要開在哪一個portPMA_PORT&#x3D;8080\n\n這邊要注意的是root的密碼，\n預設使用者的密碼可以屆時再改或設定成亂碼，\n畢竟這些預設值都是眾人皆知的，\n以資安來說最好是採用亂數密碼來設定比較好\b，\n以上設定完了之後就可以來啟動拉～\n1docker-composer up -d apache phpmyadmin 想啟動的服務...\n\n在這裡我只跟docker說我要啟動 apache 和 phpmyadmin 這兩項服務，\n接著你會發現docker會啟動數個container，\n\n仔細觀察可以發現，\n他將workspace、php、apache、mysql都分開來，\n好處就是今天更換其中一個的版本，\n都不需要額外設定主機的環境變數…等，\n這些事情docker都幫你在底層處理好了～～ \n接著來看一下container的狀態\n123docker ps 或docker-compose ps\n\n可以看到每個container開啟的port號與狀態，\n所有的服務都有順利執行，\n我們打開瀏覽器並輸入localhost:8080，來檢查phpmyadmin是否順利啟動\n\n123Server &#x3D; mysql or mariadbUsername &#x3D; defaultPassword &#x3D; secret\n\n就可順利進入到phpmyadmin的主畫面了\n接下來就是建立專案拉～\n先進入到workspace這個container中，\n會發現預設進入的資料夾是 /var/www/，\n123docker-compose exec workspace bashcomposer create-project --prefer-dist laravel&#x2F;laravel myprojectvim .env\n\n將DB連線設定為 mysql or mariadb並設定sql的使用者與密碼\n12345DB_HOST&#x3D;mysql DB_PORT&#x3D;3306DB_DATABASE&#x3D;defaultDB_USERNAME&#x3D;defaultDB_PASSWORD&#x3D;secret\n\n因為在docker裡container與container之間是用名稱去做連結，\n不同以往採用localhost的方式連線sql\n設定完成後打開瀏覽器輸入 localhost/myproject/public，\n如果出現laravel的預設畫面，表示我們已經順利將專案建立起來拉～～\n\n\n後記\n這裡我比較偷懶，沒有額外去設定vitrulhost，安全性也會比較有疑慮，\n如果用nginx則需要再設定conf與host才能順利執行，\n下一篇呢就來寫 設定vitruhost 跟 nginx conf的教學 ～～\n","dateCreated":"2020-01-27T17:35:51+08:00","dateModified":"2020-02-08T18:01:37+08:00","datePublished":"2020-01-27T17:35:51+08:00","description":"嗨～ 大家好～ 先跟大家拜個年～  新年快樂\n首先要來跟大家介紹的是Laradock，","headline":"Laradock - 更快速優雅的建立Laravel","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yeeinhole.github.io/2020/01/27/laradock/"},"publisher":{"@type":"Organization","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg","logo":{"@type":"ImageObject","url":"yee.jpeg"}},"url":"https://yeeinhole.github.io/2020/01/27/laradock/","keywords":"laravel, docker, laradock, devops, w3HexSchool"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg"},"articleBody":"嗨～ 大家好～ 先跟大家拜個年～  新年快樂\n首先要來跟大家介紹的是Laradock，\n\n\nLaradock是一套很方便建立Laravel環境的工具，\n它採用docker-compose的方式，\n將建立container要做的事情都規劃好了，\n開發者就不需要在苦惱docker、container這一部分，\n建議日後也是要了解docker的運作～～\nLaradock也收錄了很多的工具，\n像是常見的 Apache、Nginx、Phpmyadmin…等\n甚至連Gitlab都有了，\n功能非常的齊全，所以也有點肥大！？！？\n話不多說我們開始吧～～\n\n本文所採用的環境\b\n\nMax OSX 10.15\nDocker version 19.03.5\n\n已知可用的環境\n\nCentos7\n\n\n首先先到Laradock的官網下載整個包 Laradock，\n1git clone https:&#x2F;&#x2F;github.com&#x2F;Laradock&#x2F;laradock.git\n\n接著複製env.example存成.env\n12cp env-example .envvim .env\n\n打開.env後發現有很多設定，\n跟環境比較有關係的是這些\n\n12345678910111213141516### Paths ################################################## Point to the path of your applications code on your host# 專案要放在本機的哪個資料夾中APP_CODE_PATH_HOST&#x3D;.&#x2F;www&#x2F;# Point to where the &#96;APP_CODE_PATH_HOST&#96; should be in the container# 在container中，專案的資料夾名稱，這裡會跟上面的地方做對應APP_CODE_PATH_CONTAINER&#x3D;&#x2F;var&#x2F;www# You may add flags to the path &#96;:cached&#96;, &#96;:delegated&#96;. When using Docker Sync add &#96;:nocopy&#96;# 還不知道可以做什麼.....APP_CODE_CONTAINER_FLAG&#x3D;:cached# Choose storage path on your machine. For all storage systems# \b\b系統檔案的路徑，有些工具會有一些非專案的檔案，就會存放在此DATA_PATH_HOST&#x3D;~&#x2F;.laradock&#x2F;data\n\n除了基本的環境設定外，\n.env檔裡存放著各個工具的預設帳號密碼與相關設定，\n只要修改欲使用工具的設定值即可\n，在此以phpmyadmin做演示，\n\n1234# Accepted values: mariadb - mysql# phpmyadmin搭配的sql是誰PMA_DB_ENGINE&#x3D;mysql\n\n注意者裡一定要設定，\n屆時開啟phpmyadmin就會自動啟動sql\n1234567891011# phpmyadmin的預設使用者PMA_USER&#x3D;default# 預設使用者的密碼PMA_PASSWORD&#x3D;secret# sql root帳號的密碼PMA_ROOT_PASSWORD&#x3D;secret# phpmyadmin要開在哪一個portPMA_PORT&#x3D;8080\n\n這邊要注意的是root的密碼，\n預設使用者的密碼可以屆時再改或設定成亂碼，\n畢竟這些預設值都是眾人皆知的，\n以資安來說最好是採用亂數密碼來設定比較好\b，\n以上設定完了之後就可以來啟動拉～\n1docker-composer up -d apache phpmyadmin 想啟動的服務...\n\n在這裡我只跟docker說我要啟動 apache 和 phpmyadmin 這兩項服務，\n接著你會發現docker會啟動數個container，\n\n仔細觀察可以發現，\n他將workspace、php、apache、mysql都分開來，\n好處就是今天更換其中一個的版本，\n都不需要額外設定主機的環境變數…等，\n這些事情docker都幫你在底層處理好了～～ \n接著來看一下container的狀態\n123docker ps 或docker-compose ps\n\n可以看到每個container開啟的port號與狀態，\n所有的服務都有順利執行，\n我們打開瀏覽器並輸入localhost:8080，來檢查phpmyadmin是否順利啟動\n\n123Server &#x3D; mysql or mariadbUsername &#x3D; defaultPassword &#x3D; secret\n\n就可順利進入到phpmyadmin的主畫面了\n接下來就是建立專案拉～\n先進入到workspace這個container中，\n會發現預設進入的資料夾是 /var/www/，\n123docker-compose exec workspace bashcomposer create-project --prefer-dist laravel&#x2F;laravel myprojectvim .env\n\n將DB連線設定為 mysql or mariadb並設定sql的使用者與密碼\n12345DB_HOST&#x3D;mysql DB_PORT&#x3D;3306DB_DATABASE&#x3D;defaultDB_USERNAME&#x3D;defaultDB_PASSWORD&#x3D;secret\n\n因為在docker裡container與container之間是用名稱去做連結，\n不同以往採用localhost的方式連線sql\n設定完成後打開瀏覽器輸入 localhost/myproject/public，\n如果出現laravel的預設畫面，表示我們已經順利將專案建立起來拉～～\n\n\n後記\n這裡我比較偷懶，沒有額外去設定vitrulhost，安全性也會比較有疑慮，\n如果用nginx則需要再設定conf與host才能順利執行，\n下一篇呢就來寫 設定vitruhost 跟 nginx conf的教學 ～～\n","dateCreated":"2020-01-27T17:35:51+08:00","dateModified":"2020-02-08T18:02:37+08:00","datePublished":"2020-01-27T17:35:51+08:00","description":"嗨～ 大家好～ 先跟大家拜個年～  新年快樂\n首先要來跟大家介紹的是Laradock，","headline":"Laradock - 更快速優雅的建立Laravel","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yeeinhole.github.io/2020/01/27/laradock/"},"publisher":{"@type":"Organization","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg","logo":{"@type":"ImageObject","url":"yee.jpeg"}},"url":"https://yeeinhole.github.io/2020/01/27/laradock/","keywords":"laravel, docker, laradock, devops, w3HexSchool"}</script>
     <meta name="description" content="嗨～ 大家好～ 先跟大家拜個年～  新年快樂 首先要來跟大家介紹的是Laradock，">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Laradock - 更快速優雅的建立Laravel">
@@ -29,7 +29,7 @@
 <meta property="og:image" content="https://yeeinhole.github.io/image/laradock1/phpmyadmin-index.png">
 <meta property="og:image" content="https://yeeinhole.github.io/image/laradock1/laravel.png">
 <meta property="article:published_time" content="2020-01-27T09:35:51.000Z">
-<meta property="article:modified_time" content="2020-02-08T10:01:37.581Z">
+<meta property="article:modified_time" content="2020-02-08T10:02:37.255Z">
 <meta property="article:author" content="Yee">
 <meta property="article:tag" content="laravel">
 <meta property="article:tag" content="docker">
@@ -246,7 +246,7 @@
     
         <span>分類 </span>
         
-    <a class="category-link" href="/categories/w3HexSchool/">w3HexSchool</a>, <a class="category-link" href="/categories/w3HexSchool/devops/">devops</a>
+    <a class="category-link" href="/categories/devops/">devops</a>
 
 
     
@@ -399,7 +399,7 @@
             <a
                 class="post-action-btn btn btn--default btn-open-shareoptions"
                 href="#btn-open-shareoptions"
-                aria-label="Diesen Beitrag teilen"
+                aria-label="Share this post"
             >
                 <i class="fa fa-share-alt" aria-hidden="true"></i>
             </a>
@@ -449,7 +449,7 @@
         
         <li class="post-action">
             
-                <a class="post-action-btn btn btn--default" href="#" aria-label="Nach oben">
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
             
                 <i class="fa fa-list" aria-hidden="true"></i>
             </a>
@@ -511,7 +511,7 @@
             <a
                 class="post-action-btn btn btn--default btn-open-shareoptions"
                 href="#btn-open-shareoptions"
-                aria-label="Diesen Beitrag teilen"
+                aria-label="Share this post"
             >
                 <i class="fa fa-share-alt" aria-hidden="true"></i>
             </a>
@@ -561,7 +561,7 @@
         
         <li class="post-action">
             
-                <a class="post-action-btn btn btn--default" href="#" aria-label="Nach oben">
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
             
                 <i class="fa fa-list" aria-hidden="true"></i>
             </a>
