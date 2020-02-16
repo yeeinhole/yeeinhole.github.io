@@ -8,17 +8,26 @@ tags:
      - docker
      - laradock
      - devops
+     - w3HexSchool
 comments: true
 ---
 
 嗨～ 大家好～ 先跟大家拜個年～  新年快樂
 
-要來跟大家介紹的是Laradock，
+首先要來跟大家介紹的是Laradock，
 <!-- more -->
 
 Laradock是一套很方便建立Laravel環境的工具，
 
-它採用的是Docker並且收錄了很多的工具，
+它採用docker-compose的方式，
+
+將建立container要做的事情都規劃好了，
+
+開發者就不需要在苦惱docker、container這一部分，
+
+建議日後也是要了解docker的運作～～
+
+Laradock也收錄了很多的工具，
 
 像是常見的 Apache、Nginx、Phpmyadmin...等
 
@@ -35,7 +44,7 @@ Laradock是一套很方便建立Laravel環境的工具，
 1. Max OSX 10.15
 2. Docker version 19.03.5
 
-已知可用的環境
+已知設定略同的環境
 1. Centos7
 
 ***
@@ -43,12 +52,14 @@ Laradock是一套很方便建立Laravel環境的工具，
 首先先到Laradock的官網下載整個包 [Laradock](https://laradock.io/)，
 
 ```
+vim ~/dock
 git clone https://github.com/Laradock/laradock.git
 ```
 
 接著複製env.example存成.env
 
 ```
+cd ~/dock/laradock
 cp env-example .env
 vim .env
 ```
@@ -210,5 +221,4 @@ DB_PASSWORD=secret
 
 如果用nginx則需要再設定conf與host才能順利執行，
 
-改天在寫一篇設定vitruhost 跟 nginx conf的教學 ～～
-
+下一篇呢就來寫 設定vitruhost 跟 nginx conf的教學 ～～
