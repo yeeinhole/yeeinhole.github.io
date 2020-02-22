@@ -1,5 +1,5 @@
 ---
-title: Trello - 寫文章也要用專案管理工具管理一下
+title: Trello - 寫文章也不忘用專案管理工具管理一下
 date: 2020-02-22 18:56:03
 categories:
     - python
@@ -91,14 +91,14 @@ add_list = https://api.trello.com/1/lists
 add_card = https://api.trello.com/1/cards
 ```
 這邊的board_id先存url上的
-![board_id]](../../../../image/trello_notify/board_id.png "board_id")
+![board_id](../../../../image/trello_notify/board_id.png "board_id")
 因為trello的卡片是需要一個list去存放的，
 
-所以有個list名稱的設定，之後程式會split後，得到一份名稱list，
+所以有個list名稱的設定，之後程式會split後，得到一份名稱的list，
 
 至於url的部分，我也習慣先放進來，
 
-接著建立一隻py吧～～
+接著建立一支py吧～～
 
 以下是本文會用到的package，通通都import進來！
 {% codeblock lang:python %}
@@ -142,7 +142,7 @@ url_add_card = conf.get('Url' , 'add_card')
 2. 新增卡片並加上due date
 
 讓我們先看到API文件上說明list的部分，
-![api_list]](../../../../image/trello_notify/api_list.png "api_list")
+![api_list](../../../../image/trello_notify/api_list.png "api_list")
 貼心的trello提供多種語言的使用方法，讓我們馬上開始吧！
 
 這時我發現一個問題，我照著trello給的程式碼測試了一次，我卻得到錯誤訊息！！
@@ -193,9 +193,7 @@ board_id = board_info['id']
 
 那我們的目的是，有多個成員在同一個board底下，
 
-所以使用一個回圈去新增多個list，
-
-將trello提供的程式碼稍微修改一下，
+所以使用一個迴圈去新增多個list，將trello提供的程式碼稍微修改一下，
 {% codeblock lang:python %}
 for i in list_name:
     body = {
