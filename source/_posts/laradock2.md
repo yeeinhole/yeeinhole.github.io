@@ -70,7 +70,7 @@ sudo vim /etc/hosts
 cd ~/dock/laradock
 vim apache2/sites/default.apache.conf
 ```
-![apache_host1]](../../../../image/laradock2/apache_host1.png "apache_host1")
+![apache_host1](../../../../image/laradock2/apache_host1.png "apache_host1")
 預設值裡已經有 ServerName 欄位了，
 
 將後面的domain改成剛剛在hosts裡設定的
@@ -124,9 +124,3 @@ docker的這種掛載檔案的方式，使我們很方便去修改這些地方�
 這篇教學只有簡單的說明該如何使用它們，
 
 一些進階的設定日後有機會在整理成文章分享出來。
-
-下一篇來分享個最近實作的小工具，
-
-畢竟在今年決定參與週週寫文章的行列，又怕自己太忙忘記，
-
-利用trello與line notify做一個自動提醒的小工具，提醒我每週記得寫文章，也一起提醒團隊成員。
