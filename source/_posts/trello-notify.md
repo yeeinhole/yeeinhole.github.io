@@ -61,7 +61,7 @@ python套件
 
 首先我們先到[Trello Developer](https://developers.trello.com/)，註冊一個開發者帳號，
 
-註冊流程我就不多加說明了，接著就是申請key[api token](https://trello.com/app-key)還有token，
+註冊流程我就不多加說明了，接著就是申請[api key](https://trello.com/app-key)還有token，
 ![trello_api_key](../../../../image/trello_notify/trello_api_key.png "trello_api_key")
 token的部分在紅色的框框裡，
 
@@ -92,9 +92,9 @@ add_card = https://api.trello.com/1/cards
 ```
 這邊的board_id先存url上的
 ![board_id](../../../../image/trello_notify/board_id.png "board_id")
-因為trello的卡片是需要一個list去存放的，
+因為trello的卡片是存放在list中的，
 
-所以有個list名稱的設定，之後程式會split後，得到一份名稱的list，
+所以在```list_name```這邊可以設定list的名稱，要幾個就設定多少個名稱，
 
 至於url的部分，我也習慣先放進來，
 
