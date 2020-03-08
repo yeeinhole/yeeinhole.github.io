@@ -38,7 +38,6 @@ python套件
 4. datetime
 5. time
 6. sys
-7. line_notify
 ***
 
 首先先來註冊[Line Notify](https://notify-bot.line.me/my/)，
@@ -54,9 +53,9 @@ python套件
 恭喜你已經拿到token摟！
 
 接著打開Line搜尋官方帳號 Line notify並加入好友，
-![line_notify4](../../../../image/trello_notify2/line_notify4.jpg "line_notify4")
-如果是單人就到這裡，如果是群組，請把它加到群組裡！！！
 ![line_notify5](../../../../image/trello_notify2/line_notify5.jpg "line_notify5")
+如果是單人就到這裡，如果是群組，請把它加到群組裡！！！
+![line_notify4](../../../../image/trello_notify2/line_notify4.jpg "line_notify4")
 ***
 
 接著打開上一篇所使用的ini檔，
@@ -76,9 +75,11 @@ url = "https://notify-api.line.me/api/notify"
 import requests
 import json
 import datetime as dt
-import line_notify as line
+# 匯入寫好call notify的py
+import send_notify as line
 import configparser
 import sys
+import time
 
 #啟動時間
 start_time = time.time()
@@ -254,6 +255,5 @@ print(req.status_code)
 
 開個小服務讓user到平台上綁定，並各別推播訊息到user手中
 
-本文code的連結：產生中... XD
-
+本文code的連結：[TrelloXLine](https://github.com/yeeinhole/TrelloXLine "TrelloXLine")
 希望大家用的開心～ 準時寫文章～ 一起拿金質獎～
