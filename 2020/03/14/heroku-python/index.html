@@ -6,39 +6,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Yee的補坑筆記">
-    <title>Laradock - 設定host Apache 與 Nginx - Yee的補坑筆記</title>
+    <title>Heroku - 快速部署python - Yee的補坑筆記</title>
     <meta name="author" content="Yee">
     
         <meta name="keywords" content="laravel,docker,">
     
     
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg"},"articleBody":"Hi 大家好～ 在上篇我們初始化了Laradock也建置了個Laravel專案，\n本篇要來設定，\n讓Laravel用起來更優雅～\n\n\n本文所採用的環境\b\n\nMax OSX 10.15\nDocker version 19.03.5\n\n已知設定略同的環境\n\nCentos7\n\n須先了解基礎linux與vim\n\n首先先設定我們本機的host\n1sudo vim &#x2F;etc&#x2F;hosts\n記得加上sudo，因為hosts在 “/“ 裡面，\n\n左邊是目的地IP右邊是domain\n12#IP Domain127.0.0.1 com.laravel\n因為要連到本機上，所以ip為127.0.0.1，並給上專案一個domain，完成後儲存且離開，\n這個domain只會在本機端生效，似乎也要避免到熱門的domain，\n完成後就要來設定我們的Apache與Nginx摟～\n\n在Laradock中的Apache與Nginx都有一個sites的資料夾，\n裡頭放的分別是\n\nApache virtualhost\nNginx config\n\n首先我們先設定Apache，\n到apache2/sites底下會發現有預設的檔案，我們可以複製一份新的，也可以直接修改他，\n我選擇直接修改預設的檔案，\n12cd ~&#x2F;dock&#x2F;laradockvim apache2&#x2F;sites&#x2F;default.apache.conf\n預設值裡已經有 ServerName 欄位了，\n將後面的domain改成剛剛在hosts裡設定的\n設定完成後一定要重啟一次apache讓設定生效\n1docker-compose restart apache2\n\n接著打開瀏覽器並輸入上剛剛所設定的domain，\n第一次輸入本地端的domain一定要在結尾加上 “/“，\n否則會變成搜尋這個domain，\n那當然會得到找不到頁面的畫面拉～～\n\n以下是Nginx的部分\n一樣我們先到 ngins/sites 底下，一樣也已經有預設檔案了，我們一樣直接做修改\n123cd ~&#x2F;dock&#x2F;laradockcp apache2&#x2F;sites&#x2F;sample.conf.example apache2&#x2F;sites&#x2F;sample.confvim apache2&#x2F;sites&#x2F;default.conf\n\n一樣修改server name 與 檔案路徑，\n完成之後一樣先重啟nginx再打開瀏覽器試試看，\n這裡會發現我是使用8888 port，因為某些關係，我把nginx改成8888port，\n讓我可以同時使用apache與nginx，至於這邊改天再寫一篇吧！\n\n後記\n以前自己裝apache或nginx時，都需要設定這些部分，\n時常忘記他們被放在哪個資料夾中，\ndocker的這種掛載檔案的方式，使我們很方便去修改這些地方，\n這篇教學只有簡單的說明該如何使用它們，\n一些進階的設定日後有機會在整理成文章分享出來。\n","dateCreated":"2020-02-13T23:37:34+08:00","dateModified":"2020-02-22T20:54:23+08:00","datePublished":"2020-02-13T23:37:34+08:00","description":"Hi 大家好～ 在上篇我們初始化了Laradock也建置了個Laravel專案，\n本篇要來設定，\n讓Laravel用起來更優雅～","headline":"Laradock - 設定host Apache 與 Nginx","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yeeinhole.github.io/2020/02/13/laradock2/"},"publisher":{"@type":"Organization","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg","logo":{"@type":"ImageObject","url":"yee.jpeg"}},"url":"https://yeeinhole.github.io/2020/02/13/laradock2/","keywords":"devops, w3HexSchool, laradock, apache, nginx, docker"}</script>
-    <meta name="description" content="Hi 大家好～ 在上篇我們初始化了Laradock也建置了個Laravel專案， 本篇要來設定， 讓Laravel用起來更優雅～">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg"},"articleBody":"當開發好小腳本或小工具時，\n我們可以來使用Heroku來建置執行的環境～～ \n\n\n為什麼選擇Heroku，\n因為他目前支援的語言也蠻多的，建置過程中也不會太麻煩，\n類似Git的方法就能部署，也可以串接github來自動部署。\n\n本文所採用的環境\b\n\nMax OSX 10.15\nHomebrew 2.2.5\nheroku/7.39.0 darwin-x64 node-v12.13.0\n\n本次沒有測過其他平台，windows官方有提供cli工具，至於linux大概也是裝指令吧！？\n準備好一個heroku的帳號\n\n首先我們先來裝heroku的指令這裡我一樣使用brew來安裝～ 讓子彈飛一下最後出現了brew的酒杯，順利完成安裝\n接著用treminal登入heroku吧！照著指令的提示，按下任意鍵就會跳出瀏覽器(我以為跟git一樣可以在treminal登入呢！)照著上面的流程後，就可以在treminal中順利的登入heroku了！\n這樣heroku的指令都會對應到heroku的帳號中，\n讓我們來開一個APP吧，可以用heroku create也可以登入到heroku建立，\n這裡我就到heroku中建立吧！建立完成後，到setting頁籤中找到Buildpacks的部分，\n這裡也是可以用指令去做，既然我們已經在後台了，就直接在這邊設定吧！\nBuildpacks我的理解是，設定app的語言，之後會在建立相關的檔案，讓app的環境建立起來我們這裡要用python，所以選擇python完成這些設定後，接著建置該app需要的環境，\nheroku的部署會使用到git指令，\n1234567mkdir trelloxlinecd trelloxlinegit initgit add -Agit commit -am &quot;Heroku&quot;&#x2F;&#x2F; 這裡的指令背後跟 git remote add ... 一樣，只是透過heroku指令去抓heroku git:remote -a trelloxline\n到這邊我想跟著官方的指令，應該會下git push heroku master，\n但… 事實沒那麼簡單，因為是第一次部署，我們需要先建立一個檔案，讓heroku幫我們部署App的環境，\n1pip3 freeze &gt; requirements.txt\n將我們本機端開發所使用到的套件…等都丟到requirements.txt這個檔案中，\n接著我們就可以進行部署拉～\n1git push heroku master\n登登登～ 這樣heroku就會幫我們初始化App，(為了測試環境是否成功，我們先建立個hello.py這個檔案，裡頭就寫個 print(&#39;Hello&#39;)\n然後一樣git add ….. ((省略git 步驟\n接著回到heroku的介面中，右上角這個more裡中，有終端機指令的選項，我們來測試看看檔案有沒有部署上去，老樣子先來個ls -al檔案都有順利上去，接著就是嘗試執行py了，python hello.py\nすばらし～～ \n這樣就可以部署自己做的py工具摟！！！\n\n後記\n之前上課的時候，就有用過heroku這工具，映像中當時git push就可以部署一個html or php，\n沒想到現在部署變得比較小麻煩些，不過可能也是因為要執行python，\nheroku必須知道本機端是用哪個版本的py、pip跟package，\n在部署過程中爬了一下文才綜合出解決的方法 @@\n","dateCreated":"2020-03-14T16:21:54+08:00","dateModified":"2020-03-14T17:42:40+08:00","datePublished":"2020-03-14T16:21:54+08:00","description":"當開發好小腳本或小工具時，\n我們可以來使用Heroku來建置執行的環境～～ ","headline":"Heroku - 快速部署python","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yeeinhole.github.io/2020/03/14/heroku-python/"},"publisher":{"@type":"Organization","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg","logo":{"@type":"ImageObject","url":"yee.jpeg"}},"url":"https://yeeinhole.github.io/2020/03/14/heroku-python/","keywords":"devops, heroku, python, w3HexSchool"}</script>
+    <meta name="description" content="當開發好小腳本或小工具時， 我們可以來使用Heroku來建置執行的環境～～">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="Laradock - 設定host Apache 與 Nginx">
-<meta property="og:url" content="https://yeeinhole.github.io/2020/02/13/laradock2/index.html">
+<meta property="og:title" content="Heroku - 快速部署python">
+<meta property="og:url" content="https://yeeinhole.github.io/2020/03/14/heroku-python/index.html">
 <meta property="og:site_name" content="Yee的補坑筆記">
-<meta property="og:description" content="Hi 大家好～ 在上篇我們初始化了Laradock也建置了個Laravel專案， 本篇要來設定， 讓Laravel用起來更優雅～">
+<meta property="og:description" content="當開發好小腳本或小工具時， 我們可以來使用Heroku來建置執行的環境～～">
 <meta property="og:locale" content="zh_TW">
-<meta property="og:image" content="https://yeeinhole.github.io/image/laradock2/hosts.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/laradock2/apache_host1.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/laradock2/apache_host2.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/laradock2/apache_browser.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/laradock2/nginx_conf1.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/laradock2/nginx_conf2.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/laradock2/nginx_browser.png">
-<meta property="article:published_time" content="2020-02-13T15:37:34.000Z">
-<meta property="article:modified_time" content="2020-02-22T12:54:23.451Z">
+<meta property="og:image" content="https://yeeinhole.github.io/image/herohu-python/heroku_install1.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/herohu-python/heroku_install2.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/herohu-python/heroku_login1.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/herohu-python/heroku_login2.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/herohu-python/heroku_login3.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/herohu-python/heroku_login4.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/herohu-python/heroku_cerate.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/herohu-python/heroku_buildpacks1.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/herohu-python/heroku_buildpacks2.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/herohu-python/heroku_git_push.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/herohu-python/heroku_index.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/herohu-python/heroku_console1.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/herohu-python/heroku_console2.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/herohu-python/heroku_console3.png">
+<meta property="article:published_time" content="2020-03-14T08:21:54.000Z">
+<meta property="article:modified_time" content="2020-03-14T09:42:40.651Z">
 <meta property="article:author" content="Yee">
 <meta property="article:tag" content="devops">
+<meta property="article:tag" content="heroku">
+<meta property="article:tag" content="python">
 <meta property="article:tag" content="w3HexSchool">
-<meta property="article:tag" content="laradock">
-<meta property="article:tag" content="apache">
-<meta property="article:tag" content="nginx">
-<meta property="article:tag" content="docker">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://yeeinhole.github.io/image/laradock2/hosts.png">
+<meta name="twitter:image" content="https://yeeinhole.github.io/image/herohu-python/heroku_install1.png">
     
     
         
@@ -234,14 +239,14 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title">
-            Laradock - 設定host Apache 與 Nginx
+            Heroku - 快速部署python
         </h1>
     
     
         <div class="post-meta">
-    <time datetime="2020-02-13T23:37:34+08:00">
+    <time datetime="2020-03-14T16:21:54+08:00">
 	
-		    2月 13, 2020
+		    3月 14, 2020
     	
     </time>
     
@@ -259,67 +264,49 @@
     
     <div class="post-content markdown">
         <div class="main-content-wrap">
-            <p>Hi 大家好～ 在上篇我們初始化了Laradock也建置了個Laravel專案，</p>
-<p>本篇要來設定，</p>
-<p>讓Laravel用起來更優雅～</p>
+            <p>當開發好小腳本或小工具時，</p>
+<p>我們可以來使用Heroku來建置執行的環境～～ </p>
 <a id="more"></a>
+
+<p>為什麼選擇Heroku，</p>
+<p>因為他目前支援的語言也蠻多的，建置過程中也不會太麻煩，</p>
+<p>類似Git的方法就能部署，也可以串接github來自動部署。</p>
 <hr>
 <p>本文所採用的環境<br></p>
 <ol>
 <li>Max OSX 10.15</li>
-<li>Docker version 19.03.5</li>
+<li>Homebrew 2.2.5</li>
+<li>heroku/7.39.0 darwin-x64 node-v12.13.0</li>
 </ol>
-<p>已知設定略同的環境</p>
-<ol>
-<li>Centos7</li>
-</ol>
-<p>須先了解基礎linux與vim</p>
+<p>本次沒有測過其他平台，windows官方有提供cli工具，至於linux大概也是裝指令吧！？</p>
+<p>準備好一個heroku的帳號</p>
 <hr>
-<p>首先先設定我們本機的host</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim &#x2F;etc&#x2F;hosts</span><br></pre></td></tr></table></figure>
-<p>記得加上sudo，因為hosts在 “/“ 裡面，</p>
-<p><img src="../../../../image/laradock2/hosts.png" alt="hosts" title="hosts"></p>
-<p>左邊是目的地IP右邊是domain</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#IP Domain</span><br><span class="line">127.0.0.1 com.laravel</span><br></pre></td></tr></table></figure>
-<p>因為要連到本機上，所以ip為127.0.0.1，並給上專案一個domain，完成後儲存且離開，</p>
-<p>這個domain只會在本機端生效，似乎也要避免到熱門的domain，</p>
-<p>完成後就要來設定我們的Apache與Nginx摟～</p>
-<hr>
-<p>在Laradock中的Apache與Nginx都有一個sites的資料夾，</p>
-<p>裡頭放的分別是</p>
-<ol>
-<li>Apache virtualhost</li>
-<li>Nginx config</li>
-</ol>
-<p>首先我們先設定Apache，</p>
-<p>到apache2/sites底下會發現有預設的檔案，我們可以複製一份新的，也可以直接修改他，</p>
-<p>我選擇直接修改預設的檔案，</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd ~&#x2F;dock&#x2F;laradock</span><br><span class="line">vim apache2&#x2F;sites&#x2F;default.apache.conf</span><br></pre></td></tr></table></figure>
-<p><img src="../../../../image/laradock2/apache_host1.png" alt="apache_host1" title="apache_host1"><br>預設值裡已經有 ServerName 欄位了，</p>
-<p>將後面的domain改成剛剛在hosts裡設定的<br><img src="../../../../image/laradock2/apache_host2.png" alt="apache_host2" title="apache_host2"></p>
-<p>設定完成後一定要重啟一次apache讓設定生效</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose restart apache2</span><br></pre></td></tr></table></figure>
-
-<p>接著打開瀏覽器並輸入上剛剛所設定的domain，<br><img src="../../../../image/laradock2/apache_browser.png" alt="apache_browser" title="apache_browser"></p>
-<p>第一次輸入本地端的domain一定要在結尾加上 “/“，</p>
-<p>否則會變成搜尋這個domain，</p>
-<p>那當然會得到找不到頁面的畫面拉～～</p>
-<hr>
-<p>以下是Nginx的部分</p>
-<p>一樣我們先到 ngins/sites 底下，一樣也已經有預設檔案了，我們一樣直接做修改</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd ~&#x2F;dock&#x2F;laradock</span><br><span class="line">cp apache2&#x2F;sites&#x2F;sample.conf.example apache2&#x2F;sites&#x2F;sample.conf</span><br><span class="line">vim apache2&#x2F;sites&#x2F;default.conf</span><br></pre></td></tr></table></figure>
-<p><img src="../../../../image/laradock2/nginx_conf1.png" alt="nginx_conf1" title="nginx_conf1"></p>
-<p>一樣修改server name 與 檔案路徑，<br><img src="../../../../image/laradock2/nginx_conf2.png" alt="nginx_conf2" title="nginx_conf2"></p>
-<p>完成之後一樣先重啟nginx再打開瀏覽器試試看，<br><img src="../../../../image/laradock2/nginx_browser.png" alt="nginx_browser" title="nginx_browser"></p>
-<p>這裡會發現我是使用8888 port，因為某些關係，我把nginx改成8888port，</p>
-<p>讓我可以同時使用apache與nginx，至於這邊改天再寫一篇吧！</p>
+<p>首先我們先來裝heroku的指令<br><img src="../../../../image/herohu-python/heroku_install1.png" alt="heroku_install" title="heroku_install"><br>這裡我一樣使用brew來安裝～ 讓子彈飛一下<br><img src="../../../../image/herohu-python/heroku_install2.png" alt="heroku_install" title="heroku_install"><br>最後出現了brew的酒杯，順利完成安裝</p>
+<p>接著用treminal登入heroku吧！<br><img src="../../../../image/herohu-python/heroku_login1.png" alt="heroku_login" title="heroku_login"><br>照著指令的提示，按下任意鍵就會跳出瀏覽器(我以為跟git一樣可以在treminal登入呢！)<br><img src="../../../../image/herohu-python/heroku_login2.png" alt="heroku_login" title="heroku_login"><br><img src="../../../../image/herohu-python/heroku_login3.png" alt="heroku_login" title="heroku_login"><br><img src="../../../../image/herohu-python/heroku_login4.png" alt="heroku_login" title="heroku_login"><br>照著上面的流程後，就可以在treminal中順利的登入heroku了！</p>
+<p>這樣heroku的指令都會對應到heroku的帳號中，</p>
+<p>讓我們來開一個APP吧，可以用<code>heroku create</code>也可以登入到heroku建立，</p>
+<p>這裡我就到heroku中建立吧！<br><img src="../../../../image/herohu-python/heroku_cerate.png" alt="heroku_cerate" title="heroku_cerate"><br>建立完成後，到setting頁籤中找到Buildpacks的部分，</p>
+<p>這裡也是可以用指令去做，既然我們已經在後台了，就直接在這邊設定吧！</p>
+<p>Buildpacks我的理解是，設定app的語言，之後會在建立相關的檔案，讓app的環境建立起來<br><img src="../../../../image/herohu-python/heroku_buildpacks1.png" alt="heroku_buildpacks" title="heroku_buildpacks"><br>我們這裡要用python，所以選擇python<br><img src="../../../../image/herohu-python/heroku_buildpacks2.png" alt="heroku_buildpacks" title="heroku_buildpacks"><br>完成這些設定後，接著建置該app需要的環境，</p>
+<p>heroku的部署會使用到git指令，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mkdir trelloxline</span><br><span class="line">cd trelloxline</span><br><span class="line">git init</span><br><span class="line">git add -A</span><br><span class="line">git commit -am &quot;Heroku&quot;</span><br><span class="line">&#x2F;&#x2F; 這裡的指令背後跟 git remote add ... 一樣，只是透過heroku指令去抓</span><br><span class="line">heroku git:remote -a trelloxline</span><br></pre></td></tr></table></figure>
+<p>到這邊我想跟著官方的指令，應該會下<code>git push heroku master</code>，</p>
+<p>但… 事實沒那麼簡單，因為是第一次部署，我們需要先建立一個檔案，讓heroku幫我們部署App的環境，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 freeze &gt; requirements.txt</span><br></pre></td></tr></table></figure>
+<p>將我們本機端開發所使用到的套件…等都丟到<code>requirements.txt</code>這個檔案中，</p>
+<p>接著我們就可以進行部署拉～</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push heroku master</span><br></pre></td></tr></table></figure>
+<p><img src="../../../../image/herohu-python/heroku_git_push.png" alt="heroku_git_push" title="heroku_git_push"><br>登登登～ 這樣heroku就會幫我們初始化App，<br>(<br>為了測試環境是否成功，我們先建立個hello.py這個檔案，裡頭就寫個 <code>print(&#39;Hello&#39;)</code></p>
+<p>然後一樣git add ….. ((省略git 步驟</p>
+<p>接著回到heroku的介面中，<br><img src="../../../../image/herohu-python/heroku_index.png" alt="heroku_index" title="heroku_index"><br>右上角這個more裡中，有終端機指令的選項，我們來測試看看檔案有沒有部署上去，<br><img src="../../../../image/herohu-python/heroku_console1.png" alt="heroku_console" title="heroku_console"><br>老樣子先來個ls -al<br><img src="../../../../image/herohu-python/heroku_console2.png" alt="heroku_console" title="heroku_console"><br>檔案都有順利上去，接著就是嘗試執行py了，<code>python hello.py</code><br><img src="../../../../image/herohu-python/heroku_console3.png" alt="heroku_console" title="heroku_console"></p>
+<p>すばらし～～ </p>
+<p>這樣就可以部署自己做的py工具摟！！！</p>
 <hr>
 <p>後記</p>
-<p>以前自己裝apache或nginx時，都需要設定這些部分，</p>
-<p>時常忘記他們被放在哪個資料夾中，</p>
-<p>docker的這種掛載檔案的方式，使我們很方便去修改這些地方，</p>
-<p>這篇教學只有簡單的說明該如何使用它們，</p>
-<p>一些進階的設定日後有機會在整理成文章分享出來。</p>
+<p>之前上課的時候，就有用過heroku這工具，映像中當時git push就可以部署一個html or php，</p>
+<p>沒想到現在部署變得比較小麻煩些，不過可能也是因為要執行python，</p>
+<p>heroku必須知道本機端是用哪個版本的py、pip跟package，</p>
+<p>在部署過程中爬了一下文才綜合出解決的方法 @@</p>
 
             
 
@@ -331,7 +318,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">標籤</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/apache/" rel="tag">apache</a> <a class="tag tag--primary tag--small t-link" href="/tags/devops/" rel="tag">devops</a> <a class="tag tag--primary tag--small t-link" href="/tags/docker/" rel="tag">docker</a> <a class="tag tag--primary tag--small t-link" href="/tags/laradock/" rel="tag">laradock</a> <a class="tag tag--primary tag--small t-link" href="/tags/nginx/" rel="tag">nginx</a> <a class="tag tag--primary tag--small t-link" href="/tags/w3HexSchool/" rel="tag">w3HexSchool</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/devops/" rel="tag">devops</a> <a class="tag tag--primary tag--small t-link" href="/tags/heroku/" rel="tag">heroku</a> <a class="tag tag--primary tag--small t-link" href="/tags/python/" rel="tag">python</a> <a class="tag tag--primary tag--small t-link" href="/tags/w3HexSchool/" rel="tag">w3HexSchool</a>
 
             </div>
         
@@ -341,14 +328,11 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                <a
-                    class="post-action-btn btn btn--default tooltip--top"
-                    href="/2020/02/22/trello-notify/"
-                    data-tooltip="Trello - 寫文章也不忘用專案管理工具管理一下"
-                    aria-label="上一篇: Trello - 寫文章也不忘用專案管理工具管理一下"
-                >
-                    
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
                     </a>
@@ -358,9 +342,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2020/01/27/laradock/"
-                    data-tooltip="Laradock - 更快速優雅的建立Laravel"
-                    aria-label="下一篇: Laradock - 更快速優雅的建立Laravel"
+                    href="/2020/03/08/ngrok/"
+                    data-tooltip="Ngrok - 再也不用擔心開發遇到Webhook"
+                    aria-label="下一篇: Ngrok - 再也不用擔心開發遇到Webhook"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
@@ -385,7 +369,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://yeeinhole.github.io/2020/02/13/laradock2/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://yeeinhole.github.io/2020/03/14/heroku-python/"
                     title="分享到 Facebook"
                     aria-label="分享到 Facebook"
                 >
@@ -398,7 +382,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://yeeinhole.github.io/2020/02/13/laradock2/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://yeeinhole.github.io/2020/03/14/heroku-python/"
                     title="分享到 Twitter"
                     aria-label="分享到 Twitter"
                 >
@@ -411,7 +395,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://yeeinhole.github.io/2020/02/13/laradock2/"
+                    target="new" href="https://plus.google.com/share?url=https://yeeinhole.github.io/2020/03/14/heroku-python/"
                     title="分享到 Google+"
                     aria-label="分享到 Google+"
                 >
@@ -456,14 +440,11 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                <a
-                    class="post-action-btn btn btn--default tooltip--top"
-                    href="/2020/02/22/trello-notify/"
-                    data-tooltip="Trello - 寫文章也不忘用專案管理工具管理一下"
-                    aria-label="上一篇: Trello - 寫文章也不忘用專案管理工具管理一下"
-                >
-                    
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
                     </a>
@@ -473,9 +454,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2020/01/27/laradock/"
-                    data-tooltip="Laradock - 更快速優雅的建立Laravel"
-                    aria-label="下一篇: Laradock - 更快速優雅的建立Laravel"
+                    href="/2020/03/08/ngrok/"
+                    data-tooltip="Ngrok - 再也不用擔心開發遇到Webhook"
+                    aria-label="下一篇: Ngrok - 再也不用擔心開發遇到Webhook"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
@@ -500,7 +481,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://yeeinhole.github.io/2020/02/13/laradock2/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://yeeinhole.github.io/2020/03/14/heroku-python/"
                     title="分享到 Facebook"
                     aria-label="分享到 Facebook"
                 >
@@ -513,7 +494,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://yeeinhole.github.io/2020/02/13/laradock2/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://yeeinhole.github.io/2020/03/14/heroku-python/"
                     title="分享到 Twitter"
                     aria-label="分享到 Twitter"
                 >
@@ -526,7 +507,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://yeeinhole.github.io/2020/02/13/laradock2/"
+                    target="new" href="https://plus.google.com/share?url=https://yeeinhole.github.io/2020/03/14/heroku-python/"
                     title="分享到 Google+"
                     aria-label="分享到 Google+"
                 >
@@ -560,7 +541,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://www.facebook.com/sharer/sharer.php?u=https://yeeinhole.github.io/2020/02/13/laradock2/"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://yeeinhole.github.io/2020/03/14/heroku-python/"
                         aria-label="分享到 Facebook"
                     >
                         <i class="fab fa-facebook" aria-hidden="true"></i><span>分享到 Facebook</span>
@@ -573,7 +554,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://twitter.com/intent/tweet?text=https://yeeinhole.github.io/2020/02/13/laradock2/"
+                        href="https://twitter.com/intent/tweet?text=https://yeeinhole.github.io/2020/03/14/heroku-python/"
                         aria-label="分享到 Twitter"
                     >
                         <i class="fab fa-twitter" aria-hidden="true"></i><span>分享到 Twitter</span>
@@ -586,7 +567,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://plus.google.com/share?url=https://yeeinhole.github.io/2020/02/13/laradock2/"
+                        href="https://plus.google.com/share?url=https://yeeinhole.github.io/2020/03/14/heroku-python/"
                         aria-label="分享到 Google+"
                     >
                         <i class="fab fa-google-plus" aria-hidden="true"></i><span>分享到 Google+</span>
