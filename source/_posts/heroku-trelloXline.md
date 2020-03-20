@@ -43,55 +43,55 @@ git commit -am "TrelloXLine"
 git push heroku master
 ```
 一樣會看到它在重新部署環境，
-![hreoku-deploy](../../../../image/herohu-trelloXline/hreoku_deploy.png "hreoku-deploy")
+![hreoku-deploy](../../../../image/heroku-trelloXline/hreoku_deploy.png "hreoku-deploy")
 
 完成後一樣先到heroku的console試試看能不能運行
 ```
 python main.py
 ```
-![heroku_console1](../../../../image/herohu-trelloXline/heroku_console1.png "heroku_console1")
+![heroku_console1](../../../../image/heroku-trelloXline/heroku_console1.png "heroku_console1")
 
 ***
 
 接下來會用到heroku的addon項目，該功能需要先去建立信用卡資料才可以使用！！！！！
 
 註冊信用卡後，會贈送450 hours，這樣就從每個月的550 hours變成 1000hours
-![heroku_bill](../../../../image/herohu-trelloXline/heroku_bill1.png "heroku_bill")
-![heroku_bill](../../../../image/herohu-trelloXline/heroku_bill2.png "heroku_bill")
+![heroku_bill](../../../../image/heroku-trelloXline/heroku_bill1.png "heroku_bill")
+![heroku_bill](../../../../image/heroku-trelloXline/heroku_bill2.png "heroku_bill")
 ```
 // 可以看目前的時數
 heroku ps -a trelloxline
 ```
-![heroku_bill](../../../../image/herohu-trelloXline/heroku_bill3.png "heroku_bill")
+![heroku_bill](../../../../image/heroku-trelloXline/heroku_bill3.png "heroku_bill")
 
 本文的小工具照理說應該是不會超過拉～～  下個月再來更新個使用結果～～
 ***
 
 接著到Resouces頁籤中 新增一個 Heroku Scheduler 的addon，
-![heroku_addon1](../../../../image/herohu-trelloXline/heroku_addon1.png "heroku_addon1")
+![heroku_addon1](../../../../image/heroku-trelloXline/heroku_addon1.png "heroku_addon1")
 在右上角搜尋 Heroku Scheduler 
-![heroku_addon2](../../../../image/herohu-trelloXline/heroku_addon2.png "heroku_addon2")
-![heroku_scheduler1](../../../../image/herohu-trelloXline/heroku_scheduler1.png "heroku_scheduler1")
+![heroku_addon2](../../../../image/heroku-trelloXline/heroku_addon2.png "heroku_addon2")
+![heroku_scheduler1](../../../../image/heroku-trelloXline/heroku_scheduler1.png "heroku_scheduler1")
 就直接安裝他吧！
-![heroku_scheduler2](../../../../image/herohu-trelloXline/heroku_scheduler2.png "heroku_scheduler2")
+![heroku_scheduler2](../../../../image/heroku-trelloXline/heroku_scheduler2.png "heroku_scheduler2")
 這裡輸入我們的app name，進行連結
-![heroku_scheduler3](../../../../image/herohu-trelloXline/heroku_scheduler3.png "heroku_scheduler3")
+![heroku_scheduler3](../../../../image/heroku-trelloXline/heroku_scheduler3.png "heroku_scheduler3")
 之後回到Resouces頁籤中，就能看到Heroku Scheduler了，
-![heroku_addon3](../../../../image/herohu-trelloXline/heroku_addon3.png "heroku_addon3")
+![heroku_addon3](../../../../image/heroku-trelloXline/heroku_addon3.png "heroku_addon3")
 點他之後就可以開始設定我們的排程摟！
-![heroku_scheduler_job1](../../../../image/herohu-trelloXline/heroku_scheduler_job1.png "heroku_scheduler_job1")
+![heroku_scheduler_job1](../../../../image/heroku-trelloXline/heroku_scheduler_job1.png "heroku_scheduler_job1")
 create一個job，
-![heroku_scheduler_job2](../../../../image/herohu-trelloXline/heroku_scheduler_job2.png "heroku_scheduler_job2")
+![heroku_scheduler_job2](../../../../image/heroku-trelloXline/heroku_scheduler_job2.png "heroku_scheduler_job2")
 可惡居然只能設定 每10min、每小時、每天的某個時間，
 
 如果會介意每天執行的話，只好到程式裡頭加上時間判斷，是要執行的日期才可以跑完程式，
 
 而且他只能設定UTC的時間 - - ，找個網站來換算[時間]](https://datetime360.com/tw/taipei-utc-time/)
-![heroku_scheduler_job3](../../../../image/herohu-trelloXline/heroku_scheduler_job3.png "heroku_scheduler_job3")
+![heroku_scheduler_job3](../../../../image/heroku-trelloXline/heroku_scheduler_job3.png "heroku_scheduler_job3")
 這裡為了測試，我設定一個每10min的job，
 
 接下來就是等時間到了看有沒有發訊息到line群組中了.....
-![heroku_scheduler_finish](../../../../image/herohu-trelloXline/heroku_scheduler_finish.png "heroku_scheduler_finish")
+![heroku_scheduler_finish](../../../../image/heroku-trelloXline/heroku_scheduler_finish.png "heroku_scheduler_finish")
 
 すばらし～～ 
 
