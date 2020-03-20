@@ -13,7 +13,7 @@
     
     
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg"},"articleBody":"還記得當初有寫個小工具 trelloXline notify，\n當時寫完想找個雲端空間來做排程，\n後來發現有heroku的相關文章，所以來嘗試看看\n\n\n\n本文所採用的環境\b\n\nMax OSX 10.15\nHomebrew 2.2.5\nheroku/7.39.0 darwin-x64 node-v12.13.0\n\n前置部署TrelloXLine\n\nheroku這邊支援直接將github部署到heroku app中，\n但為了方便設定config ((heroku console好像不太方便…. \n我們還是從本機端開始吧！\n把TrelloXLine丟進前次所建立的資料夾中，且設定好ini檔後，\n依舊使用git進行部署\n123git add -Agit commit -am &quot;TrelloXLine&quot;git push heroku master\n一樣會看到它在重新部署環境，\n完成後一樣先到heroku的console試試看能不能運行\n1python main.py\n\n\n接下來會用到heroku的addon項目，該功能需要先去建立信用卡資料才可以使用！！！！！\n註冊信用卡後，會贈送450 hours，這樣就從每個月的550 hours變成 1000hours\n12&#x2F;&#x2F; 可以看目前的時數heroku ps -a trelloxline\n\n本文的小工具照理說應該是不會超過拉～～  下個月再來更新個使用結果～～\n\n接著到Resouces頁籤中 新增一個 Heroku Scheduler 的addon，在右上角搜尋 Heroku Scheduler就直接安裝他吧！這裡輸入我們的app name，進行連結之後回到Resouces頁籤中，就能看到Heroku Scheduler了，點他之後就可以開始設定我們的排程摟！create一個job，可惡居然只能設定 每10min、每小時、每天的某個時間，\n如果會介意每天執行的話，只好到程式裡頭加上時間判斷，是要執行的日期才可以跑完程式，\n而且他只能設定UTC的時間 - - ，找個網站來換算[時間]](https://datetime360.com/tw/taipei-utc-time/)這裡為了測試，我設定一個每10min的job，\n接下來就是等時間到了看有沒有發訊息到line群組中了…..\nすばらし～～ \n成功設定好Heroku Scheduler了，\n雖然他第兩個時間似乎好像有那麼一點點不準😂\n\n後記\n因為這個是小工具，所以不會超過heroku的每月上限，\n但實際如果跑一個月下來有點可怕的話～～\n也是有個方法，做一個index去呼叫py，\n不過這邊會牽扯到free機器會sleep，\n據說每次執行會比較慢一些… 畢竟要先把它吵醒…\n下個月再來更新一下使用的時數是如何了\n","dateCreated":"2020-03-20T13:55:23+08:00","dateModified":"2020-03-14T18:50:09+08:00","datePublished":"2020-03-20T13:55:23+08:00","description":"還記得當初有寫個小工具 trelloXline notify，\n當時寫完想找個雲端空間來做排程，\n後來發現有heroku的相關文章，所以來嘗試看看","headline":"heroku - 自動執行python腳本","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yeeinhole.github.io/2020/03/20/heroku-trelloXline/"},"publisher":{"@type":"Organization","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg","logo":{"@type":"ImageObject","url":"yee.jpeg"}},"url":"https://yeeinhole.github.io/2020/03/20/heroku-trelloXline/","keywords":"devops, heroku, python, w3HexSchool"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg"},"articleBody":"還記得當初有寫個小工具 trelloXline notify，\n當時寫完想找個雲端空間來做排程，\n後來發現有heroku的相關文章，所以來嘗試看看\n\n\n\n本文所採用的環境\b\n\nMax OSX 10.15\nHomebrew 2.2.5\nheroku/7.39.0 darwin-x64 node-v12.13.0\n\n前置部署TrelloXLine\n\nheroku這邊支援直接將github部署到heroku app中，\n但為了方便設定config ((heroku console好像不太方便…. \n我們還是從本機端開始吧！\n把TrelloXLine丟進前次所建立的資料夾中，且設定好ini檔後，\n依舊使用git進行部署\n123git add -Agit commit -am &quot;TrelloXLine&quot;git push heroku master\n一樣會看到它在重新部署環境，\n完成後一樣先到heroku的console試試看能不能運行\n1python main.py\n\n\n接下來會用到heroku的addon項目，該功能需要先去建立信用卡資料才可以使用！！！！！\n註冊信用卡後，會贈送450 hours，這樣就從每個月的550 hours變成 1000hours\n12&#x2F;&#x2F; 可以看目前的時數heroku ps -a trelloxline\n\n本文的小工具照理說應該是不會超過拉～～  下個月再來更新個使用結果～～\n\n接著到Resouces頁籤中 新增一個 Heroku Scheduler 的addon，在右上角搜尋 Heroku Scheduler就直接安裝他吧！這裡輸入我們的app name，進行連結之後回到Resouces頁籤中，就能看到Heroku Scheduler了，點他之後就可以開始設定我們的排程摟！create一個job，可惡居然只能設定 每10min、每小時、每天的某個時間，\n如果會介意每天執行的話，只好到程式裡頭加上時間判斷，是要執行的日期才可以跑完程式，\n而且他只能設定UTC的時間 - - ，找個網站來換算[時間]](https://datetime360.com/tw/taipei-utc-time/)這裡為了測試，我設定一個每10min的job，\n接下來就是等時間到了看有沒有發訊息到line群組中了…..\nすばらし～～ \n成功設定好Heroku Scheduler了，\n雖然他第兩個時間似乎好像有那麼一點點不準😂\n\n後記\n因為這個是小工具，所以不會超過heroku的每月上限，\n但實際如果跑一個月下來有點可怕的話～～\n也是有個方法，做一個index去呼叫py，\n不過這邊會牽扯到free機器會sleep，\n據說每次執行會比較慢一些… 畢竟要先把它吵醒…\n下個月再來更新一下使用的時數是如何了\n","dateCreated":"2020-03-20T13:55:23+08:00","dateModified":"2020-03-20T14:08:57+08:00","datePublished":"2020-03-20T13:55:23+08:00","description":"還記得當初有寫個小工具 trelloXline notify，\n當時寫完想找個雲端空間來做排程，\n後來發現有heroku的相關文章，所以來嘗試看看","headline":"heroku - 自動執行python腳本","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yeeinhole.github.io/2020/03/20/heroku-trelloXline/"},"publisher":{"@type":"Organization","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg","logo":{"@type":"ImageObject","url":"yee.jpeg"}},"url":"https://yeeinhole.github.io/2020/03/20/heroku-trelloXline/","keywords":"devops, heroku, python, w3HexSchool"}</script>
     <meta name="description" content="還記得當初有寫個小工具 trelloXline notify， 當時寫完想找個雲端空間來做排程， 後來發現有heroku的相關文章，所以來嘗試看看">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="heroku - 自動執行python腳本">
@@ -21,30 +21,30 @@
 <meta property="og:site_name" content="Yee的補坑筆記">
 <meta property="og:description" content="還記得當初有寫個小工具 trelloXline notify， 當時寫完想找個雲端空間來做排程， 後來發現有heroku的相關文章，所以來嘗試看看">
 <meta property="og:locale" content="zh_TW">
-<meta property="og:image" content="https://yeeinhole.github.io/image/herohu-trelloXline/hreoku_deploy.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/herohu-trelloXline/heroku_console1.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/herohu-trelloXline/heroku_bill1.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/herohu-trelloXline/heroku_bill2.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/herohu-trelloXline/heroku_bill3.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/herohu-trelloXline/heroku_addon1.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/herohu-trelloXline/heroku_addon2.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/herohu-trelloXline/heroku_scheduler1.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/herohu-trelloXline/heroku_scheduler2.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/herohu-trelloXline/heroku_scheduler3.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/herohu-trelloXline/heroku_addon3.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/herohu-trelloXline/heroku_scheduler_job1.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/herohu-trelloXline/heroku_scheduler_job2.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/herohu-trelloXline/heroku_scheduler_job3.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/herohu-trelloXline/heroku_scheduler_finish.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/heroku-trelloXline/hreoku_deploy.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/heroku-trelloXline/heroku_console1.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/heroku-trelloXline/heroku_bill1.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/heroku-trelloXline/heroku_bill2.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/heroku-trelloXline/heroku_bill3.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/heroku-trelloXline/heroku_addon1.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/heroku-trelloXline/heroku_addon2.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/heroku-trelloXline/heroku_scheduler1.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/heroku-trelloXline/heroku_scheduler2.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/heroku-trelloXline/heroku_scheduler3.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/heroku-trelloXline/heroku_addon3.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/heroku-trelloXline/heroku_scheduler_job1.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/heroku-trelloXline/heroku_scheduler_job2.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/heroku-trelloXline/heroku_scheduler_job3.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/heroku-trelloXline/heroku_scheduler_finish.png">
 <meta property="article:published_time" content="2020-03-20T05:55:23.000Z">
-<meta property="article:modified_time" content="2020-03-14T10:50:09.472Z">
+<meta property="article:modified_time" content="2020-03-20T06:08:57.152Z">
 <meta property="article:author" content="Yee">
 <meta property="article:tag" content="devops">
 <meta property="article:tag" content="heroku">
 <meta property="article:tag" content="python">
 <meta property="article:tag" content="w3HexSchool">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://yeeinhole.github.io/image/herohu-trelloXline/hreoku_deploy.png">
+<meta name="twitter:image" content="https://yeeinhole.github.io/image/heroku-trelloXline/hreoku_deploy.png">
     
     
         
@@ -285,21 +285,21 @@
 <p>把TrelloXLine丟進前次所建立的資料夾中，且設定好ini檔後，</p>
 <p>依舊使用git進行部署</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git add -A</span><br><span class="line">git commit -am &quot;TrelloXLine&quot;</span><br><span class="line">git push heroku master</span><br></pre></td></tr></table></figure>
-<p>一樣會看到它在重新部署環境，<br><img src="../../../../image/herohu-trelloXline/hreoku_deploy.png" alt="hreoku-deploy" title="hreoku-deploy"></p>
+<p>一樣會看到它在重新部署環境，<br><img src="../../../../image/heroku-trelloXline/hreoku_deploy.png" alt="hreoku-deploy" title="hreoku-deploy"></p>
 <p>完成後一樣先到heroku的console試試看能不能運行</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python main.py</span><br></pre></td></tr></table></figure>
-<p><img src="../../../../image/herohu-trelloXline/heroku_console1.png" alt="heroku_console1" title="heroku_console1"></p>
+<p><img src="../../../../image/heroku-trelloXline/heroku_console1.png" alt="heroku_console1" title="heroku_console1"></p>
 <hr>
 <p>接下來會用到heroku的addon項目，該功能需要先去建立信用卡資料才可以使用！！！！！</p>
-<p>註冊信用卡後，會贈送450 hours，這樣就從每個月的550 hours變成 1000hours<br><img src="../../../../image/herohu-trelloXline/heroku_bill1.png" alt="heroku_bill" title="heroku_bill"><br><img src="../../../../image/herohu-trelloXline/heroku_bill2.png" alt="heroku_bill" title="heroku_bill"></p>
+<p>註冊信用卡後，會贈送450 hours，這樣就從每個月的550 hours變成 1000hours<br><img src="../../../../image/heroku-trelloXline/heroku_bill1.png" alt="heroku_bill" title="heroku_bill"><br><img src="../../../../image/heroku-trelloXline/heroku_bill2.png" alt="heroku_bill" title="heroku_bill"></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 可以看目前的時數</span><br><span class="line">heroku ps -a trelloxline</span><br></pre></td></tr></table></figure>
-<p><img src="../../../../image/herohu-trelloXline/heroku_bill3.png" alt="heroku_bill" title="heroku_bill"></p>
+<p><img src="../../../../image/heroku-trelloXline/heroku_bill3.png" alt="heroku_bill" title="heroku_bill"></p>
 <p>本文的小工具照理說應該是不會超過拉～～  下個月再來更新個使用結果～～</p>
 <hr>
-<p>接著到Resouces頁籤中 新增一個 Heroku Scheduler 的addon，<br><img src="../../../../image/herohu-trelloXline/heroku_addon1.png" alt="heroku_addon1" title="heroku_addon1"><br>在右上角搜尋 Heroku Scheduler<br><img src="../../../../image/herohu-trelloXline/heroku_addon2.png" alt="heroku_addon2" title="heroku_addon2"><br><img src="../../../../image/herohu-trelloXline/heroku_scheduler1.png" alt="heroku_scheduler1" title="heroku_scheduler1"><br>就直接安裝他吧！<br><img src="../../../../image/herohu-trelloXline/heroku_scheduler2.png" alt="heroku_scheduler2" title="heroku_scheduler2"><br>這裡輸入我們的app name，進行連結<br><img src="../../../../image/herohu-trelloXline/heroku_scheduler3.png" alt="heroku_scheduler3" title="heroku_scheduler3"><br>之後回到Resouces頁籤中，就能看到Heroku Scheduler了，<br><img src="../../../../image/herohu-trelloXline/heroku_addon3.png" alt="heroku_addon3" title="heroku_addon3"><br>點他之後就可以開始設定我們的排程摟！<br><img src="../../../../image/herohu-trelloXline/heroku_scheduler_job1.png" alt="heroku_scheduler_job1" title="heroku_scheduler_job1"><br>create一個job，<br><img src="../../../../image/herohu-trelloXline/heroku_scheduler_job2.png" alt="heroku_scheduler_job2" title="heroku_scheduler_job2"><br>可惡居然只能設定 每10min、每小時、每天的某個時間，</p>
+<p>接著到Resouces頁籤中 新增一個 Heroku Scheduler 的addon，<br><img src="../../../../image/heroku-trelloXline/heroku_addon1.png" alt="heroku_addon1" title="heroku_addon1"><br>在右上角搜尋 Heroku Scheduler<br><img src="../../../../image/heroku-trelloXline/heroku_addon2.png" alt="heroku_addon2" title="heroku_addon2"><br><img src="../../../../image/heroku-trelloXline/heroku_scheduler1.png" alt="heroku_scheduler1" title="heroku_scheduler1"><br>就直接安裝他吧！<br><img src="../../../../image/heroku-trelloXline/heroku_scheduler2.png" alt="heroku_scheduler2" title="heroku_scheduler2"><br>這裡輸入我們的app name，進行連結<br><img src="../../../../image/heroku-trelloXline/heroku_scheduler3.png" alt="heroku_scheduler3" title="heroku_scheduler3"><br>之後回到Resouces頁籤中，就能看到Heroku Scheduler了，<br><img src="../../../../image/heroku-trelloXline/heroku_addon3.png" alt="heroku_addon3" title="heroku_addon3"><br>點他之後就可以開始設定我們的排程摟！<br><img src="../../../../image/heroku-trelloXline/heroku_scheduler_job1.png" alt="heroku_scheduler_job1" title="heroku_scheduler_job1"><br>create一個job，<br><img src="../../../../image/heroku-trelloXline/heroku_scheduler_job2.png" alt="heroku_scheduler_job2" title="heroku_scheduler_job2"><br>可惡居然只能設定 每10min、每小時、每天的某個時間，</p>
 <p>如果會介意每天執行的話，只好到程式裡頭加上時間判斷，是要執行的日期才可以跑完程式，</p>
-<p>而且他只能設定UTC的時間 - - ，找個網站來換算[時間]](<a href="https://datetime360.com/tw/taipei-utc-time/" target="_blank" rel="noopener">https://datetime360.com/tw/taipei-utc-time/</a>)<br><img src="../../../../image/herohu-trelloXline/heroku_scheduler_job3.png" alt="heroku_scheduler_job3" title="heroku_scheduler_job3"><br>這裡為了測試，我設定一個每10min的job，</p>
-<p>接下來就是等時間到了看有沒有發訊息到line群組中了…..<br><img src="../../../../image/herohu-trelloXline/heroku_scheduler_finish.png" alt="heroku_scheduler_finish" title="heroku_scheduler_finish"></p>
+<p>而且他只能設定UTC的時間 - - ，找個網站來換算[時間]](<a href="https://datetime360.com/tw/taipei-utc-time/" target="_blank" rel="noopener">https://datetime360.com/tw/taipei-utc-time/</a>)<br><img src="../../../../image/heroku-trelloXline/heroku_scheduler_job3.png" alt="heroku_scheduler_job3" title="heroku_scheduler_job3"><br>這裡為了測試，我設定一個每10min的job，</p>
+<p>接下來就是等時間到了看有沒有發訊息到line群組中了…..<br><img src="../../../../image/heroku-trelloXline/heroku_scheduler_finish.png" alt="heroku_scheduler_finish" title="heroku_scheduler_finish"></p>
 <p>すばらし～～ </p>
 <p>成功設定好Heroku Scheduler了，</p>
 <p>雖然他第兩個時間似乎好像有那麼一點點不準😂</p>
@@ -362,7 +362,7 @@
             <a
                 class="post-action-btn btn btn--default btn-open-shareoptions"
                 href="#btn-open-shareoptions"
-                aria-label="Diesen Beitrag teilen"
+                aria-label="Share this post"
             >
                 <i class="fa fa-share-alt" aria-hidden="true"></i>
             </a>
@@ -412,7 +412,7 @@
         
         <li class="post-action">
             
-                <a class="post-action-btn btn btn--default" href="#" aria-label="Nach oben">
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
             
                 <i class="fa fa-list" aria-hidden="true"></i>
             </a>
@@ -474,7 +474,7 @@
             <a
                 class="post-action-btn btn btn--default btn-open-shareoptions"
                 href="#btn-open-shareoptions"
-                aria-label="Diesen Beitrag teilen"
+                aria-label="Share this post"
             >
                 <i class="fa fa-share-alt" aria-hidden="true"></i>
             </a>
@@ -524,7 +524,7 @@
         
         <li class="post-action">
             
-                <a class="post-action-btn btn btn--default" href="#" aria-label="Nach oben">
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
             
                 <i class="fa fa-list" aria-hidden="true"></i>
             </a>
