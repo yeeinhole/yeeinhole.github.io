@@ -6,39 +6,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Yee的補坑筆記">
-    <title>Laradock - 設定host Apache 與 Nginx - Yee的補坑筆記</title>
+    <title>Mac - 用zsh就是要自訂自己喜歡的樣式 - Yee的補坑筆記</title>
     <meta name="author" content="Yee">
     
         <meta name="keywords" content="laravel,docker,">
     
     
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg"},"articleBody":"Hi 大家好～ 在上篇我們初始化了Laradock也建置了個Laravel專案，\n本篇要來設定，\n讓Laravel用起來更優雅～\n\n\n本文所採用的環境\b\n\nMax OSX 10.15\nDocker version 19.03.5\n\n已知設定略同的環境\n\nCentos7\n\n須先了解基礎linux與vim\n\n首先先設定我們本機的host\n1sudo vim &#x2F;etc&#x2F;hosts\n記得加上sudo，因為hosts在 “/“ 裡面，\n\n左邊是目的地IP右邊是domain\n12#IP Domain127.0.0.1 com.laravel\n因為要連到本機上，所以ip為127.0.0.1，並給上專案一個domain，完成後儲存且離開，\n這個domain只會在本機端生效，似乎也要避免到熱門的domain，\n完成後就要來設定我們的Apache與Nginx摟～\n\n在Laradock中的Apache與Nginx都有一個sites的資料夾，\n裡頭放的分別是\n\nApache virtualhost\nNginx config\n\n首先我們先設定Apache，\n到apache2/sites底下會發現有預設的檔案，我們可以複製一份新的，也可以直接修改他，\n我選擇直接修改預設的檔案，\n12cd ~&#x2F;dock&#x2F;laradockvim apache2&#x2F;sites&#x2F;default.apache.conf\n預設值裡已經有 ServerName 欄位了，\n將後面的domain改成剛剛在hosts裡設定的\n設定完成後一定要重啟一次apache讓設定生效\n1docker-compose restart apache2\n\n接著打開瀏覽器並輸入上剛剛所設定的domain，\n第一次輸入本地端的domain一定要在結尾加上 “/“，\n否則會變成搜尋這個domain，\n那當然會得到找不到頁面的畫面拉～～\n\n以下是Nginx的部分\n一樣我們先到 ngins/sites 底下，一樣也已經有預設檔案了，我們一樣直接做修改\n123cd ~&#x2F;dock&#x2F;laradockcp apache2&#x2F;sites&#x2F;sample.conf.example apache2&#x2F;sites&#x2F;sample.confvim apache2&#x2F;sites&#x2F;default.conf\n\n一樣修改server name 與 檔案路徑，\n完成之後一樣先重啟nginx再打開瀏覽器試試看，\n這裡會發現我是使用8888 port，因為某些關係，我把nginx改成8888port，\n讓我可以同時使用apache與nginx，至於這邊改天再寫一篇吧！\n\n後記\n以前自己裝apache或nginx時，都需要設定這些部分，\n時常忘記他們被放在哪個資料夾中，\ndocker的這種掛載檔案的方式，使我們很方便去修改這些地方，\n這篇教學只有簡單的說明該如何使用它們，\n一些進階的設定日後有機會在整理成文章分享出來。\n","dateCreated":"2020-02-13T23:37:34+08:00","dateModified":"2020-02-22T20:54:23+08:00","datePublished":"2020-02-13T23:37:34+08:00","description":"Hi 大家好～ 在上篇我們初始化了Laradock也建置了個Laravel專案，\n本篇要來設定，\n讓Laravel用起來更優雅～","headline":"Laradock - 設定host Apache 與 Nginx","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yeeinhole.github.io/2020/02/13/laradock2/"},"publisher":{"@type":"Organization","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg","logo":{"@type":"ImageObject","url":"yee.jpeg"}},"url":"https://yeeinhole.github.io/2020/02/13/laradock2/","keywords":"devops, w3HexSchool, docker, laradock, apache, nginx"}</script>
-    <meta name="description" content="Hi 大家好～ 在上篇我們初始化了Laradock也建置了個Laravel專案， 本篇要來設定， 讓Laravel用起來更優雅～">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg"},"articleBody":"在某一次OS X更新之後，\n打開終端機時我就發現，多了一串文字說明…\n\n起初，沒有去暸解那段文字在說明些什麼，\n畢竟我在終端機的使用上沒有太大的環境問題，\n某天心血來朝，看一下他到底在說些什麼，有提供個網址，來去看看…什麼！！！ 居然說要改用zsh作為預設的shell，\n在之前看過一些文章，zsh裝了theme還有一些套件後，可以很酷的使用終端機，\n無奈看到要設定一些東西，我就懶懶的，畢竟要讓zsh去抓設定在bash裡的東西…\n既然官方都這樣說了，那就… 換！！！\n\n本文所採用的環境\b\n\nMax OSX 10.15\nHomebrew 2.2.5\n\n\n往下滑，官方也很貼心的附上教學，\n先到設定裡打開 使用者 &amp; 群組，\n並點左下角的鎖頭，去解鎖之後才能設定東西，之後對自身的使用者右鍵，就會出現進階設定選單，也就是官網的那個頁面，打開選單後，在shell那邊選擇zsh之後重開終端機，就切換至zsh了！!!其實切換很簡單，這不是重點，重點在裝完主題後，就會出現紅框的資訊，\n這邊我參考一篇之前收錄的文章 - 超簡單！十分鐘打造漂亮又好用的 zsh command line 環境，\n除了安裝zsh的部分跳過外，我也跟著安裝itrem2，\n該篇文章也是採用Homebrew去安裝iterm2，\n大致上的設定可以參考這篇文章進行，所以我就不再說明安裝的過程，\n參考文章內的流程如下\n\n安裝iterm2\n安裝powerline font\n安裝oh-my-zsh\n安裝powerlevel9k\n\n其中我遇到的問題是… powerline font這邊，我無法順利的安裝，\n所以突發奇想的我，去挖出了他的otf檔，powerline\n直接載下來點擊安裝到mac的字體庫中，\n接著就是參照說明打開 itren2或者treminal的設定這樣就可以選字體拉～～\n其餘主題什麼的參照該篇文章沒有太大的問題，\n設定完成後就可以讓終端機看起來更高級拉～\n題外話～  \n我改用zsh的時候，沒有設定什麼，大部分的指令都可以使用，\n像是 docker-compose , composer …等\n但也是有朋友遇到要再設定一下，\n若有遇到該問題可以參考這篇\n是說Apple在說明改用zsh為預設的shell那頁也有寫到這點呢…Apple 改用zsh為預設的shell\n\n後記\n有稍微查過 zsh 與 bash的差異，\n似乎沒有太大的差異，有些指令zsh快，有些則是bash，((似乎大部分都是zsh比較快呢！\n\b也在某些文章的留言看到說，\n使用zsh並不是因為比bash快很多，而是因為他有強大的自訂功能，\n讓終端機看起來很厲害，似乎就是主題套件powerlevel9k名稱的由來呢 ＸＤ\n","dateCreated":"2020-04-03T16:51:28+08:00","dateModified":"2020-04-03T17:40:45+08:00","datePublished":"2020-04-03T16:51:28+08:00","description":"在某一次OS X更新之後，\n打開終端機時我就發現，多了一串文字說明…","headline":"Mac - 用zsh就是要自訂自己喜歡的樣式","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yeeinhole.github.io/2020/04/03/mac-zsh/"},"publisher":{"@type":"Organization","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg","logo":{"@type":"ImageObject","url":"yee.jpeg"}},"url":"https://yeeinhole.github.io/2020/04/03/mac-zsh/","keywords":"w3HexSchool, OS X, zsh, treminal"}</script>
+    <meta name="description" content="在某一次OS X更新之後， 打開終端機時我就發現，多了一串文字說明…">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="Laradock - 設定host Apache 與 Nginx">
-<meta property="og:url" content="https://yeeinhole.github.io/2020/02/13/laradock2/index.html">
+<meta property="og:title" content="Mac - 用zsh就是要自訂自己喜歡的樣式">
+<meta property="og:url" content="https://yeeinhole.github.io/2020/04/03/mac-zsh/index.html">
 <meta property="og:site_name" content="Yee的補坑筆記">
-<meta property="og:description" content="Hi 大家好～ 在上篇我們初始化了Laradock也建置了個Laravel專案， 本篇要來設定， 讓Laravel用起來更優雅～">
+<meta property="og:description" content="在某一次OS X更新之後， 打開終端機時我就發現，多了一串文字說明…">
 <meta property="og:locale" content="zh_TW">
-<meta property="og:image" content="https://yeeinhole.github.io/image/laradock2/hosts.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/laradock2/apache_host1.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/laradock2/apache_host2.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/laradock2/apache_browser.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/laradock2/nginx_conf1.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/laradock2/nginx_conf2.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/laradock2/nginx_browser.png">
-<meta property="article:published_time" content="2020-02-13T15:37:34.000Z">
-<meta property="article:modified_time" content="2020-02-22T12:54:23.451Z">
+<meta property="og:image" content="https://yeeinhole.github.io/image/zsh/bash1.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/zsh/apple_info.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/zsh/change1.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/zsh/change2.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/zsh/change3.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/zsh/zsh1.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/zsh/itren1.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/zsh/treminal1.png">
+<meta property="article:published_time" content="2020-04-03T08:51:28.000Z">
+<meta property="article:modified_time" content="2020-04-03T09:40:45.858Z">
 <meta property="article:author" content="Yee">
-<meta property="article:tag" content="devops">
 <meta property="article:tag" content="w3HexSchool">
-<meta property="article:tag" content="docker">
-<meta property="article:tag" content="laradock">
-<meta property="article:tag" content="apache">
-<meta property="article:tag" content="nginx">
+<meta property="article:tag" content="OS X">
+<meta property="article:tag" content="zsh">
+<meta property="article:tag" content="treminal">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://yeeinhole.github.io/image/laradock2/hosts.png">
+<meta name="twitter:image" content="https://yeeinhole.github.io/image/zsh/bash1.png">
     
     
         
@@ -234,20 +233,20 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title">
-            Laradock - 設定host Apache 與 Nginx
+            Mac - 用zsh就是要自訂自己喜歡的樣式
         </h1>
     
     
         <div class="post-meta">
-    <time datetime="2020-02-13T23:37:34+08:00">
+    <time datetime="2020-04-03T16:51:28+08:00">
 	
-		    2月 13, 2020
+		    4月 03, 2020
     	
     </time>
     
         <span>分類 </span>
         
-    <a class="category-link" href="/categories/devops/">devops</a>
+    <a class="category-link" href="/categories/OS-X/">OS X</a>
 
 
     
@@ -259,67 +258,55 @@
     
     <div class="post-content markdown">
         <div class="main-content-wrap">
-            <p>Hi 大家好～ 在上篇我們初始化了Laradock也建置了個Laravel專案，</p>
-<p>本篇要來設定，</p>
-<p>讓Laravel用起來更優雅～</p>
+            <p>在某一次OS X更新之後，</p>
+<p>打開終端機時我就發現，多了一串文字說明…</p>
 <a id="more"></a>
+<p>起初，沒有去暸解那段文字在說明些什麼，</p>
+<p>畢竟我在終端機的使用上沒有太大的環境問題，</p>
+<p>某天心血來朝，看一下他到底在說些什麼，<br><img src="../../../../image/zsh/bash1.png" alt="bash" title="bash"><br>有提供個網址，來去看看…<br><img src="../../../../image/zsh/apple_info.png" alt="apple_info" title="apple_info"><br>什麼！！！ 居然說要改用zsh作為預設的shell，</p>
+<p>在之前看過一些文章，zsh裝了theme還有一些套件後，可以很酷的使用終端機，</p>
+<p>無奈看到要設定一些東西，我就懶懶的，畢竟要讓zsh去抓設定在bash裡的東西…</p>
+<p>既然官方都這樣說了，那就… 換！！！</p>
 <hr>
 <p>本文所採用的環境<br></p>
 <ol>
 <li>Max OSX 10.15</li>
-<li>Docker version 19.03.5</li>
+<li>Homebrew 2.2.5</li>
 </ol>
-<p>已知設定略同的環境</p>
+<hr>
+<p>往下滑，官方也很貼心的附上教學，</p>
+<p>先到設定裡打開 使用者 &amp; 群組，</p>
+<p>並點左下角的鎖頭，去解鎖之後才能設定東西，<br><img src="../../../../image/zsh/change1.png" alt="change1" title="change1"><br>之後對自身的使用者右鍵，就會出現進階設定選單，也就是官網的那個頁面，<br><img src="../../../../image/zsh/change2.png" alt="change2" title="change2"><br>打開選單後，在shell那邊選擇zsh<br><img src="../../../../image/zsh/change3.png" alt="change3" title="change3"><br>之後重開終端機，就切換至zsh了！!!<br><img src="../../../../image/zsh/zsh1.png" alt="zsh1" title="zsh1"><br>其實切換很簡單，這不是重點，重點在裝完主題後，就會出現紅框的資訊，</p>
+<p>這邊我參考一篇之前收錄的文章 - <a href="https://medium.com/statementdog-engineering/prettify-your-zsh-command-line-prompt-3ca2acc967f" target="_blank" rel="noopener">超簡單！十分鐘打造漂亮又好用的 zsh command line 環境</a>，</p>
+<p>除了安裝zsh的部分跳過外，我也跟著安裝itrem2，</p>
+<p>該篇文章也是採用Homebrew去安裝iterm2，</p>
+<p>大致上的設定可以參考這篇文章進行，所以我就不再說明安裝的過程，</p>
+<p>參考文章內的流程如下</p>
 <ol>
-<li>Centos7</li>
+<li>安裝iterm2</li>
+<li>安裝powerline font</li>
+<li>安裝oh-my-zsh</li>
+<li>安裝powerlevel9k</li>
 </ol>
-<p>須先了解基礎linux與vim</p>
-<hr>
-<p>首先先設定我們本機的host</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim &#x2F;etc&#x2F;hosts</span><br></pre></td></tr></table></figure>
-<p>記得加上sudo，因為hosts在 “/“ 裡面，</p>
-<p><img src="../../../../image/laradock2/hosts.png" alt="hosts" title="hosts"></p>
-<p>左邊是目的地IP右邊是domain</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#IP Domain</span><br><span class="line">127.0.0.1 com.laravel</span><br></pre></td></tr></table></figure>
-<p>因為要連到本機上，所以ip為127.0.0.1，並給上專案一個domain，完成後儲存且離開，</p>
-<p>這個domain只會在本機端生效，似乎也要避免到熱門的domain，</p>
-<p>完成後就要來設定我們的Apache與Nginx摟～</p>
-<hr>
-<p>在Laradock中的Apache與Nginx都有一個sites的資料夾，</p>
-<p>裡頭放的分別是</p>
-<ol>
-<li>Apache virtualhost</li>
-<li>Nginx config</li>
-</ol>
-<p>首先我們先設定Apache，</p>
-<p>到apache2/sites底下會發現有預設的檔案，我們可以複製一份新的，也可以直接修改他，</p>
-<p>我選擇直接修改預設的檔案，</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd ~&#x2F;dock&#x2F;laradock</span><br><span class="line">vim apache2&#x2F;sites&#x2F;default.apache.conf</span><br></pre></td></tr></table></figure>
-<p><img src="../../../../image/laradock2/apache_host1.png" alt="apache_host1" title="apache_host1"><br>預設值裡已經有 ServerName 欄位了，</p>
-<p>將後面的domain改成剛剛在hosts裡設定的<br><img src="../../../../image/laradock2/apache_host2.png" alt="apache_host2" title="apache_host2"></p>
-<p>設定完成後一定要重啟一次apache讓設定生效</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose restart apache2</span><br></pre></td></tr></table></figure>
-
-<p>接著打開瀏覽器並輸入上剛剛所設定的domain，<br><img src="../../../../image/laradock2/apache_browser.png" alt="apache_browser" title="apache_browser"></p>
-<p>第一次輸入本地端的domain一定要在結尾加上 “/“，</p>
-<p>否則會變成搜尋這個domain，</p>
-<p>那當然會得到找不到頁面的畫面拉～～</p>
-<hr>
-<p>以下是Nginx的部分</p>
-<p>一樣我們先到 ngins/sites 底下，一樣也已經有預設檔案了，我們一樣直接做修改</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd ~&#x2F;dock&#x2F;laradock</span><br><span class="line">cp apache2&#x2F;sites&#x2F;sample.conf.example apache2&#x2F;sites&#x2F;sample.conf</span><br><span class="line">vim apache2&#x2F;sites&#x2F;default.conf</span><br></pre></td></tr></table></figure>
-<p><img src="../../../../image/laradock2/nginx_conf1.png" alt="nginx_conf1" title="nginx_conf1"></p>
-<p>一樣修改server name 與 檔案路徑，<br><img src="../../../../image/laradock2/nginx_conf2.png" alt="nginx_conf2" title="nginx_conf2"></p>
-<p>完成之後一樣先重啟nginx再打開瀏覽器試試看，<br><img src="../../../../image/laradock2/nginx_browser.png" alt="nginx_browser" title="nginx_browser"></p>
-<p>這裡會發現我是使用8888 port，因為某些關係，我把nginx改成8888port，</p>
-<p>讓我可以同時使用apache與nginx，至於這邊改天再寫一篇吧！</p>
+<p>其中我遇到的問題是… powerline font這邊，我無法順利的安裝，</p>
+<p>所以突發奇想的我，去挖出了他的otf檔，<a href="https://github.com/powerline/powerline/tree/develop/font" target="_blank" rel="noopener">powerline</a></p>
+<p>直接載下來點擊安裝到mac的字體庫中，</p>
+<p>接著就是參照說明打開 itren2或者treminal的設定<br><img src="../../../../image/zsh/itren1.png" alt="itren1" title="itren1"><br><img src="../../../../image/zsh/treminal1.png" alt="treminal1" title="treminal1"><br>這樣就可以選字體拉～～</p>
+<p>其餘主題什麼的參照該篇文章沒有太大的問題，</p>
+<p>設定完成後就可以讓終端機看起來更高級拉～</p>
+<p>題外話～  </p>
+<p>我改用zsh的時候，沒有設定什麼，大部分的指令都可以使用，</p>
+<p>像是 docker-compose , composer …等</p>
+<p>但也是有朋友遇到要再設定一下，</p>
+<p>若有遇到該問題可以<a href="http://to-u.xyz/2016/08/07/zsh-bash/" target="_blank" rel="noopener">參考這篇</a></p>
+<p>是說Apple在說明改用zsh為預設的shell那頁也有寫到這點呢…<br><a href="https://support.apple.com/en-us/HT208050" target="_blank" rel="noopener">Apple 改用zsh為預設的shell</a></p>
 <hr>
 <p>後記</p>
-<p>以前自己裝apache或nginx時，都需要設定這些部分，</p>
-<p>時常忘記他們被放在哪個資料夾中，</p>
-<p>docker的這種掛載檔案的方式，使我們很方便去修改這些地方，</p>
-<p>這篇教學只有簡單的說明該如何使用它們，</p>
-<p>一些進階的設定日後有機會在整理成文章分享出來。</p>
+<p>有稍微查過 zsh 與 bash的差異，</p>
+<p>似乎沒有太大的差異，有些指令zsh快，有些則是bash，<br>((似乎大部分都是zsh比較快呢！</p>
+<p>也在某些文章的留言看到說，</p>
+<p>使用zsh並不是因為比bash快很多，而是因為他有強大的自訂功能，</p>
+<p>讓終端機看起來很厲害，似乎就是主題套件powerlevel9k名稱的由來呢 ＸＤ</p>
 
             
 
@@ -331,7 +318,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">標籤</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/apache/" rel="tag">apache</a> <a class="tag tag--primary tag--small t-link" href="/tags/devops/" rel="tag">devops</a> <a class="tag tag--primary tag--small t-link" href="/tags/docker/" rel="tag">docker</a> <a class="tag tag--primary tag--small t-link" href="/tags/laradock/" rel="tag">laradock</a> <a class="tag tag--primary tag--small t-link" href="/tags/nginx/" rel="tag">nginx</a> <a class="tag tag--primary tag--small t-link" href="/tags/w3HexSchool/" rel="tag">w3HexSchool</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/OS-X/" rel="tag">OS X</a> <a class="tag tag--primary tag--small t-link" href="/tags/treminal/" rel="tag">treminal</a> <a class="tag tag--primary tag--small t-link" href="/tags/w3HexSchool/" rel="tag">w3HexSchool</a> <a class="tag tag--primary tag--small t-link" href="/tags/zsh/" rel="tag">zsh</a>
 
             </div>
         
@@ -341,14 +328,11 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                <a
-                    class="post-action-btn btn btn--default tooltip--top"
-                    href="/2020/02/22/trello-notify/"
-                    data-tooltip="Trello - 寫文章也不忘用專案管理工具管理一下"
-                    aria-label="上一篇: Trello - 寫文章也不忘用專案管理工具管理一下"
-                >
-                    
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
                     </a>
@@ -358,9 +342,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2020/01/27/laradock/"
-                    data-tooltip="Laradock - 更快速優雅的建立Laravel"
-                    aria-label="下一篇: Laradock - 更快速優雅的建立Laravel"
+                    href="/2020/03/29/docker-iptable/"
+                    data-tooltip="Docekr - iptable 設定"
+                    aria-label="下一篇: Docekr - iptable 設定"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
@@ -385,7 +369,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://yeeinhole.github.io/2020/02/13/laradock2/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://yeeinhole.github.io/2020/04/03/mac-zsh/"
                     title="分享到 Facebook"
                     aria-label="分享到 Facebook"
                 >
@@ -398,7 +382,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://yeeinhole.github.io/2020/02/13/laradock2/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://yeeinhole.github.io/2020/04/03/mac-zsh/"
                     title="分享到 Twitter"
                     aria-label="分享到 Twitter"
                 >
@@ -411,7 +395,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://yeeinhole.github.io/2020/02/13/laradock2/"
+                    target="new" href="https://plus.google.com/share?url=https://yeeinhole.github.io/2020/04/03/mac-zsh/"
                     title="分享到 Google+"
                     aria-label="分享到 Google+"
                 >
@@ -456,14 +440,11 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                <a
-                    class="post-action-btn btn btn--default tooltip--top"
-                    href="/2020/02/22/trello-notify/"
-                    data-tooltip="Trello - 寫文章也不忘用專案管理工具管理一下"
-                    aria-label="上一篇: Trello - 寫文章也不忘用專案管理工具管理一下"
-                >
-                    
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
                     </a>
@@ -473,9 +454,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2020/01/27/laradock/"
-                    data-tooltip="Laradock - 更快速優雅的建立Laravel"
-                    aria-label="下一篇: Laradock - 更快速優雅的建立Laravel"
+                    href="/2020/03/29/docker-iptable/"
+                    data-tooltip="Docekr - iptable 設定"
+                    aria-label="下一篇: Docekr - iptable 設定"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
@@ -500,7 +481,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://yeeinhole.github.io/2020/02/13/laradock2/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://yeeinhole.github.io/2020/04/03/mac-zsh/"
                     title="分享到 Facebook"
                     aria-label="分享到 Facebook"
                 >
@@ -513,7 +494,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://yeeinhole.github.io/2020/02/13/laradock2/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://yeeinhole.github.io/2020/04/03/mac-zsh/"
                     title="分享到 Twitter"
                     aria-label="分享到 Twitter"
                 >
@@ -526,7 +507,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://yeeinhole.github.io/2020/02/13/laradock2/"
+                    target="new" href="https://plus.google.com/share?url=https://yeeinhole.github.io/2020/04/03/mac-zsh/"
                     title="分享到 Google+"
                     aria-label="分享到 Google+"
                 >
@@ -560,7 +541,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://www.facebook.com/sharer/sharer.php?u=https://yeeinhole.github.io/2020/02/13/laradock2/"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://yeeinhole.github.io/2020/04/03/mac-zsh/"
                         aria-label="分享到 Facebook"
                     >
                         <i class="fab fa-facebook" aria-hidden="true"></i><span>分享到 Facebook</span>
@@ -573,7 +554,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://twitter.com/intent/tweet?text=https://yeeinhole.github.io/2020/02/13/laradock2/"
+                        href="https://twitter.com/intent/tweet?text=https://yeeinhole.github.io/2020/04/03/mac-zsh/"
                         aria-label="分享到 Twitter"
                     >
                         <i class="fab fa-twitter" aria-hidden="true"></i><span>分享到 Twitter</span>
@@ -586,7 +567,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://plus.google.com/share?url=https://yeeinhole.github.io/2020/02/13/laradock2/"
+                        href="https://plus.google.com/share?url=https://yeeinhole.github.io/2020/04/03/mac-zsh/"
                         aria-label="分享到 Google+"
                     >
                         <i class="fab fa-google-plus" aria-hidden="true"></i><span>分享到 Google+</span>
