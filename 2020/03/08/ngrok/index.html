@@ -13,7 +13,7 @@
     
     
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg"},"articleBody":"\b\b想必大家在開發成中都會遇到一些Webhook需要https才能測試的情況，\n例如：Line liff的開發，金流串接導向回程式中…等\n\n所以～ 有套工具叫做 Ngrok\n\n本文所採用的環境\b\n\nMax OSX 10.15\nHomebrew 2.2.5\nDocker version 19.03.5\nlaradock\n\n已知設定略同的環境\n\nCentos7\nwin10\n\n\n在 mac 跟 linux中，都可以選擇用brew &amp; apt … 的指令去下載 ngrok，\n我是在mac中使用Homebrew這套工具來幫我管理一些工具，他有點類似apt、yum這樣，\n不過普遍的使用方法就是直接到官網，將Ngrok下載下來，\n進到官網登入個帳號後，就可以下載它，其實在下載頁面，官網也把使用方法寫得很詳細了，\n下載解壓後，用終端機進入到檔案的資料夾中，\n12345# 官方下載的檔案.&#x2F;ngrok http 80# homebrew安裝的ngrok http 80\n看到出現這個畫面就表示已經成功啟動摟～～\n打開瀏覽器試試看，It’ work!!\n不過ngrok有一個缺點就是～ 每次啟動都會有不一樣的domain，\n這樣就變得每次都要去設定apache conf 或 nginx conf，\n所以我們可以設定成這樣，\n12345- apacheServerAlias *.ngrok.io- nginxserver_name  *.ngrok.io;\napache的nginx的之後就可以直接用ngrok給的domain進入到專案中摟！\n\n後記\n有了這項工具後遇到要webhook的情況就不需要找機器或者固定ip…等，\n直接無痛在本機端繼續開發&amp;測試～～\n","dateCreated":"2020-03-08T16:32:06+08:00","dateModified":"2020-03-08T22:01:09+08:00","datePublished":"2020-03-08T16:32:06+08:00","description":"\b\b想必大家在開發成中都會遇到一些Webhook需要https才能測試的情況，\n例如：Line liff的開發，金流串接導向回程式中…等","headline":"Ngrok - 再也不用擔心開發遇到Webhook","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yeeinhole.github.io/2020/03/08/ngrok/"},"publisher":{"@type":"Organization","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg","logo":{"@type":"ImageObject","url":"yee.jpeg"}},"url":"https://yeeinhole.github.io/2020/03/08/ngrok/","keywords":"devops, w3HexSchool, ngrok, laradock"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg"},"articleBody":"\b\b想必大家在開發成中都會遇到一些Webhook需要https才能測試的情況，\n例如：Line liff的開發，金流串接導向回程式中…等\n\n所以～ 有套工具叫做 Ngrok\n\n本文所採用的環境\b\n\nMax OSX 10.15\nHomebrew 2.2.5\nDocker version 19.03.5\nlaradock\n\n已知設定略同的環境\n\nCentos7\nwin10\n\n\n在 mac 跟 linux中，都可以選擇用brew &amp; apt … 的指令去下載 ngrok，\n我是在mac中使用Homebrew這套工具來幫我管理一些工具，他有點類似apt、yum這樣，\n不過普遍的使用方法就是直接到官網，將Ngrok下載下來，\n進到官網登入個帳號後，就可以下載它，其實在下載頁面，官網也把使用方法寫得很詳細了，\n下載解壓後，用終端機進入到檔案的資料夾中，\n12345# 官方下載的檔案.&#x2F;ngrok http 80# homebrew安裝的ngrok http 80\n看到出現這個畫面就表示已經成功啟動摟～～\n打開瀏覽器試試看，It’ work!!\n不過ngrok有一個缺點就是～ 每次啟動都會有不一樣的domain，\n這樣就變得每次都要去設定apache conf 或 nginx conf，\n所以我們可以設定成這樣，\n12345- apacheServerAlias *.ngrok.io- nginxserver_name  *.ngrok.io;\napache的nginx的之後就可以直接用ngrok給的domain進入到專案中摟！\n\n後記\n有了這項工具後遇到要webhook的情況就不需要找機器或者固定ip…等，\n直接無痛在本機端繼續開發&amp;測試～～\n","dateCreated":"2020-03-08T16:32:06+08:00","dateModified":"2020-03-08T22:01:09+08:00","datePublished":"2020-03-08T16:32:06+08:00","description":"\b\b想必大家在開發成中都會遇到一些Webhook需要https才能測試的情況，\n例如：Line liff的開發，金流串接導向回程式中…等","headline":"Ngrok - 再也不用擔心開發遇到Webhook","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yeeinhole.github.io/2020/03/08/ngrok/"},"publisher":{"@type":"Organization","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg","logo":{"@type":"ImageObject","url":"yee.jpeg"}},"url":"https://yeeinhole.github.io/2020/03/08/ngrok/","keywords":"devops, w3HexSchool, laradock, ngrok"}</script>
     <meta name="description" content="想必大家在開發成中都會遇到一些Webhook需要https才能測試的情況， 例如：Line liff的開發，金流串接導向回程式中…等">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Ngrok - 再也不用擔心開發遇到Webhook">
@@ -32,8 +32,8 @@
 <meta property="article:author" content="Yee">
 <meta property="article:tag" content="devops">
 <meta property="article:tag" content="w3HexSchool">
-<meta property="article:tag" content="ngrok">
 <meta property="article:tag" content="laradock">
+<meta property="article:tag" content="ngrok">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://yeeinhole.github.io/image/ngrok/ngrok.png">
     
@@ -345,7 +345,7 @@
             <a
                 class="post-action-btn btn btn--default btn-open-shareoptions"
                 href="#btn-open-shareoptions"
-                aria-label="Share this post"
+                aria-label="Diesen Beitrag teilen"
             >
                 <i class="fa fa-share-alt" aria-hidden="true"></i>
             </a>
@@ -395,7 +395,7 @@
         
         <li class="post-action">
             
-                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Nach oben">
             
                 <i class="fa fa-list" aria-hidden="true"></i>
             </a>
@@ -460,7 +460,7 @@
             <a
                 class="post-action-btn btn btn--default btn-open-shareoptions"
                 href="#btn-open-shareoptions"
-                aria-label="Share this post"
+                aria-label="Diesen Beitrag teilen"
             >
                 <i class="fa fa-share-alt" aria-hidden="true"></i>
             </a>
@@ -510,7 +510,7 @@
         
         <li class="post-action">
             
-                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Nach oben">
             
                 <i class="fa fa-list" aria-hidden="true"></i>
             </a>

@@ -1,0 +1,650 @@
+
+<!DOCTYPE html>
+<html lang="zh-tw">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Yee的補坑筆記">
+    <title>Docekr - iptable 設定 - Yee的補坑筆記</title>
+    <meta name="author" content="Yee">
+    
+        <meta name="keywords" content="laravel,docker,">
+    
+    
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg"},"articleBody":"當部署docker環境到server上，\n就會發現到預設是可以允許任何連線的…\n\n但如果server是測試機或者私人用途不希望可以被隨意的連線時，\n通常在Linux上第一個想到的是iptables 或者 firewall，\n以iptables來說，基本的認知就是在 INPUT Chain設定連線規則，\n但… 事情沒有那麼簡單… \n剛開始無論怎麼設定，都不會有效果的… \n所以進入了無限查資料的輪迴中…\n最後在docekr官方文件中有一個章節就是跟iptables有關的…\n我先說明一下我的情境，為何我想要鎖定某些ip可以存取我在docker上啟動的服務。\n\n\n該server是測試機以我的認知，測試機的環境差不多等同於正式機，\n\n為了一些開發偵錯的方便，會開放一些錯誤訊息，\n當然不希望這些錯誤訊息被知道…等\n還有測試機可以對外連線，是一件非常非常奇怪得事情 ((這不是公司內部在用的嗎…  怎麼可以被連線知道 \n當然這問題如果在實體主機也可以解決，但虛擬伺服器則沒辦法透過主機網路去解決這項問題\n\n莫名被FB爬蟲機器人爬不曉得大家有沒有發現過，當自己部署一個網站至server上，\n\n可能有串接了某些服務，就會啟動了Facebook的爬蟲機器人， ((這點不太清楚為什麼會觸發\n該機器人會定時的掃描網站，如果有做錯誤的log偵測或提醒，時不時會收到404…等的錯誤訊息 ((這裡的404可能是沒有這路徑，或者該路徑其實是需要轉跳才能出現…等\n\ndocker的網路架構docker預設是使用bridge的方式，讓每個container可以連線，\n\n以mysql來說，新增一組帳號，需要設定該帳號是 % or localhost的方式進行連線，\n在docker底下不能設定localhost或者是特定ip， ((當使用bridge模式時，當然這也可以透過設定docker網路去解決\n因此目前的使用都是採用 % 的方式進行連線mysql\n\n綜合上述的問題，我決定設定iptables解決這些問題，\n因為稍微研究這層網路問題才發現到，docekr裝在linux時會自動到iptables上開啟一個Chain，\n不論當下是使用 iptables 或者 firewall…\n這個題很奇怪，畢竟認知有限無法清楚了解為何會這樣…\n後來乾脆直接改用iptables，畢竟認知下用firewall應該是吃不到iptables的規則…\n\n設定的方式很簡單，需要先裝好iptables，\n這裡就不再截iptables安裝的畫面，\n基本上灌好centos7應該是firewall，先確定是否有啟動，之後再將其停用即可\n12345678910systemctl status firewalldsystemctl stop firewalld# 開機不要啟動 firewalldsystemctl mask firewalld# 安裝iptablesyum install iptables-services# 開機自動啟動 iptablessystemctl enable iptables# 看到綠燈表示安裝成功systemctl status iptables\n接著就是參照docker官方的iptables章節進行設定，\n文件裡也寫到預設的docker iptables都在DOCKER CHAIN裡，希望各位不要去更改該CHAIN的設定，\n因此給了 DOCKER-USER CHAIN這個地方，讓大家自行設定規則。\n官方得教學很簡單的說明三種使用情境 ((截取自docker docs - iptables\n\n只允許某一特定的IP連線\n1iptables -I DOCKER-USER -i ext_if ! -s 192.168.1.1 -j DROP\n\n只允許某一網段的IP可以連線\n1iptables -I DOCKER-USER -i ext_if ! -s 192.168.1.0&#x2F;24 -j DROP\n\n只允許某一範圍的IP可以連線\n1iptables -I DOCKER-USER -m iprange -i ext_if ! --src-range 192.168.1.1-192.168.1.3 -j DROP\n至於路由器模式的話，因為沒使用過，暫時不知道指令的內容會設定到什麼…\n\n\n基本上指令的架構來自於iptables，這邊不多做些解釋，\n唯一要注意的是… 也是讓我卡最久的地方 ((沒有注意到這個參數… 然後沒去改且跟著官方的設定只修改ip的地方… \next_if就是它！！！ 這裡要把它改成你的網卡名稱，就是ifconfig裡對外連線的那個網卡名稱…\n因此我的方法如下，當時也不太確定 ! -s 能否順利執行，因此採用所學的觀念，先拒絕全部再逐一開放可連線的IP\n123456# 先拒絕所有連線iptables -I DOCKER-USER -i eth0 -j DROP# 允許的IPiptables -I DOCKER-USER -i eth0 -s 000.000.00.000 -j ACCEPT# 允許一個範圍的ip連線 ((這組ip是綠界金流的ip，API文件只有寫幾組，但我偷懶都直接開給他了... iptables -I DOCKER-USER -i eth0 -m iprange --src-range 175.99.72.1-175.99.72.32 -j ACCEPT\n以上的指令去開放公司的IP或者合作夥伴的IP，\n達到只允許某些IP連線至server上使用docker服務。\n\n後記\ndocker這工具真的很方便的部署出一個環境，\n但相對的沒有多花時間去研究了解他的架構，就不知道安全性上是否有疑慮，或者需要自行設定些規則…\n雖然目前只部署到測試機上，還可以透過這些設定拒絕大部分連線，\n至於部署到正式機上，我覺得又是另一回事了…\n","dateCreated":"2020-04-01T16:46:06+08:00","dateModified":"2020-04-03T16:42:57+08:00","datePublished":"2020-04-01T16:46:06+08:00","description":"當部署docker環境到server上，\n就會發現到預設是可以允許任何連線的…","headline":"Docekr - iptable 設定","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yeeinhole.github.io/2020/04/01/docker-iptable/"},"publisher":{"@type":"Organization","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg","logo":{"@type":"ImageObject","url":"yee.jpeg"}},"url":"https://yeeinhole.github.io/2020/04/01/docker-iptable/","keywords":"devops, docker, CentOS 7, Linux, w3HexSchool"}</script>
+    <meta name="description" content="當部署docker環境到server上， 就會發現到預設是可以允許任何連線的…">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Docekr - iptable 設定">
+<meta property="og:url" content="https://yeeinhole.github.io/2020/04/01/docker-iptable/index.html">
+<meta property="og:site_name" content="Yee的補坑筆記">
+<meta property="og:description" content="當部署docker環境到server上， 就會發現到預設是可以允許任何連線的…">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2020-04-01T08:46:06.000Z">
+<meta property="article:modified_time" content="2020-04-03T08:42:57.879Z">
+<meta property="article:author" content="Yee">
+<meta property="article:tag" content="devops">
+<meta property="article:tag" content="docker">
+<meta property="article:tag" content="CentOS 7">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="w3HexSchool">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="https://yeeinhole.github.io/assets/images/yee.jpeg"/>
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-2lqfypdcngq7rgk11flmhgs30biseha2s4rv2frat5edalqervoqqqtncnuh.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            Yee的補坑筆記
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="打開鏈接: /#about"
+            >
+        
+        
+            <img class="header-picture" src="/assets/images/yee.jpeg" alt="作者的圖片"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a
+                    href="/#about"
+                    aria-label="閱讀有關作者的更多信息"
+                >
+                    <img class="sidebar-profile-picture" src="/assets/images/yee.jpeg" alt="作者的圖片"/>
+                </a>
+                <h4 class="sidebar-profile-name">Yee</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>Hi 我是 Yee，常常不小心就掉進坑中…</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="https://yeeinhole.github.io/"
+                            title="首頁"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">首頁</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-categories"
+                            
+                            title="分類"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">分類</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-tags"
+                            
+                            title="標籤"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">標籤</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-archives"
+                            
+                            title="所有文章"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">所有文章</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/friend"
+                            
+                            title="友情連結"
+                        >
+                    
+                        <i class="sidebar-button-icon fas fa-link" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">友情連結</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#about"
+                            
+                            title="關於"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">關於</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="mailto:amung966w@gmail.com" target="_blank" rel="noopener" title="Email">
+                    
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Email</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            Docekr - iptable 設定
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2020-04-01T16:46:06+08:00">
+	
+		    4月 01, 2020
+    	
+    </time>
+    
+        <span>分類 </span>
+        
+    <a class="category-link" href="/categories/devops/">devops</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <p>當部署docker環境到server上，</p>
+<p>就會發現到預設是可以允許任何連線的…</p>
+<a id="more"></a>
+<p>但如果server是測試機或者私人用途不希望可以被隨意的連線時，</p>
+<p>通常在Linux上第一個想到的是iptables 或者 firewall，</p>
+<p>以iptables來說，基本的認知就是在 INPUT Chain設定連線規則，</p>
+<p>但… 事情沒有那麼簡單… </p>
+<p>剛開始無論怎麼設定，都不會有效果的… </p>
+<p>所以進入了無限查資料的輪迴中…</p>
+<p>最後在docekr官方文件中有一個章節就是跟iptables有關的…</p>
+<p>我先說明一下我的情境，為何我想要鎖定某些ip可以存取我在docker上啟動的服務。</p>
+<hr>
+<ol>
+<li>該server是測試機<br>以我的認知，測試機的環境差不多等同於正式機，</li>
+</ol>
+<p>為了一些開發偵錯的方便，會開放一些錯誤訊息，</p>
+<p>當然不希望這些錯誤訊息被知道…等</p>
+<p>還有測試機可以對外連線，是一件非常非常奇怪得事情 ((這不是公司內部在用的嗎…  怎麼可以被連線知道 </p>
+<p>當然這問題如果在實體主機也可以解決，但虛擬伺服器則沒辦法透過主機網路去解決這項問題</p>
+<ol start="2">
+<li>莫名被FB爬蟲機器人爬<br>不曉得大家有沒有發現過，當自己部署一個網站至server上，</li>
+</ol>
+<p>可能有串接了某些服務，就會啟動了Facebook的爬蟲機器人， ((這點不太清楚為什麼會觸發</p>
+<p>該機器人會定時的掃描網站，如果有做錯誤的log偵測或提醒，時不時會收到404…等的錯誤訊息 ((這裡的404可能是沒有這路徑，或者該路徑其實是需要轉跳才能出現…等</p>
+<ol start="3">
+<li>docker的網路架構<br>docker預設是使用bridge的方式，讓每個container可以連線，</li>
+</ol>
+<p>以mysql來說，新增一組帳號，需要設定該帳號是 % or localhost的方式進行連線，</p>
+<p>在docker底下不能設定localhost或者是特定ip， ((當使用bridge模式時，當然這也可以透過設定docker網路去解決</p>
+<p>因此目前的使用都是採用 % 的方式進行連線mysql</p>
+<hr>
+<p>綜合上述的問題，我決定設定iptables解決這些問題，</p>
+<p>因為稍微研究這層網路問題才發現到，docekr裝在linux時會自動到iptables上開啟一個Chain，</p>
+<p>不論當下是使用 iptables 或者 firewall…</p>
+<p>這個題很奇怪，畢竟認知有限無法清楚了解為何會這樣…</p>
+<p>後來乾脆直接改用iptables，畢竟認知下用firewall應該是吃不到iptables的規則…</p>
+<hr>
+<p>設定的方式很簡單，需要先裝好iptables，</p>
+<p>這裡就不再截iptables安裝的畫面，</p>
+<p>基本上灌好centos7應該是firewall，先確定是否有啟動，之後再將其停用即可</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">systemctl status firewalld</span><br><span class="line">systemctl stop firewalld</span><br><span class="line"># 開機不要啟動 firewalld</span><br><span class="line">systemctl mask firewalld</span><br><span class="line"># 安裝iptables</span><br><span class="line">yum install iptables-services</span><br><span class="line"># 開機自動啟動 iptables</span><br><span class="line">systemctl enable iptables</span><br><span class="line"># 看到綠燈表示安裝成功</span><br><span class="line">systemctl status iptables</span><br></pre></td></tr></table></figure>
+<p>接著就是參照docker官方的<a href="https://docs.docker.com/network/iptables/" target="_blank" rel="noopener">iptables章節</a>進行設定，</p>
+<p>文件裡也寫到預設的docker iptables都在DOCKER CHAIN裡，希望各位不要去更改該CHAIN的設定，</p>
+<p>因此給了 DOCKER-USER CHAIN這個地方，讓大家自行設定規則。</p>
+<p>官方得教學很簡單的說明三種使用情境 ((截取自docker docs - iptables</p>
+<ol>
+<li><p>只允許某一特定的IP連線</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iptables -I DOCKER-USER -i ext_if ! -s 192.168.1.1 -j DROP</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>只允許某一網段的IP可以連線</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iptables -I DOCKER-USER -i ext_if ! -s 192.168.1.0&#x2F;24 -j DROP</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>只允許某一範圍的IP可以連線</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iptables -I DOCKER-USER -m iprange -i ext_if ! --src-range 192.168.1.1-192.168.1.3 -j DROP</span><br></pre></td></tr></table></figure>
+<p>至於路由器模式的話，因為沒使用過，暫時不知道指令的內容會設定到什麼…</p>
+</li>
+</ol>
+<p>基本上指令的架構來自於iptables，這邊不多做些解釋，</p>
+<p>唯一要注意的是… 也是讓我卡最久的地方 ((沒有注意到這個參數… 然後沒去改且跟著官方的設定只修改ip的地方… </p>
+<h3 id="ext-if"><a href="#ext-if" class="headerlink" title="ext_if"></a>ext_if</h3><p>就是它！！！ 這裡要把它改成你的網卡名稱，就是ifconfig裡對外連線的那個網卡名稱…</p>
+<p>因此我的方法如下，當時也不太確定 ! -s 能否順利執行，因此採用所學的觀念，先拒絕全部再逐一開放可連線的IP</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 先拒絕所有連線</span><br><span class="line">iptables -I DOCKER-USER -i eth0 -j DROP</span><br><span class="line"># 允許的IP</span><br><span class="line">iptables -I DOCKER-USER -i eth0 -s 000.000.00.000 -j ACCEPT</span><br><span class="line"># 允許一個範圍的ip連線 ((這組ip是綠界金流的ip，API文件只有寫幾組，但我偷懶都直接開給他了... </span><br><span class="line">iptables -I DOCKER-USER -i eth0 -m iprange --src-range 175.99.72.1-175.99.72.32 -j ACCEPT</span><br></pre></td></tr></table></figure>
+<p>以上的指令去開放公司的IP或者合作夥伴的IP，</p>
+<p>達到只允許某些IP連線至server上使用docker服務。</p>
+<hr>
+<p>後記</p>
+<p>docker這工具真的很方便的部署出一個環境，</p>
+<p>但相對的沒有多花時間去研究了解他的架構，就不知道安全性上是否有疑慮，或者需要自行設定些規則…</p>
+<p>雖然目前只部署到測試機上，還可以透過這些設定拒絕大部分連線，</p>
+<p>至於部署到正式機上，我覺得又是另一回事了…</p>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">標籤</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/CentOS-7/" rel="tag">CentOS 7</a> <a class="tag tag--primary tag--small t-link" href="/tags/Linux/" rel="tag">Linux</a> <a class="tag tag--primary tag--small t-link" href="/tags/devops/" rel="tag">devops</a> <a class="tag tag--primary tag--small t-link" href="/tags/docker/" rel="tag">docker</a> <a class="tag tag--primary tag--small t-link" href="/tags/w3HexSchool/" rel="tag">w3HexSchool</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2020/03/20/heroku-trelloXline/"
+                    data-tooltip="heroku - 自動執行python腳本"
+                    aria-label="下一篇: heroku - 自動執行python腳本"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Diesen Beitrag teilen"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://yeeinhole.github.io/2020/04/01/docker-iptable/"
+                    title="分享到 Facebook"
+                    aria-label="分享到 Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://yeeinhole.github.io/2020/04/01/docker-iptable/"
+                    title="分享到 Twitter"
+                    aria-label="分享到 Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://yeeinhole.github.io/2020/04/01/docker-iptable/"
+                    title="分享到 Google+"
+                    aria-label="分享到 Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Nach oben">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 Yee. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2020/03/20/heroku-trelloXline/"
+                    data-tooltip="heroku - 自動執行python腳本"
+                    aria-label="下一篇: heroku - 自動執行python腳本"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Diesen Beitrag teilen"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://yeeinhole.github.io/2020/04/01/docker-iptable/"
+                    title="分享到 Facebook"
+                    aria-label="分享到 Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://yeeinhole.github.io/2020/04/01/docker-iptable/"
+                    title="分享到 Twitter"
+                    aria-label="分享到 Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://yeeinhole.github.io/2020/04/01/docker-iptable/"
+                    title="分享到 Google+"
+                    aria-label="分享到 Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Nach oben">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://yeeinhole.github.io/2020/04/01/docker-iptable/"
+                        aria-label="分享到 Facebook"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>分享到 Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://yeeinhole.github.io/2020/04/01/docker-iptable/"
+                        aria-label="分享到 Twitter"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>分享到 Twitter</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://yeeinhole.github.io/2020/04/01/docker-iptable/"
+                        aria-label="分享到 Google+"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>分享到 Google+</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/yee.jpeg" alt="作者的圖片"/>
+        
+            <h4 id="about-card-name">Yee</h4>
+        
+            <div id="about-card-bio"><p>Hi 我是 Yee，常常不小心就掉進坑中…</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>後端工程師 X 數據分系</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Taiwan
+            </div>
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/mybg.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-8jejpetz5mxyxxmlbiz3r2lqf5sdh34epoqgvwjmadigq9cpmb2rdlngp8ka.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>
