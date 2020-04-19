@@ -1,5 +1,5 @@
 ---
-title: heroku - 自動執行python腳本
+title: Heroku - 自動執行python腳本
 date: 2020-03-20 13:55:23
 categories:
     - devops

@@ -67,8 +67,7 @@ index_generator:
 default_category: uncategorized
 category_map:
     devops: devops
-    w3HexSchool: w3HexSchool
-    laravel: laravel
+    Laravel: Laravel
     其他: other
 tag_map:
     laravel: laravel
