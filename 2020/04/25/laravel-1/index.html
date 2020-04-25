@@ -1,0 +1,789 @@
+
+<!DOCTYPE html>
+<html lang="zh-tw">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Yee的補坑筆記">
+    <title>Laravel之旅 - 認識Laravel資料夾結構 - Yee的補坑筆記</title>
+    <meta name="author" content="Yee">
+    
+        <meta name="keywords" content="laravel,docker,">
+    
+    
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg"},"articleBody":"一直想寫一系列如何認識與上手Laravel，\n自認自己的學法特殊，師父只教了如何CRUD，剩下的就由它任意發展了～～\n\n最後決定開寫的原因是，\n整理手邊的筆記 &amp; 讓自己更加認識 Laravel，\n除了基本的開發，其實還有很多很多個地方沒有用到，\n就趁著個機會，多少接觸些。\n\n本文所採用的環境\b\n\nMax OSX 10.15\nDocker version 19.03.5\nLaradock\nLaravel 6.0 以上 (5.8適用)\n\n本系列不從部署環境開始說起，\n部署環境可參考以下\n\nLaradock - 更快速優雅的建立Laravel\nInstall Apache, MySQL, PHP on macOS Catalina 10.15\nWin10請服用XAMPP，非專業版的Win裝docker會比較麻煩，不過也可以試試～～\n\n\n我們先來說說Laravel的資料夾結構，\n\n\n\n資料夾名稱\n說明\n\n\n\napp\n開發程式的地方，裡面有Controller、Exceptions… 待會再詳細說明\n\n\nbootstrap\n啟動laravel的地方，基本的開發不會改動到這區塊\n\n\nconfig\n設置系統參數的地方，可以定義一些文字或變數，供程式使用，改變參數就不需要改程式\n\n\ndatabase\n存放DB的scheme與設定假資料的地方\n\n\npublic\nweb的進入點，圖檔、js、css、編譯過的檔案都會放在這裡\n\n\nresources\n前台資源的地方，編譯前的js、scss、語言檔、views\n\n\nrouter\n路由參數，設置url對應controller的地方\n\n\nstorage\n存放編譯過的blade、logs、暫存檔的地方，基本的開發不會改動到這區塊\n\n\ntests\n撰寫測試程式的地方\n\n\nvendor\npackage的目錄，與node_modules的用途一樣\n\n\n\n\n\n檔案\n說明\n\n\n\n.env .env.example\n系統參數的檔案\n\n\ncomposer.json .lock\nLaravel版本、已安裝的package，一些composer的設定， .lock則是編譯過後的.json檔，供部署或其他開發者，安裝相同版本的package\n\n\npackage(-lock).json\n用npm管理js套件的地方，用途跟composer相似\n\n\nphpunit.xml\n設定php unit test的檔案\n\n\nserver.php\n模擬一個apache或nginx的設定，可以快速建立一個測試環境來執行laravel\n\n\nwebpack.mix.js\nwebpack打包js、scss的設定檔，需要搭配node和npm服用\n\n\n以上是laravel預設給予的資料夾與檔案，\n通常開發中比較常用到的是 app、config、database、resources、router、test((除非不寫測試，\napp這個資料夾預設只有 Console、Exception、Http、Providers跟一個User.php，\n而這些的用途如下\n\n\n\n資料夾\n說明\n\n\n\nConsole\n可以用來撰寫atrisan指令與排成指令\n\n\nExceptions\n例外處理，可以自定錯誤文字或者錯誤後該做什麼動作的地方，預設會將exception向上丟出(如果.env設置debug=true時就會呈現在畫面中)也會把錯誤記錄到log中\b\b\b\n\n\nHttp\n撰寫Controller、Middleware的地方，預設會給一套登入/註冊系統的Controller，Middelware則有常見的是否已登入、Cookie加密、CSRF白名單…等的判斷\n\n\nProviders\n提供自訂provider的地方，laravel啟動時會載入許多providers來建置整個系統，providers的清單在config/app.php中，官方文件是說大部分的providers都是緩載入的情況，當被使用時才會真實載入\n\n\nUser.php\n是一個Eloquent ORM的Model，\b可以操作預設的users資料表\n\n\n這些是預先載入的資料夾，\n其實還有一些資料夾沒有載入，讓我來逐一說明其功能，\n\n\n\n資料夾\n說明\n\n\n\nBroadcasting\n顧名思義是指廣播系統，也就是跟webSocket有關係，可以讓後端程式發訊息到前端的socket，可以搭配Laravel Echo、Pusher來使用\n\n\nEvents\n定義事件的地方，可以說是 當…時，通常會配合listener使用\n\n\nListeners\n定義一些邏輯被觸發執行，也就是當event時做…，跟隨著event發生時做某件事情\n\n\nMail\n建置與封裝跟mail有關的程式邏輯\n\n\nNotifications\n\b可以設定當系統觸發什麼事件就發送一個簡單的通知，官方舉例：寄mail、Slack…等\n\n\nPolicies\n可以寫條件規則，限制使用者的操作，可搭配Gate使用，讓router受到條件限制使用\b\b\n\n\nHttp\\Requests(Rules)\n\b\b撰寫Form Validation的規則，讓post進來的變數只留下有定義的，也可以透過 http method 增減驗證規則\n\n\n以上是官方文件中提到不會預設載入的功能資料夾，\n那～ 應該有人會好奇說… 為什麼沒有提到Models，\n官方的說明是 Model 一詞的定義較分辨不清，\n原因是在於有些人定義為 “業務邏輯” 有些人定義為 “資料庫數據”，\n因此laravel不預設定義Model為何，留給開發人員自行定義，\n而我… 是把它定義成資料庫的那一派，\n我把業務邏輯定義到Service或Helper中。\n\b\b\b\b\b\b再來要說明的是程式的資料夾，\n這部分我大致上看到兩種派別，\n一種是依照 “系統功能” 另一種則是 “程式功能”，\n其實兩者字面上的意思很相近，((我也忘記這兩種分法的正確名稱，這是我自己理解出來的名稱\n以 “會員管理” 這個功能來說會有這些程式\n\nMember.php (Model)\nMemberController.php (Controller)\nMemberService.php (Service業務邏輯)\n…\n\n當 “系統功能” 做區分時資料夾結構長這樣\n123456app|   |Http   |----|Member   |----|------|Member.php   |----|------|MemberController.php   |----|------|MemberService.php\n當 “程式功能” 做區分時資料夾結構長這樣\n12345678910111213app|   |Http|   |----|Controller|   |----|----------|MemberController.php   |----|----------|OOXXController.php   |   |Models|   |------|Member.php   |------|OOXX.php   |   |Services|   |------|MemberService.php   |------|OOXXService.php\n\n至於哪一種比較好，見仁見智，視專案狀況決定，\n當你的專案功能數目龐大，我覺得採用 “系統功能” 會比較好，\n而專案沒有那麼大的情況下，用 “程式功能” 來做區分就可以了，\n那我呢… 目前是 “程式功能” 這一派的，\n或許當我某天遇到什麼瓶頸時，就會更改我的作法了吧～～\n今天就先說到這裡吧！！ \n下一章就來簡單說明Controller的功能與做個簡單的範例～\n\nRefLaravel6.0 - directory\n\n後記\n摁～ 透過去仔細查閱官方文件，才發現到其實還有很多功能沒有運用到，\n很多時候都在Controller或Service做完這些事情，\n但其實laravel早就幫你想好了，\n後續在逐一嘗試一些官方所提供的功能吧！\n","dateCreated":"2020-04-25T21:11:35+08:00","dateModified":"2020-04-26T00:19:24+08:00","datePublished":"2020-04-25T21:11:35+08:00","description":"一直想寫一系列如何認識與上手Laravel，\n自認自己的學法特殊，師父只教了如何CRUD，剩下的就由它任意發展了～～","headline":"Laravel之旅 - 認識Laravel資料夾結構","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yeeinhole.github.io/2020/04/25/laravel-1/"},"publisher":{"@type":"Organization","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg","logo":{"@type":"ImageObject","url":"yee.jpeg"}},"url":"https://yeeinhole.github.io/2020/04/25/laravel-1/","keywords":"laravel, w3HexSchool"}</script>
+    <meta name="description" content="一直想寫一系列如何認識與上手Laravel， 自認自己的學法特殊，師父只教了如何CRUD，剩下的就由它任意發展了～～">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Laravel之旅 - 認識Laravel資料夾結構">
+<meta property="og:url" content="https://yeeinhole.github.io/2020/04/25/laravel-1/index.html">
+<meta property="og:site_name" content="Yee的補坑筆記">
+<meta property="og:description" content="一直想寫一系列如何認識與上手Laravel， 自認自己的學法特殊，師父只教了如何CRUD，剩下的就由它任意發展了～～">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2020-04-25T13:11:35.000Z">
+<meta property="article:modified_time" content="2020-04-25T16:19:24.684Z">
+<meta property="article:author" content="Yee">
+<meta property="article:tag" content="laravel">
+<meta property="article:tag" content="w3HexSchool">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="https://yeeinhole.github.io/assets/images/yee.jpeg"/>
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-2lqfypdcngq7rgk11flmhgs30biseha2s4rv2frat5edalqervoqqqtncnuh.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            Yee的補坑筆記
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="打開鏈接: /#about"
+            >
+        
+        
+            <img class="header-picture" src="/assets/images/yee.jpeg" alt="作者的圖片"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a
+                    href="/#about"
+                    aria-label="閱讀有關作者的更多信息"
+                >
+                    <img class="sidebar-profile-picture" src="/assets/images/yee.jpeg" alt="作者的圖片"/>
+                </a>
+                <h4 class="sidebar-profile-name">Yee</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>Hi 我是 Yee，常常不小心就掉進坑中…</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="https://yeeinhole.github.io/"
+                            title="首頁"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">首頁</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-categories"
+                            
+                            title="分類"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">分類</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-tags"
+                            
+                            title="標籤"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">標籤</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-archives"
+                            
+                            title="所有文章"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">所有文章</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/friend"
+                            
+                            title="友情連結"
+                        >
+                    
+                        <i class="sidebar-button-icon fas fa-link" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">友情連結</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#about"
+                            
+                            title="關於"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">關於</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="mailto:amung966w@gmail.com" target="_blank" rel="noopener" title="Email">
+                    
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Email</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            Laravel之旅 - 認識Laravel資料夾結構
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2020-04-25T21:11:35+08:00">
+	
+		    4月 25, 2020
+    	
+    </time>
+    
+        <span>分類 </span>
+        
+    <a class="category-link" href="/categories/Laravel/">Laravel</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <p>一直想寫一系列如何認識與上手Laravel，</p>
+<p>自認自己的學法特殊，師父只教了如何CRUD，剩下的就由它任意發展了～～</p>
+<a id="more"></a>
+<p>最後決定開寫的原因是，</p>
+<p>整理手邊的筆記 &amp; 讓自己更加認識 Laravel，</p>
+<p>除了基本的開發，其實還有很多很多個地方沒有用到，</p>
+<p>就趁著個機會，多少接觸些。</p>
+<hr>
+<p>本文所採用的環境<br></p>
+<ol>
+<li>Max OSX 10.15</li>
+<li>Docker version 19.03.5</li>
+<li>Laradock</li>
+<li>Laravel 6.0 以上 (5.8適用)</li>
+</ol>
+<p>本系列不從部署環境開始說起，</p>
+<p>部署環境可參考以下</p>
+<ol>
+<li><a href="https://yeeinhole.github.io/2020/01/27/laradock/">Laradock - 更快速優雅的建立Laravel</a></li>
+<li><a href="https://coolestguidesontheplanet.com/install-apache-mysql-php-on-macos-catalina-10-15/" target="_blank" rel="noopener">Install Apache, MySQL, PHP on macOS Catalina 10.15</a></li>
+<li>Win10請服用XAMPP，非專業版的Win裝docker會比較麻煩，不過也可以試試～～</li>
+</ol>
+<hr>
+<p>我們先來說說Laravel的資料夾結構，</p>
+<table>
+<thead>
+<tr>
+<th>資料夾名稱</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>app</td>
+<td>開發程式的地方，裡面有Controller、Exceptions… 待會再詳細說明</td>
+</tr>
+<tr>
+<td>bootstrap</td>
+<td>啟動laravel的地方，基本的開發不會改動到這區塊</td>
+</tr>
+<tr>
+<td>config</td>
+<td>設置系統參數的地方，可以定義一些文字或變數，供程式使用，改變參數就不需要改程式</td>
+</tr>
+<tr>
+<td>database</td>
+<td>存放DB的scheme與設定假資料的地方</td>
+</tr>
+<tr>
+<td>public</td>
+<td>web的進入點，圖檔、js、css、編譯過的檔案都會放在這裡</td>
+</tr>
+<tr>
+<td>resources</td>
+<td>前台資源的地方，編譯前的js、scss、語言檔、views</td>
+</tr>
+<tr>
+<td>router</td>
+<td>路由參數，設置url對應controller的地方</td>
+</tr>
+<tr>
+<td>storage</td>
+<td>存放編譯過的blade、logs、暫存檔的地方，基本的開發不會改動到這區塊</td>
+</tr>
+<tr>
+<td>tests</td>
+<td>撰寫測試程式的地方</td>
+</tr>
+<tr>
+<td>vendor</td>
+<td>package的目錄，與node_modules的用途一樣</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>檔案</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>.env .env.example</td>
+<td>系統參數的檔案</td>
+</tr>
+<tr>
+<td>composer.json .lock</td>
+<td>Laravel版本、已安裝的package，一些composer的設定， .lock則是編譯過後的.json檔，供部署或其他開發者，安裝相同版本的package</td>
+</tr>
+<tr>
+<td>package(-lock).json</td>
+<td>用npm管理js套件的地方，用途跟composer相似</td>
+</tr>
+<tr>
+<td>phpunit.xml</td>
+<td>設定php unit test的檔案</td>
+</tr>
+<tr>
+<td>server.php</td>
+<td>模擬一個apache或nginx的設定，可以快速建立一個測試環境來執行laravel</td>
+</tr>
+<tr>
+<td>webpack.mix.js</td>
+<td>webpack打包js、scss的設定檔，需要搭配node和npm服用</td>
+</tr>
+</tbody></table>
+<p>以上是laravel預設給予的資料夾與檔案，</p>
+<p>通常開發中比較常用到的是 app、config、database、resources、router、test((除非不寫測試，</p>
+<p>app這個資料夾預設只有 Console、Exception、Http、Providers跟一個User.php，</p>
+<p>而這些的用途如下</p>
+<table>
+<thead>
+<tr>
+<th>資料夾</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Console</td>
+<td>可以用來撰寫atrisan指令與排成指令</td>
+</tr>
+<tr>
+<td>Exceptions</td>
+<td>例外處理，可以自定錯誤文字或者錯誤後該做什麼動作的地方，預設會將exception向上丟出(如果.env設置debug=true時就會呈現在畫面中)也會把錯誤記錄到log中</td>
+</tr>
+<tr>
+<td>Http</td>
+<td>撰寫Controller、Middleware的地方，預設會給一套登入/註冊系統的Controller，Middelware則有常見的是否已登入、Cookie加密、CSRF白名單…等的判斷</td>
+</tr>
+<tr>
+<td>Providers</td>
+<td>提供自訂provider的地方，laravel啟動時會載入許多providers來建置整個系統，providers的清單在config/app.php中，官方文件是說大部分的providers都是緩載入的情況，當被使用時才會真實載入</td>
+</tr>
+<tr>
+<td>User.php</td>
+<td>是一個Eloquent ORM的Model，可以操作預設的users資料表</td>
+</tr>
+</tbody></table>
+<p>這些是預先載入的資料夾，</p>
+<p>其實還有一些資料夾沒有載入，讓我來逐一說明其功能，</p>
+<table>
+<thead>
+<tr>
+<th>資料夾</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Broadcasting</td>
+<td>顧名思義是指廣播系統，也就是跟webSocket有關係，可以讓後端程式發訊息到前端的socket，可以搭配Laravel Echo、Pusher來使用</td>
+</tr>
+<tr>
+<td>Events</td>
+<td>定義事件的地方，可以說是 當…時，通常會配合listener使用</td>
+</tr>
+<tr>
+<td>Listeners</td>
+<td>定義一些邏輯被觸發執行，也就是當event時做…，跟隨著event發生時做某件事情</td>
+</tr>
+<tr>
+<td>Mail</td>
+<td>建置與封裝跟mail有關的程式邏輯</td>
+</tr>
+<tr>
+<td>Notifications</td>
+<td>可以設定當系統觸發什麼事件就發送一個簡單的通知，官方舉例：寄mail、Slack…等</td>
+</tr>
+<tr>
+<td>Policies</td>
+<td>可以寫條件規則，限制使用者的操作，可搭配Gate使用，讓router受到條件限制使用</td>
+</tr>
+<tr>
+<td>Http\Requests(Rules)</td>
+<td>撰寫Form Validation的規則，讓post進來的變數只留下有定義的，也可以透過 http method 增減驗證規則</td>
+</tr>
+</tbody></table>
+<p>以上是官方文件中提到不會預設載入的功能資料夾，</p>
+<p>那～ 應該有人會好奇說… 為什麼沒有提到Models，</p>
+<p>官方的說明是 Model 一詞的定義較分辨不清，</p>
+<p>原因是在於有些人定義為 “業務邏輯” 有些人定義為 “資料庫數據”，</p>
+<p>因此laravel不預設定義Model為何，留給開發人員自行定義，</p>
+<p>而我… 是把它定義成資料庫的那一派，</p>
+<p>我把業務邏輯定義到Service或Helper中。</p>
+<p>再來要說明的是程式的資料夾，</p>
+<p>這部分我大致上看到兩種派別，</p>
+<p>一種是依照 “系統功能” 另一種則是 “程式功能”，</p>
+<p>其實兩者字面上的意思很相近，((我也忘記這兩種分法的正確名稱，這是我自己理解出來的名稱</p>
+<p>以 “會員管理” 這個功能來說會有這些程式</p>
+<ol>
+<li>Member.php (Model)</li>
+<li>MemberController.php (Controller)</li>
+<li>MemberService.php (Service業務邏輯)</li>
+<li>…</li>
+</ol>
+<p>當 “系統功能” 做區分時資料夾結構長這樣</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">app|</span><br><span class="line">   |Http</span><br><span class="line">   |----|Member</span><br><span class="line">   |----|------|Member.php</span><br><span class="line">   |----|------|MemberController.php</span><br><span class="line">   |----|------|MemberService.php</span><br></pre></td></tr></table></figure>
+<p>當 “程式功能” 做區分時資料夾結構長這樣</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">app|</span><br><span class="line">   |Http|</span><br><span class="line">   |----|Controller|</span><br><span class="line">   |----|----------|MemberController.php</span><br><span class="line">   |----|----------|OOXXController.php</span><br><span class="line">   |</span><br><span class="line">   |Models|</span><br><span class="line">   |------|Member.php</span><br><span class="line">   |------|OOXX.php</span><br><span class="line">   |</span><br><span class="line">   |Services|</span><br><span class="line">   |------|MemberService.php</span><br><span class="line">   |------|OOXXService.php</span><br></pre></td></tr></table></figure>
+
+<p>至於哪一種比較好，見仁見智，視專案狀況決定，</p>
+<p>當你的專案功能數目龐大，我覺得採用 “系統功能” 會比較好，</p>
+<p>而專案沒有那麼大的情況下，用 “程式功能” 來做區分就可以了，</p>
+<p>那我呢… 目前是 “程式功能” 這一派的，</p>
+<p>或許當我某天遇到什麼瓶頸時，就會更改我的作法了吧～～</p>
+<p>今天就先說到這裡吧！！ </p>
+<p>下一章就來簡單說明Controller的功能與做個簡單的範例～</p>
+<hr>
+<p>Ref<br><a href="https://laravel.com/docs/6.x/structure#the-rules-directory" target="_blank" rel="noopener">Laravel6.0 - directory</a></p>
+<hr>
+<p>後記</p>
+<p>摁～ 透過去仔細查閱官方文件，才發現到其實還有很多功能沒有運用到，</p>
+<p>很多時候都在Controller或Service做完這些事情，</p>
+<p>但其實laravel早就幫你想好了，</p>
+<p>後續在逐一嘗試一些官方所提供的功能吧！</p>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">標籤</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/laravel/" rel="tag">laravel</a> <a class="tag tag--primary tag--small t-link" href="/tags/w3HexSchool/" rel="tag">w3HexSchool</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2020/04/19/gsheet/"
+                    data-tooltip="Laravel - 讀寫 google sheet"
+                    aria-label="下一篇: Laravel - 讀寫 google sheet"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Diesen Beitrag teilen"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://yeeinhole.github.io/2020/04/25/laravel-1/"
+                    title="分享到 Facebook"
+                    aria-label="分享到 Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://yeeinhole.github.io/2020/04/25/laravel-1/"
+                    title="分享到 Twitter"
+                    aria-label="分享到 Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://yeeinhole.github.io/2020/04/25/laravel-1/"
+                    title="分享到 Google+"
+                    aria-label="分享到 Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Nach oben">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 Yee. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2020/04/19/gsheet/"
+                    data-tooltip="Laravel - 讀寫 google sheet"
+                    aria-label="下一篇: Laravel - 讀寫 google sheet"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Diesen Beitrag teilen"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://yeeinhole.github.io/2020/04/25/laravel-1/"
+                    title="分享到 Facebook"
+                    aria-label="分享到 Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://yeeinhole.github.io/2020/04/25/laravel-1/"
+                    title="分享到 Twitter"
+                    aria-label="分享到 Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://yeeinhole.github.io/2020/04/25/laravel-1/"
+                    title="分享到 Google+"
+                    aria-label="分享到 Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Nach oben">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://yeeinhole.github.io/2020/04/25/laravel-1/"
+                        aria-label="分享到 Facebook"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>分享到 Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://yeeinhole.github.io/2020/04/25/laravel-1/"
+                        aria-label="分享到 Twitter"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>分享到 Twitter</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://yeeinhole.github.io/2020/04/25/laravel-1/"
+                        aria-label="分享到 Google+"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>分享到 Google+</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/yee.jpeg" alt="作者的圖片"/>
+        
+            <h4 id="about-card-name">Yee</h4>
+        
+            <div id="about-card-bio"><p>Hi 我是 Yee，常常不小心就掉進坑中…</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>後端工程師 X 數據分系</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Taiwan
+            </div>
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/mybg.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-8jejpetz5mxyxxmlbiz3r2lqf5sdh34epoqgvwjmadigq9cpmb2rdlngp8ka.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>
