@@ -227,7 +227,7 @@ php artisan migrate:rollback
 // 清空再寫入
 php artisan migrate:fresh
 ```
-匯入完成後打開資料庫就可以看到
+匯入完成後打開資料庫就可以看到資料表結構了！
 ![db1](../../../../image/laravel-2/db1.png "db1")
 
 更詳細的欄位使用方式請看者裡[Laravel-Migrations](https://laravel.com/docs/6.x/migrations)
