@@ -61,7 +61,7 @@ $factory->define(User::class, function (Faker $faker) {
         'name' => $faker->name,
         // 用faker產生一組email
         'email' => $faker->unique()->safeEmail,
-        // 除了用faker，也可以呼叫helper 或者 字串
+        // 除了用faker，也可以呼叫helper、字串、數值...等
         'email_verified_at' => now(),
         'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
         'remember_token' => Str::random(10),
@@ -228,7 +228,7 @@ php artisan migrate:rollback
 php artisan migrate:fresh
 ```
 匯入完成後打開資料庫就可以看到
-![db](../../../../image/laravel-2/db.png "db")
+![db1](../../../../image/laravel-2/db1.png "db1")
 
 更詳細的欄位使用方式請看者裡[Laravel-Migrations](https://laravel.com/docs/6.x/migrations)
 
