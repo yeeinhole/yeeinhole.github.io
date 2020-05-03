@@ -160,8 +160,6 @@ app|
 
 今天就先說到這裡吧！！ 
 
-下一章就來簡單說明Controller的功能與做個簡單的範例～
-
 ***
 Ref
 [Laravel6.0 - directory](https://laravel.com/docs/6.x/structure#the-rules-directory)
