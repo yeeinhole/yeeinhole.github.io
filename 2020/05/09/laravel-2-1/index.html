@@ -6,36 +6,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Yee的補坑筆記">
-    <title>Ngrok - 再也不用擔心開發遇到Webhook - Yee的補坑筆記</title>
+    <title>Laravel之旅 - 生成Migration的懶人包 - Yee的補坑筆記</title>
     <meta name="author" content="Yee">
     
         <meta name="keywords" content="laravel,docker,">
     
     
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg"},"articleBody":"\b\b想必大家在開發成中都會遇到一些Webhook需要https才能測試的情況，\n例如：Line liff的開發，金流串接導向回程式中…等\n\n所以～ 有套工具叫做 Ngrok\n\n本文所採用的環境\b\n\nMax OSX 10.15\nHomebrew 2.2.5\nDocker version 19.03.5\nlaradock\n\n已知設定略同的環境\n\nCentos7\nwin10\n\n\n在 mac 跟 linux中，都可以選擇用brew &amp; apt … 的指令去下載 ngrok，\n我是在mac中使用Homebrew這套工具來幫我管理一些工具，他有點類似apt、yum這樣，\n不過普遍的使用方法就是直接到官網，將Ngrok下載下來，\n進到官網登入個帳號後，就可以下載它，其實在下載頁面，官網也把使用方法寫得很詳細了，\n下載解壓後，用終端機進入到檔案的資料夾中，\n12345# 官方下載的檔案.&#x2F;ngrok http 80# homebrew安裝的ngrok http 80\n看到出現這個畫面就表示已經成功啟動摟～～\n打開瀏覽器試試看，It’ work!!\n不過ngrok有一個缺點就是～ 每次啟動都會有不一樣的domain，\n這樣就變得每次都要去設定apache conf 或 nginx conf，\n所以我們可以設定成這樣，\n12345- apacheServerAlias *.ngrok.io- nginxserver_name  *.ngrok.io;\napache的nginx的之後就可以直接用ngrok給的domain進入到專案中摟！\n\n後記\n有了這項工具後遇到要webhook的情況就不需要找機器或者固定ip…等，\n直接無痛在本機端繼續開發&amp;測試～～\n","dateCreated":"2020-03-08T16:32:06+08:00","dateModified":"2020-03-08T22:01:09+08:00","datePublished":"2020-03-08T16:32:06+08:00","description":"\b\b想必大家在開發成中都會遇到一些Webhook需要https才能測試的情況，\n例如：Line liff的開發，金流串接導向回程式中…等","headline":"Ngrok - 再也不用擔心開發遇到Webhook","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yeeinhole.github.io/2020/03/08/ngrok/"},"publisher":{"@type":"Organization","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg","logo":{"@type":"ImageObject","url":"yee.jpeg"}},"url":"https://yeeinhole.github.io/2020/03/08/ngrok/","keywords":"w3HexSchool, devops, laradock, ngrok"}</script>
-    <meta name="description" content="想必大家在開發成中都會遇到一些Webhook需要https才能測試的情況， 例如：Line liff的開發，金流串接導向回程式中…等">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg"},"articleBody":"在前一週，我們介紹了migration的用法與好處，\n但… \n舊有的專案有好幾十張表，該不會需要一一建立吧…\n\n當然是不用，\n有工具可以將sql檔，\n輸出成laravel的migration檔案，\n需要安裝 mysql workbanch！\n\n本文所採用的環境\b\n\nMax OSX 10.15\nDocker version 19.03.5\nLaradock\nLaravel 6.0 以上 (5.8適用)\nMysql Workbanch 8.0.19\n\n本系列不從部署環境開始說起，\n部署環境可參考以下\n\nLaradock - 更快速優雅的建立Laravel\nInstall Apache, MySQL, PHP on macOS Catalina 10.15\nWin10請服用XAMPP，非專業版的Win裝docker會比較麻煩，不過也可以試試～～\n\n\n本系列文章Laravel之旅 - 認識Laravel資料夾結構Laravel之旅 - 善用Migration管理資料表\n\n還沒安裝的請點這裡～～ Mysql Workbanch\n裝好的我們就開始吧！！！\n先到這個github下載外掛 MySQL Workbench Export Laravel 5 Migrations Plugin\n這個外掛是用py寫的，至於版本作者並未說明，\n下載好了之後，我們打開Mysql Workbanch，\n找到安裝外掛的地方，選擇剛剛下載的py，等他安裝一下，接著會跟你說裝好了，接下來的步驟是因為平常沒有在使用mysql workbanch，\n因此有以下的步驟，如果平常有在使用，則可以跳到輸出的頁面，\n建立一個Model，出現工作區域的介面，並選選擇匯入，選擇sql檔，下一步到匯入完成完成後，就可以在工作區域看到我們所匯入的資料表了，接著我們就可以來匯出轉成migration型態的檔案拉！\n到tools-&gt;catalog-&gt;Export Laravel 5 Migration可以在紅色框框中瀏覽輸出的樣子，不知道是不是mac版的關係，\n選擇輸出資料夾的地方，有夠難點的，可以點底線的右邊比較容易讓視窗打開，\n這裡不選擇資料夾的話，會不知道輸出到哪裡去了，我實在是找不到阿…\n選完資料夾後完成即可，\n到剛剛的資料夾就可以看到輸出的檔案，打開其中一個檔案來看一下，是不是跟我們上週的觀察的user很像啊～～～\n有了這項工具後，可以無痛的建立舊專案的migration摟！！！\n\n後記\n正要做一個新的專案時，老闆將DB規劃好後丟給我，\n開工的我默默地建migration，\n老闆突然問說，這沒工具嗎！？\n我沈默了一下… 我居然… 沒有想到要去google看看…\n接著我就找到這個github了，\n然後就快速的建立migration～～～\n下次記得要先google看看有沒有懶人法或工具啊啊啊…\n","dateCreated":"2020-05-09T21:00:38+08:00","dateModified":"2020-05-09T21:52:10+08:00","datePublished":"2020-05-09T21:00:38+08:00","description":"在前一週，我們介紹了migration的用法與好處，\n但… \n舊有的專案有好幾十張表，該不會需要一一建立吧…","headline":"Laravel之旅 - 生成Migration的懶人包","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yeeinhole.github.io/2020/05/09/laravel-2-1/"},"publisher":{"@type":"Organization","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg","logo":{"@type":"ImageObject","url":"yee.jpeg"}},"url":"https://yeeinhole.github.io/2020/05/09/laravel-2-1/","keywords":"laravel, w3HexSchool"}</script>
+    <meta name="description" content="在前一週，我們介紹了migration的用法與好處， 但…  舊有的專案有好幾十張表，該不會需要一一建立吧…">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="Ngrok - 再也不用擔心開發遇到Webhook">
-<meta property="og:url" content="https://yeeinhole.github.io/2020/03/08/ngrok/index.html">
+<meta property="og:title" content="Laravel之旅 - 生成Migration的懶人包">
+<meta property="og:url" content="https://yeeinhole.github.io/2020/05/09/laravel-2-1/index.html">
 <meta property="og:site_name" content="Yee的補坑筆記">
-<meta property="og:description" content="想必大家在開發成中都會遇到一些Webhook需要https才能測試的情況， 例如：Line liff的開發，金流串接導向回程式中…等">
+<meta property="og:description" content="在前一週，我們介紹了migration的用法與好處， 但…  舊有的專案有好幾十張表，該不會需要一一建立吧…">
 <meta property="og:locale" content="zh_TW">
-<meta property="og:image" content="https://yeeinhole.github.io/image/ngrok/ngrok.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/ngrok/ngrok2.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/ngrok/ngrok_success.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/ngrok/apache_conf.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/ngrok/nginx_conf.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/ngrok/browser.png">
-<meta property="article:published_time" content="2020-03-08T08:32:06.000Z">
-<meta property="article:modified_time" content="2020-03-08T14:01:09.906Z">
+<meta property="og:image" content="https://yeeinhole.github.io/image/laravel-2-1/w1.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/laravel-2-1/w2.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/laravel-2-1/w3.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/laravel-2-1/w4.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/laravel-2-1/w5.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/laravel-2-1/w6.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/laravel-2-1/w7.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/laravel-2-1/w8.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/laravel-2-1/w9.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/laravel-2-1/w10.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/laravel-2-1/w11.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/laravel-2-1/m1.png">
+<meta property="og:image" content="https://yeeinhole.github.io/image/laravel-2-1/m2.png">
+<meta property="article:published_time" content="2020-05-09T13:00:38.000Z">
+<meta property="article:modified_time" content="2020-05-09T13:52:10.627Z">
 <meta property="article:author" content="Yee">
+<meta property="article:tag" content="laravel">
 <meta property="article:tag" content="w3HexSchool">
-<meta property="article:tag" content="devops">
-<meta property="article:tag" content="laradock">
-<meta property="article:tag" content="ngrok">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://yeeinhole.github.io/image/ngrok/ngrok.png">
+<meta name="twitter:image" content="https://yeeinhole.github.io/image/laravel-2-1/w1.png">
     
     
         
@@ -231,20 +236,20 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title">
-            Ngrok - 再也不用擔心開發遇到Webhook
+            Laravel之旅 - 生成Migration的懶人包
         </h1>
     
     
         <div class="post-meta">
-    <time datetime="2020-03-08T16:32:06+08:00">
+    <time datetime="2020-05-09T21:00:38+08:00">
 	
-		    3月 08, 2020
+		    5月 09, 2020
     	
     </time>
     
         <span>分類 </span>
         
-    <a class="category-link" href="/categories/devops/">devops</a>
+    <a class="category-link" href="/categories/Laravel/">Laravel</a>
 
 
     
@@ -256,41 +261,56 @@
     
     <div class="post-content markdown">
         <div class="main-content-wrap">
-            <p>想必大家在開發成中都會遇到一些Webhook需要https才能測試的情況，</p>
-<p>例如：Line liff的開發，金流串接導向回程式中…等</p>
+            <p>在前一週，我們介紹了migration的用法與好處，</p>
+<p>但… </p>
+<p>舊有的專案有好幾十張表，該不會需要一一建立吧…</p>
 <a id="more"></a>
-<p>所以～ 有套工具叫做 <a href="https://ngrok.com/" target="_blank" rel="noopener">Ngrok</a></p>
+<p>當然是不用，</p>
+<p>有工具可以將sql檔，</p>
+<p>輸出成laravel的migration檔案，</p>
+<p>需要安裝 mysql workbanch！</p>
 <hr>
 <p>本文所採用的環境<br></p>
 <ol>
 <li>Max OSX 10.15</li>
-<li>Homebrew 2.2.5</li>
 <li>Docker version 19.03.5</li>
-<li>laradock</li>
+<li>Laradock</li>
+<li>Laravel 6.0 以上 (5.8適用)</li>
+<li>Mysql Workbanch 8.0.19</li>
 </ol>
-<p>已知設定略同的環境</p>
+<p>本系列不從部署環境開始說起，</p>
+<p>部署環境可參考以下</p>
 <ol>
-<li>Centos7</li>
-<li>win10</li>
+<li><a href="https://yeeinhole.github.io/2020/01/27/laradock/">Laradock - 更快速優雅的建立Laravel</a></li>
+<li><a href="https://coolestguidesontheplanet.com/install-apache-mysql-php-on-macos-catalina-10-15/" target="_blank" rel="noopener">Install Apache, MySQL, PHP on macOS Catalina 10.15</a></li>
+<li>Win10請服用XAMPP，非專業版的Win裝docker會比較麻煩，不過也可以試試～～</li>
 </ol>
 <hr>
-<p>在 mac 跟 linux中，都可以選擇用brew &amp; apt … 的指令去下載 ngrok，</p>
-<p>我是在mac中使用Homebrew這套工具來幫我管理一些工具，他有點類似apt、yum這樣，</p>
-<p>不過普遍的使用方法就是直接到官網，將<a href="https://ngrok.com/" target="_blank" rel="noopener">Ngrok</a>下載下來，</p>
-<p>進到官網登入個帳號後，就可以下載它，<br><img src="../../../../image/ngrok/ngrok.png" alt="ngrok" title="ngrok"><br>其實在下載頁面，官網也把使用方法寫得很詳細了，</p>
-<p>下載解壓後，用終端機進入到檔案的資料夾中，</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 官方下載的檔案</span><br><span class="line">.&#x2F;ngrok http 80</span><br><span class="line"></span><br><span class="line"># homebrew安裝的</span><br><span class="line">ngrok http 80</span><br></pre></td></tr></table></figure>
-<p><img src="../../../../image/ngrok/ngrok2.png" alt="ngrok2" title="ngrok2"><br>看到出現這個畫面就表示已經成功啟動摟～～</p>
-<p>打開瀏覽器試試看，<br><img src="../../../../image/ngrok/ngrok_success.png" alt="ngrok_success" title="ngrok_success"><br>It’ work!!</p>
-<p>不過ngrok有一個缺點就是～ 每次啟動都會有不一樣的domain，</p>
-<p>這樣就變得每次都要去設定apache conf 或 nginx conf，</p>
-<p>所以我們可以設定成這樣，</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">- apache</span><br><span class="line">ServerAlias *.ngrok.io</span><br><span class="line"></span><br><span class="line">- nginx</span><br><span class="line">server_name  *.ngrok.io;</span><br></pre></td></tr></table></figure>
-<p>apache的<br><img src="../../../../image/ngrok/apache_conf.png" alt="apache_conf" title="apache_conf"><br>nginx的<br><img src="../../../../image/ngrok/nginx_conf.png" alt="nginx_conf" title="nginx_conf"><br>之後就可以直接用ngrok給的domain進入到專案中摟！<br><img src="../../../../image/ngrok/browser.png" alt="browser" title="browser"></p>
+<p>本系列文章<br><a href="https://yeeinhole.github.io/2020/04/25/laravel-1/">Laravel之旅 - 認識Laravel資料夾結構</a><br><a href="https://yeeinhole.github.io/2020/04/25/laravel-2/">Laravel之旅 - 善用Migration管理資料表</a></p>
+<hr>
+<p>還沒安裝的請點這裡～～ <a href="https://www.mysql.com/products/workbench/" target="_blank" rel="noopener">Mysql Workbanch</a></p>
+<p>裝好的我們就開始吧！！！</p>
+<p>先到這個github下載外掛 <a href="https://github.com/beckenrode/mysql-workbench-export-laravel-5-migrations" target="_blank" rel="noopener">MySQL Workbench Export Laravel 5 Migrations Plugin</a></p>
+<p>這個外掛是用py寫的，至於版本作者並未說明，</p>
+<p>下載好了之後，我們打開Mysql Workbanch，</p>
+<p>找到安裝外掛的地方，<br><img src="../../../../image/laravel-2-1/w1.png" alt="mysql workbanch1" title="mysql workbanch1"><br>選擇剛剛下載的py，<br><img src="../../../../image/laravel-2-1/w2.png" alt="mysql workbanch2" title="mysql workbanch2"><br>等他安裝一下，接著會跟你說裝好了，<br><img src="../../../../image/laravel-2-1/w3.png" alt="mysql workbanch3" title="mysql workbanch3"><br>接下來的步驟是因為平常沒有在使用mysql workbanch，</p>
+<p>因此有以下的步驟，如果平常有在使用，則可以跳到輸出的頁面，</p>
+<p>建立一個Model，<br><img src="../../../../image/laravel-2-1/w4.png" alt="mysql workbanch4" title="mysql workbanch4"><br>出現工作區域的介面，並選選擇匯入，<br><img src="../../../../image/laravel-2-1/w5.png" alt="mysql workbanch5" title="mysql workbanch5"><br>選擇sql檔，下一步到匯入完成<br><img src="../../../../image/laravel-2-1/w6.png" alt="mysql workbanch6" title="mysql workbanch6"><br><img src="../../../../image/laravel-2-1/w7.png" alt="mysql workbanch7" title="mysql workbanch7"><br><img src="../../../../image/laravel-2-1/w8.png" alt="mysql workbanch8" title="mysql workbanch8"><br>完成後，就可以在工作區域看到我們所匯入的資料表了，<br><img src="../../../../image/laravel-2-1/w9.png" alt="mysql workbanch9" title="mysql workbanch9"><br>接著我們就可以來匯出轉成migration型態的檔案拉！</p>
+<p>到tools-&gt;catalog-&gt;Export Laravel 5 Migration<br><img src="../../../../image/laravel-2-1/w10.png" alt="mysql workbanch10" title="mysql workbanch10"><br>可以在紅色框框中瀏覽輸出的樣子，<br><img src="../../../../image/laravel-2-1/w11.png" alt="mysql workbanch11" title="mysql workbanch11"><br>不知道是不是mac版的關係，</p>
+<p>選擇輸出資料夾的地方，有夠難點的，可以點底線的右邊比較容易讓視窗打開，</p>
+<p>這裡不選擇資料夾的話，會不知道輸出到哪裡去了，我實在是找不到阿…</p>
+<p>選完資料夾後完成即可，</p>
+<p>到剛剛的資料夾就可以看到輸出的檔案，<br><img src="../../../../image/laravel-2-1/m1.png" alt="migration1" title="migration1"><br>打開其中一個檔案來看一下，<br><img src="../../../../image/laravel-2-1/m2.png" alt="migration2" title="migration2"><br>是不是跟我們上週的觀察的user很像啊～～～</p>
+<p>有了這項工具後，可以無痛的建立舊專案的migration摟！！！</p>
 <hr>
 <p>後記</p>
-<p>有了這項工具後遇到要webhook的情況就不需要找機器或者固定ip…等，</p>
-<p>直接無痛在本機端繼續開發&amp;測試～～</p>
+<p>正要做一個新的專案時，老闆將DB規劃好後丟給我，</p>
+<p>開工的我默默地建migration，</p>
+<p>老闆突然問說，這沒工具嗎！？</p>
+<p>我沈默了一下… 我居然… 沒有想到要去google看看…</p>
+<p>接著我就找到這個github了，</p>
+<p>然後就快速的建立migration～～～</p>
+<p>下次記得要先google看看有沒有懶人法或工具啊啊啊…</p>
 
             
 
@@ -302,7 +322,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">標籤</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/devops/" rel="tag">devops</a> <a class="tag tag--primary tag--small t-link" href="/tags/laradock/" rel="tag">laradock</a> <a class="tag tag--primary tag--small t-link" href="/tags/ngrok/" rel="tag">ngrok</a> <a class="tag tag--primary tag--small t-link" href="/tags/w3HexSchool/" rel="tag">w3HexSchool</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/laravel/" rel="tag">laravel</a> <a class="tag tag--primary tag--small t-link" href="/tags/w3HexSchool/" rel="tag">w3HexSchool</a>
 
             </div>
         
@@ -312,14 +332,11 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                <a
-                    class="post-action-btn btn btn--default tooltip--top"
-                    href="/2020/03/14/heroku-python/"
-                    data-tooltip="Heroku - 快速部署python"
-                    aria-label="上一篇: Heroku - 快速部署python"
-                >
-                    
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
                     </a>
@@ -329,9 +346,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2020/02/27/trello-notify2/"
-                    data-tooltip="Trello X Line - 再也不會忘記寫文章"
-                    aria-label="下一篇: Trello X Line - 再也不會忘記寫文章"
+                    href="/2020/04/25/laravel-1/"
+                    data-tooltip="Laravel之旅 - 認識Laravel資料夾結構"
+                    aria-label="下一篇: Laravel之旅 - 認識Laravel資料夾結構"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
@@ -356,7 +373,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://yeeinhole.github.io/2020/03/08/ngrok/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://yeeinhole.github.io/2020/05/09/laravel-2-1/"
                     title="分享到 Facebook"
                     aria-label="分享到 Facebook"
                 >
@@ -369,7 +386,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://yeeinhole.github.io/2020/03/08/ngrok/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://yeeinhole.github.io/2020/05/09/laravel-2-1/"
                     title="分享到 Twitter"
                     aria-label="分享到 Twitter"
                 >
@@ -382,7 +399,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://yeeinhole.github.io/2020/03/08/ngrok/"
+                    target="new" href="https://plus.google.com/share?url=https://yeeinhole.github.io/2020/05/09/laravel-2-1/"
                     title="分享到 Google+"
                     aria-label="分享到 Google+"
                 >
@@ -427,14 +444,11 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                <a
-                    class="post-action-btn btn btn--default tooltip--top"
-                    href="/2020/03/14/heroku-python/"
-                    data-tooltip="Heroku - 快速部署python"
-                    aria-label="上一篇: Heroku - 快速部署python"
-                >
-                    
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
                     </a>
@@ -444,9 +458,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2020/02/27/trello-notify2/"
-                    data-tooltip="Trello X Line - 再也不會忘記寫文章"
-                    aria-label="下一篇: Trello X Line - 再也不會忘記寫文章"
+                    href="/2020/04/25/laravel-1/"
+                    data-tooltip="Laravel之旅 - 認識Laravel資料夾結構"
+                    aria-label="下一篇: Laravel之旅 - 認識Laravel資料夾結構"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
@@ -471,7 +485,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://yeeinhole.github.io/2020/03/08/ngrok/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://yeeinhole.github.io/2020/05/09/laravel-2-1/"
                     title="分享到 Facebook"
                     aria-label="分享到 Facebook"
                 >
@@ -484,7 +498,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://yeeinhole.github.io/2020/03/08/ngrok/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://yeeinhole.github.io/2020/05/09/laravel-2-1/"
                     title="分享到 Twitter"
                     aria-label="分享到 Twitter"
                 >
@@ -497,7 +511,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://yeeinhole.github.io/2020/03/08/ngrok/"
+                    target="new" href="https://plus.google.com/share?url=https://yeeinhole.github.io/2020/05/09/laravel-2-1/"
                     title="分享到 Google+"
                     aria-label="分享到 Google+"
                 >
@@ -531,7 +545,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://www.facebook.com/sharer/sharer.php?u=https://yeeinhole.github.io/2020/03/08/ngrok/"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://yeeinhole.github.io/2020/05/09/laravel-2-1/"
                         aria-label="分享到 Facebook"
                     >
                         <i class="fab fa-facebook" aria-hidden="true"></i><span>分享到 Facebook</span>
@@ -544,7 +558,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://twitter.com/intent/tweet?text=https://yeeinhole.github.io/2020/03/08/ngrok/"
+                        href="https://twitter.com/intent/tweet?text=https://yeeinhole.github.io/2020/05/09/laravel-2-1/"
                         aria-label="分享到 Twitter"
                     >
                         <i class="fab fa-twitter" aria-hidden="true"></i><span>分享到 Twitter</span>
@@ -557,7 +571,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://plus.google.com/share?url=https://yeeinhole.github.io/2020/03/08/ngrok/"
+                        href="https://plus.google.com/share?url=https://yeeinhole.github.io/2020/05/09/laravel-2-1/"
                         aria-label="分享到 Google+"
                     >
                         <i class="fab fa-google-plus" aria-hidden="true"></i><span>分享到 Google+</span>
