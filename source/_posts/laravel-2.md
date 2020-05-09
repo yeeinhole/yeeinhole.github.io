@@ -34,7 +34,10 @@ comments: true
 2. [Install Apache, MySQL, PHP on macOS Catalina 10.15](https://coolestguidesontheplanet.com/install-apache-mysql-php-on-macos-catalina-10-15/)
 3. Win10請服用XAMPP，非專業版的Win裝docker會比較麻煩，不過也可以試試～～
 ***
+本系列文章
+[Laravel之旅 - 認識Laravel資料夾結構](https://yeeinhole.github.io/2020/04/25/laravel-1/)
 
+***
 Database這個資料夾中，
 
 預設會有三個資料夾，分別為 factories、migrations、seeds，
