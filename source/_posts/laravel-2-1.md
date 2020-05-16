@@ -94,6 +94,8 @@ comments: true
 ![migration2](../../../../image/laravel-2-1/m2.png "migration2")
 是不是跟我們上週的觀察的user很像啊～～～
 
+左邊是這次輸出的檔案，他的sql來自右邊的migration匯入，
+
 有了這項工具後，可以無痛的建立舊專案的migration摟！！！
 
 ***
