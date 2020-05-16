@@ -173,7 +173,11 @@ DB::table('users')->truncate();
 
 {% endcodeblock %}
 
-### 進階 DB lock
+以上是DB Query builder 的基本用法 ～～
+
+### 進階篇
+
+### DB lock
 有時候操作DB時，不允許其他query線程一起撈取或操作同一筆資料，
 
 這時候我們會使用table lock，
@@ -237,9 +241,8 @@ DB::rollBack();
 DB::commit();
 {% endcodeblock %}
 
-以上是DB Query builder 的基本用法 ～～
 
-更多方法可以到這裡
+更多方法可以到這裡看看
 1. [Laravel-Database: Getting Started](https://laravel.com/docs/6.x/database)
 2. [Laravel-Database: Query Builder](https://laravel.com/docs/6.x/queries)
 
