@@ -239,9 +239,11 @@ DB::commit();
 
 以上是DB Query builder 的基本用法 ～～
 
-更多方法可以到請看者裡
+更多方法可以到這裡
 1. [Laravel-Database: Getting Started](https://laravel.com/docs/6.x/database)
 2. [Laravel-Database: Query Builder](https://laravel.com/docs/6.x/queries)
+
+下一篇再來說聊Eloquent ORM
 
 ***
 後記
