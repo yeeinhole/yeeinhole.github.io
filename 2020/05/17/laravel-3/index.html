@@ -1,0 +1,661 @@
+
+<!DOCTYPE html>
+<html lang="zh-tw">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Yee的補坑筆記">
+    <title>Laravel之旅 - DB的操作(1) DB Query builder - Yee的補坑筆記</title>
+    <meta name="author" content="Yee">
+    
+        <meta name="keywords" content="laravel,docker,">
+    
+    
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg"},"articleBody":"資料庫建完了之後～ \n我們來聊聊Laravel兩種操作DB的方式～～～\n\n\n\n\n本文所採用的環境\b\n\nMax OSX 10.15\nDocker version 19.03.5\nLaradock\nLaravel 6.0 以上 (5.8適用)\nMysql Workbanch 8.0.19\n\n本系列不從部署環境開始說起，\n部署環境可參考以下\n\nLaradock - 更快速優雅的建立Laravel\nInstall Apache, MySQL, PHP on macOS Catalina 10.15\nWin10請服用XAMPP，非專業版的Win裝docker會比較麻煩，不過也可以試試～～\n\n\n本系列文章Laravel之旅 - 認識Laravel資料夾結構Laravel之旅 - 善用Migration管理資料表Laravel之旅 - 生成Migration的懶人包\n\n在Laravel中有兩種操作DB的方法，\n\nDB Query builder\nEloquent ORM\n\n先來淺談一下兩者|     |  DB Query builder  | Eloquent ORM  ||  —-  | —-  | —-  ||  使用方式  | DB::table()…語法  | 需建立與維護Model ||  回傳型態  | array  | Collection ||  方便程度  | 普通 | 很方便 ||  彈性  | 很彈性 | 普通 ||  維護  | 若沒有寫class，就需要到處維護 | 只需維護Model ||  易用程度  | 普通 | 較易用 |以上是我兩者使用過後的小心得，不一定是都是對的，\n因為遇到的情況有些差異，所以有一些不一樣的感受，\n但兩者都會自己轉為sql語法進行操作，\n看完這個簡單的差異之後，讓我們來看看各自的用法吧！\nDB Query builderDB Query builder的語法看起來很直覺，\n只要會寫sql就可以很快速地上手它，\n來看看CRUD的基礎用法吧\nSelect的用法1234567891011121314151617// 撈取users table裡所有的資料DB::table('users')-&gt;get();// 撈取第一筆資料DB::table('users')-&gt;first();// 加上where條件，預設使用 \"=\" 做queryDB::table('users')-&gt;where('id', 1')-&gt;first();// 進階where條件DB::table('users')-&gt;where('name', 'like', '%Y')-&gt;first();// 多條件的where$query = [['name', 'like', '%Y'], ['status', '=', '1']];DB::table('users')-&gt;where($query)-&gt;first();\n\n非常的直覺，我個人很喜歡使用多條件的where方法，\n既使今天只有一個where條件也可以使用，\n12$query = [['name', 'like', '%Y'],];DB::table('users')-&gt;where($query)-&gt;first();\n這樣的用法，可以很靈活的用where去撈取資料，\n當我要加條件時，只要像這樣\n123array_push($query, ['status', '=', '1']);// 此時 $query 長這樣 [['name', 'like', '%Y'], ['status', '=', '1']];DB::table('users')-&gt;where($query)-&gt;first();\n\nInsert的用法12345678910111213141516171819// 新增一筆資料DB::table('users')-&gt;insert(    ['name' =&gt; 'Yee', 'email' =&gt; 'Yee@mail.com', 'password' =&gt; 'YEEEEEE']);// 新增多筆資料DB::table('users')-&gt;insert([    ['name' =&gt; 'Yee', 'email' =&gt; 'Yee@mail.com', 'password' =&gt; 'YEEEEEE'],    ['name' =&gt; 'Yee2', 'email' =&gt; 'Yee2@mail.com', 'password' =&gt; 'YEEEEEE'],    ...,]);// 也可以這樣$data = [    ['name' =&gt; 'Yee', 'email' =&gt; 'Yee@mail.com', 'password' =&gt; 'YEEEEEE'],    ['name' =&gt; 'Yee2', 'email' =&gt; 'Yee2@mail.com', 'password' =&gt; 'YEEEEEE'],    ...,]DB::table('users')-&gt;insert($data)\ninsert也非常的簡單，沒有很複雜\nUpdate的用法123456789101112131415161718192021222324252627282930// 基本的updateDB::table('users')-&gt;where('id', 1)-&gt;update(['status' =&gt; 1]);// 修改或者新增DB::table('users')    -&gt;updateOrInsert(        // 有沒有 john@example.com 跟 John        ['email' =&gt; 'Yee@mail.com', 'name' =&gt; 'Yee'],        // 有就將狀態改為2        ['status' =&gt; '2']        // 若沒有的話，就會新增一筆資料    )// 也可以修改json欄位裡的資料// MySQL 5.7+ 以上才支援！！！DB::table('users')    -&gt;where('id', 1)    -&gt;update(['options-&gt;enabled' =&gt; true]);// 當需要對欄位加減1,2,3...時// 增DB::table('users')-&gt;increment('age');DB::table('users')-&gt;increment('age', 2);// 減DB::table('users')-&gt;decrement('age');DB::table('users')-&gt;decrement('age', 2);// 以上用法跟以下相同DB::table('users')    -&gt;update(['age' =&gt; 1]);\n\nupdate的部分也提供蠻簡單的方法去使用，\nDelete的用法123456// 刪除某一些資料DB::table('users')-&gt;where('status', '=', 2)-&gt;delete();// 清空資料庫 (會reset id index)DB::table('users')-&gt;truncate();\n\n進階 DB lock有時候操作DB時，不允許其他query線程一起撈取或操作同一筆資料，\n這時候我們會使用table lock，\nlaravel提供了兩種lock方法\n123456// 操作時，允許其他線程撈取資料，但不能修改DB::table('users')-&gt;where('status', '=', 2)-&gt;sharedLock()-&gt;get();// 操作時，不允許其他線程撈取與修改DB::table('users')-&gt;where('status', '=', 2)-&gt;lockForUpdate()-&gt;get();\n通常lock我比較常用在update的情況，\n例如：訂購商品時，庫存進行減1，\n這個情況就得用lockForUpdate，因為更新庫存時不能給其他線程撈，\n避免庫存剩下1時，大家都撈到庫存=1，後續操作可能會發生問題…等，\n用lockForUpdate後，晚到的線程會等前面更新結束且unlock後才能撈得到資料\nDB Transaction這也是一個很重要的操作，\n當一個function要操作兩張資料表以上時，有可能會遇到某一張表操作失敗，\n這時候若沒使用transaction，第一張表操作的結果會保留，\n這樣有可能會造成資料重複…等問題，\n因此可以加上transaction機制，確保每一張表的操作都成功才保存\n1234567891011121314// 基本的transactionDB::transaction(function () &#123;    DB::table('users')-&gt;where($query)-&gt;first();    DB::table('users')-&gt;where('id', 1)-&gt;update(['status' =&gt; 1]);    DB::table('posts')-&gt;where('id', 1)-&gt;update(['status' =&gt; 1]);&#125;);// 失敗後重試3次，都失敗時則拋出Exception$n = 3;DB::transaction(function () &#123;    DB::table('users')-&gt;where($query)-&gt;first();    DB::table('users')-&gt;where('id', 1)-&gt;update(['status' =&gt; 1]);    DB::table('posts')-&gt;where('id', 1)-&gt;update(['status' =&gt; 1]);&#125;, $n);\n用以上的方法可以不用再加上 DB::commit()，執行成功時完會自動 commit，\n我們也可以手動控制transaction的起始，\n12345678// 開始transactioDB::beginTransaction();// 發生錯誤時取消所有操作DB::rollBack();// 結束 DB::commit();\n\n以上是DB Query builder 的基本用法 ～～\n更多方法可以到請看者裡\n\nLaravel-Database: Getting Started\nLaravel-Database: Query Builder\n\n\n後記\n在介紹DB Query builder 的用法時，\n去仔細閱讀了一下官方的文件，忽然發現 increment 和 decrement，\n老實說… 先前都沒注意到這個用法，\n默默地回去改訂單的query寫法 XDD\n官方文件真的藏了好多寶，讓大家可以優雅得開發。\n","dateCreated":"2020-05-17T01:05:42+08:00","dateModified":"2020-05-17T02:51:00+08:00","datePublished":"2020-05-17T01:05:42+08:00","description":"資料庫建完了之後～ \n我們來聊聊Laravel兩種操作DB的方式～～～","headline":"Laravel之旅 - DB的操作(1) DB Query builder","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yeeinhole.github.io/2020/05/17/laravel-3/"},"publisher":{"@type":"Organization","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg","logo":{"@type":"ImageObject","url":"yee.jpeg"}},"url":"https://yeeinhole.github.io/2020/05/17/laravel-3/","keywords":"laravel, w3HexSchool"}</script>
+    <meta name="description" content="資料庫建完了之後～  我們來聊聊Laravel兩種操作DB的方式～～～">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Laravel之旅 - DB的操作(1) DB Query builder">
+<meta property="og:url" content="https://yeeinhole.github.io/2020/05/17/laravel-3/index.html">
+<meta property="og:site_name" content="Yee的補坑筆記">
+<meta property="og:description" content="資料庫建完了之後～  我們來聊聊Laravel兩種操作DB的方式～～～">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2020-05-16T17:05:42.000Z">
+<meta property="article:modified_time" content="2020-05-16T18:51:00.193Z">
+<meta property="article:author" content="Yee">
+<meta property="article:tag" content="laravel">
+<meta property="article:tag" content="w3HexSchool">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="https://yeeinhole.github.io/assets/images/yee.jpeg"/>
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-2lqfypdcngq7rgk11flmhgs30biseha2s4rv2frat5edalqervoqqqtncnuh.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            Yee的補坑筆記
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="打開鏈接: /#about"
+            >
+        
+        
+            <img class="header-picture" src="/assets/images/yee.jpeg" alt="作者的圖片"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a
+                    href="/#about"
+                    aria-label="閱讀有關作者的更多信息"
+                >
+                    <img class="sidebar-profile-picture" src="/assets/images/yee.jpeg" alt="作者的圖片"/>
+                </a>
+                <h4 class="sidebar-profile-name">Yee</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>Hi 我是 Yee，常常不小心就掉進坑中…</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="https://yeeinhole.github.io/"
+                            title="首頁"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">首頁</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-categories"
+                            
+                            title="分類"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">分類</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-tags"
+                            
+                            title="標籤"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">標籤</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-archives"
+                            
+                            title="所有文章"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">所有文章</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/friend"
+                            
+                            title="友情連結"
+                        >
+                    
+                        <i class="sidebar-button-icon fas fa-link" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">友情連結</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#about"
+                            
+                            title="關於"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">關於</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="mailto:amung966w@gmail.com" target="_blank" rel="noopener" title="Email">
+                    
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Email</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            Laravel之旅 - DB的操作(1) DB Query builder
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2020-05-17T01:05:42+08:00">
+	
+		    5月 17, 2020
+    	
+    </time>
+    
+        <span>分類 </span>
+        
+    <a class="category-link" href="/categories/Laravel/">Laravel</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <p>資料庫建完了之後～ </p>
+<p>我們來聊聊Laravel兩種操作DB的方式～～～</p>
+<a id="more"></a>
+
+
+<hr>
+<p>本文所採用的環境<br></p>
+<ol>
+<li>Max OSX 10.15</li>
+<li>Docker version 19.03.5</li>
+<li>Laradock</li>
+<li>Laravel 6.0 以上 (5.8適用)</li>
+<li>Mysql Workbanch 8.0.19</li>
+</ol>
+<p>本系列不從部署環境開始說起，</p>
+<p>部署環境可參考以下</p>
+<ol>
+<li><a href="https://yeeinhole.github.io/2020/01/27/laradock/">Laradock - 更快速優雅的建立Laravel</a></li>
+<li><a href="https://coolestguidesontheplanet.com/install-apache-mysql-php-on-macos-catalina-10-15/" target="_blank" rel="noopener">Install Apache, MySQL, PHP on macOS Catalina 10.15</a></li>
+<li>Win10請服用XAMPP，非專業版的Win裝docker會比較麻煩，不過也可以試試～～</li>
+</ol>
+<hr>
+<p>本系列文章<br><a href="https://yeeinhole.github.io/2020/04/25/laravel-1/">Laravel之旅 - 認識Laravel資料夾結構</a><br><a href="https://yeeinhole.github.io/2020/04/25/laravel-2/">Laravel之旅 - 善用Migration管理資料表</a><br><a href="https://yeeinhole.github.io/2020/04/25/laravel-2-2/">Laravel之旅 - 生成Migration的懶人包</a></p>
+<hr>
+<p>在Laravel中有兩種操作DB的方法，</p>
+<ol>
+<li>DB Query builder</li>
+<li>Eloquent ORM</li>
+</ol>
+<p>先來淺談一下兩者<br>|     |  DB Query builder  | Eloquent ORM  |<br>|  —-  | —-  | —-  |<br>|  使用方式  | DB::table()…語法  | 需建立與維護Model |<br>|  回傳型態  | array  | Collection |<br>|  方便程度  | 普通 | 很方便 |<br>|  彈性  | 很彈性 | 普通 |<br>|  維護  | 若沒有寫class，就需要到處維護 | 只需維護Model |<br>|  易用程度  | 普通 | 較易用 |<br>以上是我兩者使用過後的小心得，不一定是都是對的，</p>
+<p>因為遇到的情況有些差異，所以有一些不一樣的感受，</p>
+<p>但兩者都會自己轉為sql語法進行操作，</p>
+<p>看完這個簡單的差異之後，讓我們來看看各自的用法吧！</p>
+<h2 id="DB-Query-builder"><a href="#DB-Query-builder" class="headerlink" title="DB Query builder"></a>DB Query builder</h2><p>DB Query builder的語法看起來很直覺，</p>
+<p>只要會寫sql就可以很快速地上手它，</p>
+<p>來看看CRUD的基礎用法吧</p>
+<h3 id="Select的用法"><a href="#Select的用法" class="headerlink" title="Select的用法"></a>Select的用法</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 撈取users table裡所有的資料</span></span><br><span class="line">DB::table(<span class="string">'users'</span>)-&gt;get();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 撈取第一筆資料</span></span><br><span class="line">DB::table(<span class="string">'users'</span>)-&gt;first();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 加上where條件，預設使用 "=" 做query</span></span><br><span class="line">DB::table(<span class="string">'users'</span>)-&gt;where(<span class="string">'id'</span>, <span class="number">1</span><span class="string">')-&gt;first();</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">// 進階where條件</span></span><br><span class="line"><span class="string">DB::table('</span>users<span class="string">')-&gt;where('</span>name<span class="string">', '</span>like<span class="string">', '</span>%Y<span class="string">')-&gt;first();</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">// 多條件的where</span></span><br><span class="line"><span class="string">$query = [['</span>name<span class="string">', '</span>like<span class="string">', '</span>%Y<span class="string">'], ['</span>status<span class="string">', '</span>=<span class="string">', '</span><span class="number">1</span><span class="string">']];</span></span><br><span class="line"><span class="string">DB::table('</span>users<span class="string">')-&gt;where($query)-&gt;first();</span></span><br><span class="line"><span class="string"></span></span><br></pre></td></tr></table></figure>
+
+<p>非常的直覺，我個人很喜歡使用多條件的where方法，</p>
+<p>既使今天只有一個where條件也可以使用，</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$query = [[<span class="string">'name'</span>, <span class="string">'like'</span>, <span class="string">'%Y'</span>],];</span><br><span class="line">DB::table(<span class="string">'users'</span>)-&gt;where($query)-&gt;first();</span><br></pre></td></tr></table></figure>
+<p>這樣的用法，可以很靈活的用where去撈取資料，</p>
+<p>當我要加條件時，只要像這樣</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">array_push($query, [<span class="string">'status'</span>, <span class="string">'='</span>, <span class="string">'1'</span>]);</span><br><span class="line"><span class="comment">// 此時 $query 長這樣 [['name', 'like', '%Y'], ['status', '=', '1']];</span></span><br><span class="line">DB::table(<span class="string">'users'</span>)-&gt;where($query)-&gt;first();</span><br></pre></td></tr></table></figure>
+
+<h3 id="Insert的用法"><a href="#Insert的用法" class="headerlink" title="Insert的用法"></a>Insert的用法</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 新增一筆資料</span></span><br><span class="line">DB::table(<span class="string">'users'</span>)-&gt;insert(</span><br><span class="line">    [<span class="string">'name'</span> =&gt; <span class="string">'Yee'</span>, <span class="string">'email'</span> =&gt; <span class="string">'Yee@mail.com'</span>, <span class="string">'password'</span> =&gt; <span class="string">'YEEEEEE'</span>]</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 新增多筆資料</span></span><br><span class="line">DB::table(<span class="string">'users'</span>)-&gt;insert([</span><br><span class="line">    [<span class="string">'name'</span> =&gt; <span class="string">'Yee'</span>, <span class="string">'email'</span> =&gt; <span class="string">'Yee@mail.com'</span>, <span class="string">'password'</span> =&gt; <span class="string">'YEEEEEE'</span>],</span><br><span class="line">    [<span class="string">'name'</span> =&gt; <span class="string">'Yee2'</span>, <span class="string">'email'</span> =&gt; <span class="string">'Yee2@mail.com'</span>, <span class="string">'password'</span> =&gt; <span class="string">'YEEEEEE'</span>],</span><br><span class="line">    ...,</span><br><span class="line">]);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 也可以這樣</span></span><br><span class="line">$data = [</span><br><span class="line">    [<span class="string">'name'</span> =&gt; <span class="string">'Yee'</span>, <span class="string">'email'</span> =&gt; <span class="string">'Yee@mail.com'</span>, <span class="string">'password'</span> =&gt; <span class="string">'YEEEEEE'</span>],</span><br><span class="line">    [<span class="string">'name'</span> =&gt; <span class="string">'Yee2'</span>, <span class="string">'email'</span> =&gt; <span class="string">'Yee2@mail.com'</span>, <span class="string">'password'</span> =&gt; <span class="string">'YEEEEEE'</span>],</span><br><span class="line">    ...,</span><br><span class="line">]</span><br><span class="line">DB::table(<span class="string">'users'</span>)-&gt;insert($data)</span><br></pre></td></tr></table></figure>
+<p>insert也非常的簡單，沒有很複雜</p>
+<h3 id="Update的用法"><a href="#Update的用法" class="headerlink" title="Update的用法"></a>Update的用法</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 基本的update</span></span><br><span class="line">DB::table(<span class="string">'users'</span>)-&gt;where(<span class="string">'id'</span>, <span class="number">1</span>)-&gt;update([<span class="string">'status'</span> =&gt; <span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 修改或者新增</span></span><br><span class="line">DB::table(<span class="string">'users'</span>)</span><br><span class="line">    -&gt;updateOrInsert(</span><br><span class="line">        <span class="comment">// 有沒有 john@example.com 跟 John</span></span><br><span class="line">        [<span class="string">'email'</span> =&gt; <span class="string">'Yee@mail.com'</span>, <span class="string">'name'</span> =&gt; <span class="string">'Yee'</span>],</span><br><span class="line">        <span class="comment">// 有就將狀態改為2</span></span><br><span class="line">        [<span class="string">'status'</span> =&gt; <span class="string">'2'</span>]</span><br><span class="line">        <span class="comment">// 若沒有的話，就會新增一筆資料</span></span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line"><span class="comment">// 也可以修改json欄位裡的資料</span></span><br><span class="line"><span class="comment">// MySQL 5.7+ 以上才支援！！！</span></span><br><span class="line">DB::table(<span class="string">'users'</span>)</span><br><span class="line">    -&gt;where(<span class="string">'id'</span>, <span class="number">1</span>)</span><br><span class="line">    -&gt;update([<span class="string">'options-&gt;enabled'</span> =&gt; <span class="keyword">true</span>]);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 當需要對欄位加減1,2,3...時</span></span><br><span class="line"><span class="comment">// 增</span></span><br><span class="line">DB::table(<span class="string">'users'</span>)-&gt;increment(<span class="string">'age'</span>);</span><br><span class="line">DB::table(<span class="string">'users'</span>)-&gt;increment(<span class="string">'age'</span>, <span class="number">2</span>);</span><br><span class="line"><span class="comment">// 減</span></span><br><span class="line">DB::table(<span class="string">'users'</span>)-&gt;decrement(<span class="string">'age'</span>);</span><br><span class="line">DB::table(<span class="string">'users'</span>)-&gt;decrement(<span class="string">'age'</span>, <span class="number">2</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 以上用法跟以下相同</span></span><br><span class="line">DB::table(<span class="string">'users'</span>)</span><br><span class="line">    -&gt;update([<span class="string">'age'</span> =&gt; <span class="number">1</span>]);</span><br></pre></td></tr></table></figure>
+
+<p>update的部分也提供蠻簡單的方法去使用，</p>
+<h3 id="Delete的用法"><a href="#Delete的用法" class="headerlink" title="Delete的用法"></a>Delete的用法</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 刪除某一些資料</span></span><br><span class="line">DB::table(<span class="string">'users'</span>)-&gt;where(<span class="string">'status'</span>, <span class="string">'='</span>, <span class="number">2</span>)-&gt;delete();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 清空資料庫 (會reset id index)</span></span><br><span class="line">DB::table(<span class="string">'users'</span>)-&gt;truncate();</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="進階-DB-lock"><a href="#進階-DB-lock" class="headerlink" title="進階 DB lock"></a>進階 DB lock</h3><p>有時候操作DB時，不允許其他query線程一起撈取或操作同一筆資料，</p>
+<p>這時候我們會使用table lock，</p>
+<p>laravel提供了兩種lock方法</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 操作時，允許其他線程撈取資料，但不能修改</span></span><br><span class="line">DB::table(<span class="string">'users'</span>)-&gt;where(<span class="string">'status'</span>, <span class="string">'='</span>, <span class="number">2</span>)-&gt;sharedLock()-&gt;get();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 操作時，不允許其他線程撈取與修改</span></span><br><span class="line">DB::table(<span class="string">'users'</span>)-&gt;where(<span class="string">'status'</span>, <span class="string">'='</span>, <span class="number">2</span>)-&gt;lockForUpdate()-&gt;get();</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>通常lock我比較常用在update的情況，</p>
+<p>例如：訂購商品時，庫存進行減1，</p>
+<p>這個情況就得用lockForUpdate，因為更新庫存時不能給其他線程撈，</p>
+<p>避免庫存剩下1時，大家都撈到庫存=1，後續操作可能會發生問題…等，</p>
+<p>用lockForUpdate後，晚到的線程會等前面更新結束且unlock後才能撈得到資料</p>
+<h3 id="DB-Transaction"><a href="#DB-Transaction" class="headerlink" title="DB Transaction"></a>DB Transaction</h3><p>這也是一個很重要的操作，</p>
+<p>當一個function要操作兩張資料表以上時，有可能會遇到某一張表操作失敗，</p>
+<p>這時候若沒使用transaction，第一張表操作的結果會保留，</p>
+<p>這樣有可能會造成資料重複…等問題，</p>
+<p>因此可以加上transaction機制，確保每一張表的操作都成功才保存</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 基本的transaction</span></span><br><span class="line">DB::transaction(<span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    DB::table(<span class="string">'users'</span>)-&gt;where($query)-&gt;first();</span><br><span class="line">    DB::table(<span class="string">'users'</span>)-&gt;where(<span class="string">'id'</span>, <span class="number">1</span>)-&gt;update([<span class="string">'status'</span> =&gt; <span class="number">1</span>]);</span><br><span class="line">    DB::table(<span class="string">'posts'</span>)-&gt;where(<span class="string">'id'</span>, <span class="number">1</span>)-&gt;update([<span class="string">'status'</span> =&gt; <span class="number">1</span>]);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 失敗後重試3次，都失敗時則拋出Exception</span></span><br><span class="line">$n = <span class="number">3</span>;</span><br><span class="line">DB::transaction(<span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    DB::table(<span class="string">'users'</span>)-&gt;where($query)-&gt;first();</span><br><span class="line">    DB::table(<span class="string">'users'</span>)-&gt;where(<span class="string">'id'</span>, <span class="number">1</span>)-&gt;update([<span class="string">'status'</span> =&gt; <span class="number">1</span>]);</span><br><span class="line">    DB::table(<span class="string">'posts'</span>)-&gt;where(<span class="string">'id'</span>, <span class="number">1</span>)-&gt;update([<span class="string">'status'</span> =&gt; <span class="number">1</span>]);</span><br><span class="line">&#125;, $n);</span><br></pre></td></tr></table></figure>
+<p>用以上的方法可以不用再加上 <code>DB::commit()</code>，執行成功時完會自動 commit，</p>
+<p>我們也可以手動控制transaction的起始，</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 開始transactio</span></span><br><span class="line">DB::beginTransaction();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 發生錯誤時取消所有操作</span></span><br><span class="line">DB::rollBack();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 結束 </span></span><br><span class="line">DB::commit();</span><br></pre></td></tr></table></figure>
+
+<p>以上是DB Query builder 的基本用法 ～～</p>
+<p>更多方法可以到請看者裡</p>
+<ol>
+<li><a href="https://laravel.com/docs/6.x/database" target="_blank" rel="noopener">Laravel-Database: Getting Started</a></li>
+<li><a href="https://laravel.com/docs/6.x/queries" target="_blank" rel="noopener">Laravel-Database: Query Builder</a></li>
+</ol>
+<hr>
+<p>後記</p>
+<p>在介紹DB Query builder 的用法時，</p>
+<p>去仔細閱讀了一下官方的文件，忽然發現 increment 和 decrement，</p>
+<p>老實說… 先前都沒注意到這個用法，</p>
+<p>默默地回去改訂單的query寫法 XDD</p>
+<p>官方文件真的藏了好多寶，讓大家可以優雅得開發。</p>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">標籤</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/laravel/" rel="tag">laravel</a> <a class="tag tag--primary tag--small t-link" href="/tags/w3HexSchool/" rel="tag">w3HexSchool</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2020/05/09/laravel-2-1/"
+                    data-tooltip="Laravel之旅 - 生成Migration的懶人包"
+                    aria-label="下一篇: Laravel之旅 - 生成Migration的懶人包"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://yeeinhole.github.io/2020/05/17/laravel-3/"
+                    title="分享到 Facebook"
+                    aria-label="分享到 Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://yeeinhole.github.io/2020/05/17/laravel-3/"
+                    title="分享到 Twitter"
+                    aria-label="分享到 Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://yeeinhole.github.io/2020/05/17/laravel-3/"
+                    title="分享到 Google+"
+                    aria-label="分享到 Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 Yee. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2020/05/09/laravel-2-1/"
+                    data-tooltip="Laravel之旅 - 生成Migration的懶人包"
+                    aria-label="下一篇: Laravel之旅 - 生成Migration的懶人包"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://yeeinhole.github.io/2020/05/17/laravel-3/"
+                    title="分享到 Facebook"
+                    aria-label="分享到 Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://yeeinhole.github.io/2020/05/17/laravel-3/"
+                    title="分享到 Twitter"
+                    aria-label="分享到 Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://yeeinhole.github.io/2020/05/17/laravel-3/"
+                    title="分享到 Google+"
+                    aria-label="分享到 Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://yeeinhole.github.io/2020/05/17/laravel-3/"
+                        aria-label="分享到 Facebook"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>分享到 Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://yeeinhole.github.io/2020/05/17/laravel-3/"
+                        aria-label="分享到 Twitter"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>分享到 Twitter</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://yeeinhole.github.io/2020/05/17/laravel-3/"
+                        aria-label="分享到 Google+"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>分享到 Google+</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/yee.jpeg" alt="作者的圖片"/>
+        
+            <h4 id="about-card-name">Yee</h4>
+        
+            <div id="about-card-bio"><p>Hi 我是 Yee，常常不小心就掉進坑中…</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>後端工程師 X 數據分系</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Taiwan
+            </div>
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/mybg.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-8jejpetz5mxyxxmlbiz3r2lqf5sdh34epoqgvwjmadigq9cpmb2rdlngp8ka.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>
