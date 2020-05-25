@@ -49,6 +49,7 @@ comments: true
 
 讓我們來看一下他裡頭有什麼吧，
 
+### Model - User.php
 {% codeblock lang:php %}
 
 <?php
@@ -148,6 +149,7 @@ Collections也提供了一些方法可以再查詢資料...等，
 
 以下是 Eloquent ORM的基本使用方法，
 
+### Eloquent ORM的CRUD
 {% codeblock lang:php %}
 // 拿User這個model舉例
 
@@ -166,6 +168,10 @@ User::where('age', '>', '18');
 // Where還能這樣用 ((我最愛這方法ＸＤ
 $query = [['name', '=', 'Yee'], ['age', '>', '18']]
 User::where($query);
+
+// 當然也有where NULL
+User::whereNull('name')->get();
+User::whereNotNull('name')->get();
 
 // Insert 的方法一
 $user = new User;
@@ -250,7 +256,9 @@ $user = User::updateOrCreate(
 
 某些成面來說 Eloquent ORM 跟 Query builder的用法蠻像的，
 
-Eloquent ORM 除了以上的操作外，還可以設定關聯，
+所以Query builder有的方法，在Eloquent ORM也大部分都有，只是要再查詢一下用法，
+
+Eloquent ORM 除了以上的操作外，也可以設定資料表關聯，
 
 可以免除寫很多join條件的困擾，
 

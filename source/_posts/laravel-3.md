@@ -85,6 +85,12 @@ DB::table('users')->where('name', 'like', '%Y')->first();
 $query = [['name', 'like', '%Y'], ['status', '=', '1']];
 DB::table('users')->where($query)->first();
 
+// NULL的where
+DB::table('users')->whereNull('name')->get();
+DB::table('users')->whereNotNull('name')->get();
+// 因為null在sql中的條件是為 IS or IS NOT，
+// 但laravel的query條件不能放IS，所以有提供這兩個方法操作NULL的值
+
 {% endcodeblock %}
 
 非常的直覺，我個人很喜歡使用多條件的where方法，
