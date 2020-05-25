@@ -260,6 +260,6 @@ $user = User::updateOrCreate(
 
 Eloquent ORM 除了以上的操作外，也可以設定資料表關聯，
 
-可以免除寫很多join條件的困擾，
+可以免除寫很多join的條件式，
 
 下篇再來跟大家講解 relationships 的部分。
