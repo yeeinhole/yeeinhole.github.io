@@ -1,5 +1,5 @@
 ---
-title: Laravel之旅 - DB的操作(3) Relationships
+title: Laravel之旅 - DB的操作(3) Relationships
 date: 2020-07-19 18:22:52
 categories:
     - Laravel
