@@ -13,7 +13,7 @@
     
     
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg"},"articleBody":"已經說明Relationships的用法，\n讓我來說說它神奇的地方，\n當有一張表是紀錄兩張表之間的關聯，\n往往更新就需要撈出來自己比對差異，\nLaravel提供了幾個函式，\n可以快速的更新。\n\n\n\n本文所採用的環境\b\n\nMax OSX 10.15\nDocker version 19.03.5\nLaradock\nLaravel 6.0 以上 (5.8適用)\nMysql Workbanch 8.0.19\n\n本系列不從部署環境開始說起，\n部署環境可參考以下\n\nLaradock - 更快速優雅的建立Laravel\nInstall Apache, MySQL, PHP on macOS Catalina 10.15\nWin10請服用XAMPP，非專業版的Win裝docker會比較麻煩，不過也可以試試～～\n\n\n本系列文章Laravel之旅 - 認識Laravel資料夾結構Laravel之旅 - 善用Migration管理資料表Laravel之旅 - 生成Migration的懶人包Laravel之旅 - DB的操作(1) DB Query builderLaravel之旅 - DB的操作(2) Eloquent ORMLaravel之旅 - DB的操作(3) Relationships\n\n首先我們需要有這樣情境\n|  User   |  User_Role  |  Role  |\n通常這種情況都會再開一張表來存放兩張表間的關聯，\n但更新的時候都需要\n12345$user_role &#x3D; SELECT * FROM  User_Role WHERE u_id &#x3D; 1for .....    判斷哪個條件要刪除    哪個條件要被新增\n\n光想到這段程式，就覺得要一兩個if來協助完成，\n在laravel的relationships有著三種語法可以協助完成這件事情，\n當然拉也是要先設定好關聯。\n1234public function roles()&#123;    return $this-&gt;belongsToMany(Role::class, 'user_role', 'user_id', 'role_id');&#125;\n\n設定好關聯後，就可以用以下方法操作。\n123456789101112131415161718// 建立關聯$roleId 必須是個 array$user-&gt;roles()-&gt;attach($roleId);// 如果 user_role 有其他欄位需要記載時$user-&gt;roles()-&gt;attach($roleId, ['created_at' =&gt; $time]);// 當要解除關聯時$user-&gt;roles()-&gt;detach($roleId);// 解除所有關聯時$user-&gt;roles()-&gt;detach();// 同步更新關聯$user-&gt;roles()-&gt;sync([1, 2, 3]);\n\n是不是很方便又快速，\n其實relationships還有很多方法，\n像是belongsTo或belongsToMany的model更新資料時，也會更新父層資料表的時間戳，\n使資料流更完整的呈現。\n\n後記\nLaravel真的提供很多方便的函式，\n寫在官方文件中等著大家去挖掘，\n每當要寫一些需求匙，都會去查一下是否已經有寫好的函式可以使用，\n節省慢慢寫code的時間，也避免自己寫了神奇的bug出來 😂\n","dateCreated":"2020-07-26T18:51:09+08:00","dateModified":"2020-07-27T00:43:40+08:00","datePublished":"2020-07-26T18:51:09+08:00","description":"已經說明Relationships的用法，\n讓我來說說它神奇的地方，\n當有一張表是紀錄兩張表之間的關聯，\n往往更新就需要撈出來自己比對差異，\nLaravel提供了幾個函式，\n可以快速的更新。","headline":"Laravel之旅 - DB的操作(4) Relationships 特別篇","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yeeinhole.github.io/2020/07/26/laravel-3-4/"},"publisher":{"@type":"Organization","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg","logo":{"@type":"ImageObject","url":"yee.jpeg"}},"url":"https://yeeinhole.github.io/2020/07/26/laravel-3-4/","keywords":"w3HexSchool, laravel"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg"},"articleBody":"已經說明Relationships的用法，\n讓我來說說它神奇的地方，\n當有一張表是紀錄兩張表之間的關聯，\n往往更新就需要撈出來自己比對差異，\nLaravel提供了幾個函式，\n可以快速的更新。\n\n\n\n本文所採用的環境\b\n\nMax OSX 10.15\nDocker version 19.03.5\nLaradock\nLaravel 6.0 以上 (5.8適用)\nMysql Workbanch 8.0.19\n\n本系列不從部署環境開始說起，\n部署環境可參考以下\n\nLaradock - 更快速優雅的建立Laravel\nInstall Apache, MySQL, PHP on macOS Catalina 10.15\nWin10請服用XAMPP，非專業版的Win裝docker會比較麻煩，不過也可以試試～～\n\n\n本系列文章Laravel之旅 - 認識Laravel資料夾結構Laravel之旅 - 善用Migration管理資料表Laravel之旅 - 生成Migration的懶人包Laravel之旅 - DB的操作(1) DB Query builderLaravel之旅 - DB的操作(2) Eloquent ORMLaravel之旅 - DB的操作(3) Relationships\n\n首先我們需要有這樣情境\n|  User   |  User_Role  |  Role  |\n通常這種情況都會再開一張表來存放兩張表間的關聯，\n但更新的時候都需要\n12345$user_role &#x3D; SELECT * FROM  User_Role WHERE u_id &#x3D; 1for .....    判斷哪個條件要刪除    哪個條件要被新增\n\n光想到這段程式，就覺得要一兩個if來協助完成，\n在laravel的relationships有著三種語法可以協助完成這件事情，\n當然拉也是要先設定好關聯。\n1234public function roles()&#123;    return $this-&gt;belongsToMany(Role::class, 'user_role', 'user_id', 'role_id');&#125;\n\n設定好關聯後，就可以用以下方法操作。\n123456789101112131415161718// 建立關聯$roleId 必須是個 array$user-&gt;roles()-&gt;attach($roleId);// 如果 user_role 有其他欄位需要記載時$user-&gt;roles()-&gt;attach($roleId, ['created_at' =&gt; $time]);// 當要解除關聯時$user-&gt;roles()-&gt;detach($roleId);// 解除所有關聯時$user-&gt;roles()-&gt;detach();// 同步更新關聯$user-&gt;roles()-&gt;sync([1, 2, 3]);\n\n是不是很方便又快速，\n其實relationships還有很多方法，\n像是belongsTo或belongsToMany的model更新資料時，也會更新父層資料表的時間戳，\n使資料流更完整的呈現。\n\n後記\nLaravel真的提供很多方便的函式，\n寫在官方文件中等著大家去挖掘，\n每當要寫一些需求時，都會去查一下是否已經有寫好的函式可以使用，\n節省慢慢寫code的時間，也避免自己寫了神奇的bug出來 😂\n","dateCreated":"2020-07-26T18:51:09+08:00","dateModified":"2020-08-02T16:20:58+08:00","datePublished":"2020-07-26T18:51:09+08:00","description":"已經說明Relationships的用法，\n讓我來說說它神奇的地方，\n當有一張表是紀錄兩張表之間的關聯，\n往往更新就需要撈出來自己比對差異，\nLaravel提供了幾個函式，\n可以快速的更新。","headline":"Laravel之旅 - DB的操作(4) Relationships 特別篇","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yeeinhole.github.io/2020/07/26/laravel-3-4/"},"publisher":{"@type":"Organization","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg","logo":{"@type":"ImageObject","url":"yee.jpeg"}},"url":"https://yeeinhole.github.io/2020/07/26/laravel-3-4/","keywords":"laravel, w3HexSchool"}</script>
     <meta name="description" content="已經說明Relationships的用法， 讓我來說說它神奇的地方， 當有一張表是紀錄兩張表之間的關聯， 往往更新就需要撈出來自己比對差異， Laravel提供了幾個函式， 可以快速的更新。">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Laravel之旅 - DB的操作(4) Relationships 特別篇">
@@ -22,10 +22,10 @@
 <meta property="og:description" content="已經說明Relationships的用法， 讓我來說說它神奇的地方， 當有一張表是紀錄兩張表之間的關聯， 往往更新就需要撈出來自己比對差異， Laravel提供了幾個函式， 可以快速的更新。">
 <meta property="og:locale" content="zh_TW">
 <meta property="article:published_time" content="2020-07-26T10:51:09.000Z">
-<meta property="article:modified_time" content="2020-07-26T16:43:40.018Z">
+<meta property="article:modified_time" content="2020-08-02T08:20:58.130Z">
 <meta property="article:author" content="Yee">
-<meta property="article:tag" content="w3HexSchool">
 <meta property="article:tag" content="laravel">
+<meta property="article:tag" content="w3HexSchool">
 <meta name="twitter:card" content="summary">
     
     
@@ -272,7 +272,7 @@
 <li>Win10請服用XAMPP，非專業版的Win裝docker會比較麻煩，不過也可以試試～～</li>
 </ol>
 <hr>
-<p>本系列文章<br><a href="https://yeeinhole.github.io/2020/04/25/laravel-1/">Laravel之旅 - 認識Laravel資料夾結構</a><br><a href="https://yeeinhole.github.io/2020/04/25/laravel-2/">Laravel之旅 - 善用Migration管理資料表</a><br><a href="https://yeeinhole.github.io/2020/04/25/laravel-2-2/">Laravel之旅 - 生成Migration的懶人包</a><br><a href="https://yeeinhole.github.io/2020/04/25/laravel-3/">Laravel之旅 - DB的操作(1) DB Query builder</a><br><a href="https://yeeinhole.github.io/2020/04/25/laravel-3-2/">Laravel之旅 - DB的操作(2) Eloquent ORM</a><br><a href="https://yeeinhole.github.io/2020/04/25/laravel-3-3/">Laravel之旅 - DB的操作(3) Relationships</a></p>
+<p>本系列文章<br><a href="https://yeeinhole.github.io/2020/04/25/laravel-1/">Laravel之旅 - 認識Laravel資料夾結構</a><br><a href="https://yeeinhole.github.io/2020/04/25/laravel-2/">Laravel之旅 - 善用Migration管理資料表</a><br><a href="https://yeeinhole.github.io/2020/04/25/laravel-2-2/">Laravel之旅 - 生成Migration的懶人包</a><br><a href="https://yeeinhole.github.io/2020/05/17/laravel-3/">Laravel之旅 - DB的操作(1) DB Query builder</a><br><a href="https://yeeinhole.github.io/2020/05/24/laravel-3-2/">Laravel之旅 - DB的操作(2) Eloquent ORM</a><br><a href="https://yeeinhole.github.io/2020/07/19/laravel-3-3/">Laravel之旅 - DB的操作(3) Relationships</a></p>
 <hr>
 <p>首先我們需要有這樣情境</p>
 <p>|  User   |  User_Role  |  Role  |</p>
@@ -296,7 +296,7 @@
 <p>後記</p>
 <p>Laravel真的提供很多方便的函式，</p>
 <p>寫在官方文件中等著大家去挖掘，</p>
-<p>每當要寫一些需求匙，都會去查一下是否已經有寫好的函式可以使用，</p>
+<p>每當要寫一些需求時，都會去查一下是否已經有寫好的函式可以使用，</p>
 <p>節省慢慢寫code的時間，也避免自己寫了神奇的bug出來 😂</p>
 
             
@@ -319,11 +319,14 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    <a
-                        class="post-action-btn btn btn--disabled"
-                        aria-hidden="true"
-                    >
-                        
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2020/08/02/laravel-4/"
+                    data-tooltip="Laravel之旅 - 在Controller中開始寫寫code摟"
+                    aria-label="上一篇: Laravel之旅 - 在Controller中開始寫寫code摟"
+                >
+                    
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
                     </a>
@@ -349,7 +352,7 @@
             <a
                 class="post-action-btn btn btn--default btn-open-shareoptions"
                 href="#btn-open-shareoptions"
-                aria-label="Diesen Beitrag teilen"
+                aria-label="Share this post"
             >
                 <i class="fa fa-share-alt" aria-hidden="true"></i>
             </a>
@@ -399,7 +402,7 @@
         
         <li class="post-action">
             
-                <a class="post-action-btn btn btn--default" href="#" aria-label="Nach oben">
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
             
                 <i class="fa fa-list" aria-hidden="true"></i>
             </a>
@@ -431,11 +434,14 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    <a
-                        class="post-action-btn btn btn--disabled"
-                        aria-hidden="true"
-                    >
-                        
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2020/08/02/laravel-4/"
+                    data-tooltip="Laravel之旅 - 在Controller中開始寫寫code摟"
+                    aria-label="上一篇: Laravel之旅 - 在Controller中開始寫寫code摟"
+                >
+                    
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
                     </a>
@@ -461,7 +467,7 @@
             <a
                 class="post-action-btn btn btn--default btn-open-shareoptions"
                 href="#btn-open-shareoptions"
-                aria-label="Diesen Beitrag teilen"
+                aria-label="Share this post"
             >
                 <i class="fa fa-share-alt" aria-hidden="true"></i>
             </a>
@@ -511,7 +517,7 @@
         
         <li class="post-action">
             
-                <a class="post-action-btn btn btn--default" href="#" aria-label="Nach oben">
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
             
                 <i class="fa fa-list" aria-hidden="true"></i>
             </a>

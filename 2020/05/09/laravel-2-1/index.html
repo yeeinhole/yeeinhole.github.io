@@ -13,7 +13,7 @@
     
     
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg"},"articleBody":"在前一週，我們介紹了migration的用法與好處，\n但… \n舊有的專案有好幾十張表，該不會需要一一建立吧…\n\n當然是不用，\n有工具可以將sql檔，\n輸出成laravel的migration檔案，\n需要安裝 mysql workbanch！\n\n本文所採用的環境\b\n\nMax OSX 10.15\nDocker version 19.03.5\nLaradock\nLaravel 6.0 以上 (5.8適用)\nMysql Workbanch 8.0.19\n\n本系列不從部署環境開始說起，\n部署環境可參考以下\n\nLaradock - 更快速優雅的建立Laravel\nInstall Apache, MySQL, PHP on macOS Catalina 10.15\nWin10請服用XAMPP，非專業版的Win裝docker會比較麻煩，不過也可以試試～～\n\n\n本系列文章Laravel之旅 - 認識Laravel資料夾結構Laravel之旅 - 善用Migration管理資料表\n\n還沒安裝的請點這裡～～ Mysql Workbanch\n裝好的我們就開始吧！！！\n先到這個github下載外掛 MySQL Workbench Export Laravel 5 Migrations Plugin\n這個外掛是用py寫的，至於版本作者並未說明，\n下載好了之後，我們打開Mysql Workbanch，\n找到安裝外掛的地方，選擇剛剛下載的py，等他安裝一下，接著會跟你說裝好了，接下來的步驟是因為平常沒有在使用mysql workbanch，\n因此有以下的步驟，如果平常有在使用，則可以跳到輸出的頁面，\n建立一個Model，出現工作區域的介面，並選選擇匯入，選擇sql檔，下一步到匯入完成完成後，就可以在工作區域看到我們所匯入的資料表了，接著我們就可以來匯出轉成migration型態的檔案拉！\n到tools-&gt;catalog-&gt;Export Laravel 5 Migration可以在紅色框框中瀏覽輸出的樣子，不知道是不是mac版的關係，\n選擇輸出資料夾的地方，有夠難點的，可以點底線的右邊比較容易讓視窗打開，\n這裡不選擇資料夾的話，會不知道輸出到哪裡去了，我實在是找不到阿…\n選完資料夾後完成即可，\n到剛剛的資料夾就可以看到輸出的檔案，打開其中一個檔案來看一下，是不是跟我們上週的觀察的user很像啊～～～\n左邊是這次輸出的檔案，他的sql來自右邊的migration匯入，\n有了這項工具後，可以無痛的建立舊專案的migration摟！！！\n\n後記\n正要做一個新的專案時，老闆將DB規劃好後丟給我，\n開工的我默默地建migration，\n老闆突然問說，這沒工具嗎！？\n我沈默了一下… 我居然… 沒有想到要去google看看…\n接著我就找到這個github了，\n然後就快速的建立migration～～～\n下次記得要先google看看有沒有懶人法或工具啊啊啊…\n","dateCreated":"2020-05-09T21:00:38+08:00","dateModified":"2020-05-09T21:55:37+08:00","datePublished":"2020-05-09T21:00:38+08:00","description":"在前一週，我們介紹了migration的用法與好處，\n但… \n舊有的專案有好幾十張表，該不會需要一一建立吧…","headline":"Laravel之旅 - 生成Migration的懶人包","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yeeinhole.github.io/2020/05/09/laravel-2-1/"},"publisher":{"@type":"Organization","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg","logo":{"@type":"ImageObject","url":"yee.jpeg"}},"url":"https://yeeinhole.github.io/2020/05/09/laravel-2-1/","keywords":"w3HexSchool, laravel"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg"},"articleBody":"在前一週，我們介紹了migration的用法與好處，\n但… \n舊有的專案有好幾十張表，該不會需要一一建立吧…\n\n當然是不用，\n有工具可以將sql檔，\n輸出成laravel的migration檔案，\n需要安裝 mysql workbanch！\n\n本文所採用的環境\b\n\nMax OSX 10.15\nDocker version 19.03.5\nLaradock\nLaravel 6.0 以上 (5.8適用)\nMysql Workbanch 8.0.19\n\n本系列不從部署環境開始說起，\n部署環境可參考以下\n\nLaradock - 更快速優雅的建立Laravel\nInstall Apache, MySQL, PHP on macOS Catalina 10.15\nWin10請服用XAMPP，非專業版的Win裝docker會比較麻煩，不過也可以試試～～\n\n\n本系列文章Laravel之旅 - 認識Laravel資料夾結構Laravel之旅 - 善用Migration管理資料表\n\n還沒安裝的請點這裡～～ Mysql Workbanch\n裝好的我們就開始吧！！！\n先到這個github下載外掛 MySQL Workbench Export Laravel 5 Migrations Plugin\n這個外掛是用py寫的，至於版本作者並未說明，\n下載好了之後，我們打開Mysql Workbanch，\n找到安裝外掛的地方，選擇剛剛下載的py，等他安裝一下，接著會跟你說裝好了，接下來的步驟是因為平常沒有在使用mysql workbanch，\n因此有以下的步驟，如果平常有在使用，則可以跳到輸出的頁面，\n建立一個Model，出現工作區域的介面，並選選擇匯入，選擇sql檔，下一步到匯入完成完成後，就可以在工作區域看到我們所匯入的資料表了，接著我們就可以來匯出轉成migration型態的檔案拉！\n到tools-&gt;catalog-&gt;Export Laravel 5 Migration可以在紅色框框中瀏覽輸出的樣子，不知道是不是mac版的關係，\n選擇輸出資料夾的地方，有夠難點的，可以點底線的右邊比較容易讓視窗打開，\n這裡不選擇資料夾的話，會不知道輸出到哪裡去了，我實在是找不到阿…\n選完資料夾後完成即可，\n到剛剛的資料夾就可以看到輸出的檔案，打開其中一個檔案來看一下，是不是跟我們上週的觀察的user很像啊～～～\n左邊是這次輸出的檔案，他的sql來自右邊的migration匯入，\n有了這項工具後，可以無痛的建立舊專案的migration摟！！！\n\n後記\n正要做一個新的專案時，老闆將DB規劃好後丟給我，\n開工的我默默地建migration，\n老闆突然問說，這沒工具嗎！？\n我沈默了一下… 我居然… 沒有想到要去google看看…\n接著我就找到這個github了，\n然後就快速的建立migration～～～\n下次記得要先google看看有沒有懶人法或工具啊啊啊…\n","dateCreated":"2020-05-09T21:00:38+08:00","dateModified":"2020-05-09T21:55:37+08:00","datePublished":"2020-05-09T21:00:38+08:00","description":"在前一週，我們介紹了migration的用法與好處，\n但… \n舊有的專案有好幾十張表，該不會需要一一建立吧…","headline":"Laravel之旅 - 生成Migration的懶人包","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yeeinhole.github.io/2020/05/09/laravel-2-1/"},"publisher":{"@type":"Organization","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg","logo":{"@type":"ImageObject","url":"yee.jpeg"}},"url":"https://yeeinhole.github.io/2020/05/09/laravel-2-1/","keywords":"laravel, w3HexSchool"}</script>
     <meta name="description" content="在前一週，我們介紹了migration的用法與好處， 但…  舊有的專案有好幾十張表，該不會需要一一建立吧…">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Laravel之旅 - 生成Migration的懶人包">
@@ -37,8 +37,8 @@
 <meta property="article:published_time" content="2020-05-09T13:00:38.000Z">
 <meta property="article:modified_time" content="2020-05-09T13:55:37.394Z">
 <meta property="article:author" content="Yee">
-<meta property="article:tag" content="w3HexSchool">
 <meta property="article:tag" content="laravel">
+<meta property="article:tag" content="w3HexSchool">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://yeeinhole.github.io/image/laravel-2-1/w1.png">
     
@@ -350,9 +350,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2020/04/25/laravel-1/"
-                    data-tooltip="Laravel之旅 - 認識Laravel資料夾結構"
-                    aria-label="下一篇: Laravel之旅 - 認識Laravel資料夾結構"
+                    href="/2020/05/02/laravel-2/"
+                    data-tooltip="Laravel之旅 - 善用Migration管理資料表"
+                    aria-label="下一篇: Laravel之旅 - 善用Migration管理資料表"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
@@ -366,7 +366,7 @@
             <a
                 class="post-action-btn btn btn--default btn-open-shareoptions"
                 href="#btn-open-shareoptions"
-                aria-label="Diesen Beitrag teilen"
+                aria-label="Share this post"
             >
                 <i class="fa fa-share-alt" aria-hidden="true"></i>
             </a>
@@ -416,7 +416,7 @@
         
         <li class="post-action">
             
-                <a class="post-action-btn btn btn--default" href="#" aria-label="Nach oben">
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
             
                 <i class="fa fa-list" aria-hidden="true"></i>
             </a>
@@ -465,9 +465,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2020/04/25/laravel-1/"
-                    data-tooltip="Laravel之旅 - 認識Laravel資料夾結構"
-                    aria-label="下一篇: Laravel之旅 - 認識Laravel資料夾結構"
+                    href="/2020/05/02/laravel-2/"
+                    data-tooltip="Laravel之旅 - 善用Migration管理資料表"
+                    aria-label="下一篇: Laravel之旅 - 善用Migration管理資料表"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
@@ -481,7 +481,7 @@
             <a
                 class="post-action-btn btn btn--default btn-open-shareoptions"
                 href="#btn-open-shareoptions"
-                aria-label="Diesen Beitrag teilen"
+                aria-label="Share this post"
             >
                 <i class="fa fa-share-alt" aria-hidden="true"></i>
             </a>
@@ -531,7 +531,7 @@
         
         <li class="post-action">
             
-                <a class="post-action-btn btn btn--default" href="#" aria-label="Nach oben">
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
             
                 <i class="fa fa-list" aria-hidden="true"></i>
             </a>

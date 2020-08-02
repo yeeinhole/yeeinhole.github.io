@@ -13,7 +13,7 @@
     
     
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg"},"articleBody":"Hi 大家好～ 在上篇我們初始化了Laradock也建置了個Laravel專案，\n本篇要來設定，\n讓Laravel用起來更優雅～\n\n\n本文所採用的環境\b\n\nMax OSX 10.15\nDocker version 19.03.5\n\n已知設定略同的環境\n\nCentos7\n\n須先了解基礎linux與vim\n\n首先先設定我們本機的host\n1sudo vim &#x2F;etc&#x2F;hosts\n記得加上sudo，因為hosts在 “/“ 裡面，\n\n左邊是目的地IP右邊是domain\n12#IP Domain127.0.0.1 com.laravel\n因為要連到本機上，所以ip為127.0.0.1，並給上專案一個domain，完成後儲存且離開，\n這個domain只會在本機端生效，似乎也要避免到熱門的domain，\n完成後就要來設定我們的Apache與Nginx摟～\n\n在Laradock中的Apache與Nginx都有一個sites的資料夾，\n裡頭放的分別是\n\nApache virtualhost\nNginx config\n\n首先我們先設定Apache，\n到apache2/sites底下會發現有預設的檔案，我們可以複製一份新的，也可以直接修改他，\n我選擇直接修改預設的檔案，\n12cd ~&#x2F;dock&#x2F;laradockvim apache2&#x2F;sites&#x2F;default.apache.conf\n預設值裡已經有 ServerName 欄位了，\n將後面的domain改成剛剛在hosts裡設定的\n設定完成後一定要重啟一次apache讓設定生效\n1docker-compose restart apache2\n\n接著打開瀏覽器並輸入上剛剛所設定的domain，\n第一次輸入本地端的domain一定要在結尾加上 “/“，\n否則會變成搜尋這個domain，\n那當然會得到找不到頁面的畫面拉～～\n\n以下是Nginx的部分\n一樣我們先到 ngins/sites 底下，一樣也已經有預設檔案了，我們一樣直接做修改\n123cd ~&#x2F;dock&#x2F;laradockcp apache2&#x2F;sites&#x2F;sample.conf.example apache2&#x2F;sites&#x2F;sample.confvim apache2&#x2F;sites&#x2F;default.conf\n\n一樣修改server name 與 檔案路徑，\n完成之後一樣先重啟nginx再打開瀏覽器試試看，\n這裡會發現我是使用8888 port，因為某些關係，我把nginx改成8888port，\n讓我可以同時使用apache與nginx，至於這邊改天再寫一篇吧！\n\n後記\n以前自己裝apache或nginx時，都需要設定這些部分，\n時常忘記他們被放在哪個資料夾中，\ndocker的這種掛載檔案的方式，使我們很方便去修改這些地方，\n這篇教學只有簡單的說明該如何使用它們，\n一些進階的設定日後有機會在整理成文章分享出來。\n","dateCreated":"2020-02-13T23:37:34+08:00","dateModified":"2020-02-22T20:54:23+08:00","datePublished":"2020-02-13T23:37:34+08:00","description":"Hi 大家好～ 在上篇我們初始化了Laradock也建置了個Laravel專案，\n本篇要來設定，\n讓Laravel用起來更優雅～","headline":"Laradock - 設定host Apache 與 Nginx","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yeeinhole.github.io/2020/02/13/laradock2/"},"publisher":{"@type":"Organization","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg","logo":{"@type":"ImageObject","url":"yee.jpeg"}},"url":"https://yeeinhole.github.io/2020/02/13/laradock2/","keywords":"devops, docker, w3HexSchool, laradock, apache, nginx"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg"},"articleBody":"Hi 大家好～ 在上篇我們初始化了Laradock也建置了個Laravel專案，\n本篇要來設定，\n讓Laravel用起來更優雅～\n\n\n本文所採用的環境\b\n\nMax OSX 10.15\nDocker version 19.03.5\n\n已知設定略同的環境\n\nCentos7\n\n須先了解基礎linux與vim\n\n首先先設定我們本機的host\n1sudo vim &#x2F;etc&#x2F;hosts\n記得加上sudo，因為hosts在 “/“ 裡面，\n\n左邊是目的地IP右邊是domain\n12#IP Domain127.0.0.1 com.laravel\n因為要連到本機上，所以ip為127.0.0.1，並給上專案一個domain，完成後儲存且離開，\n這個domain只會在本機端生效，似乎也要避免到熱門的domain，\n完成後就要來設定我們的Apache與Nginx摟～\n\n在Laradock中的Apache與Nginx都有一個sites的資料夾，\n裡頭放的分別是\n\nApache virtualhost\nNginx config\n\n首先我們先設定Apache，\n到apache2/sites底下會發現有預設的檔案，我們可以複製一份新的，也可以直接修改他，\n我選擇直接修改預設的檔案，\n12cd ~&#x2F;dock&#x2F;laradockvim apache2&#x2F;sites&#x2F;default.apache.conf\n預設值裡已經有 ServerName 欄位了，\n將後面的domain改成剛剛在hosts裡設定的\n設定完成後一定要重啟一次apache讓設定生效\n1docker-compose restart apache2\n\n接著打開瀏覽器並輸入上剛剛所設定的domain，\n第一次輸入本地端的domain一定要在結尾加上 “/“，\n否則會變成搜尋這個domain，\n那當然會得到找不到頁面的畫面拉～～\n\n以下是Nginx的部分\n一樣我們先到 ngins/sites 底下，一樣也已經有預設檔案了，我們一樣直接做修改\n123cd ~&#x2F;dock&#x2F;laradockcp apache2&#x2F;sites&#x2F;sample.conf.example apache2&#x2F;sites&#x2F;sample.confvim apache2&#x2F;sites&#x2F;default.conf\n\n一樣修改server name 與 檔案路徑，\n完成之後一樣先重啟nginx再打開瀏覽器試試看，\n這裡會發現我是使用8888 port，因為某些關係，我把nginx改成8888port，\n讓我可以同時使用apache與nginx，至於這邊改天再寫一篇吧！\n\n後記\n以前自己裝apache或nginx時，都需要設定這些部分，\n時常忘記他們被放在哪個資料夾中，\ndocker的這種掛載檔案的方式，使我們很方便去修改這些地方，\n這篇教學只有簡單的說明該如何使用它們，\n一些進階的設定日後有機會在整理成文章分享出來。\n","dateCreated":"2020-02-13T23:37:34+08:00","dateModified":"2020-02-22T20:54:23+08:00","datePublished":"2020-02-13T23:37:34+08:00","description":"Hi 大家好～ 在上篇我們初始化了Laradock也建置了個Laravel專案，\n本篇要來設定，\n讓Laravel用起來更優雅～","headline":"Laradock - 設定host Apache 與 Nginx","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yeeinhole.github.io/2020/02/13/laradock2/"},"publisher":{"@type":"Organization","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg","logo":{"@type":"ImageObject","url":"yee.jpeg"}},"url":"https://yeeinhole.github.io/2020/02/13/laradock2/","keywords":"w3HexSchool, devops, docker, apache, nginx, laradock"}</script>
     <meta name="description" content="Hi 大家好～ 在上篇我們初始化了Laradock也建置了個Laravel專案， 本篇要來設定， 讓Laravel用起來更優雅～">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Laradock - 設定host Apache 與 Nginx">
@@ -31,12 +31,12 @@
 <meta property="article:published_time" content="2020-02-13T15:37:34.000Z">
 <meta property="article:modified_time" content="2020-02-22T12:54:23.451Z">
 <meta property="article:author" content="Yee">
+<meta property="article:tag" content="w3HexSchool">
 <meta property="article:tag" content="devops">
 <meta property="article:tag" content="docker">
-<meta property="article:tag" content="w3HexSchool">
-<meta property="article:tag" content="laradock">
 <meta property="article:tag" content="apache">
 <meta property="article:tag" content="nginx">
+<meta property="article:tag" content="laradock">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://yeeinhole.github.io/image/laradock2/hosts.png">
     
@@ -374,7 +374,7 @@
             <a
                 class="post-action-btn btn btn--default btn-open-shareoptions"
                 href="#btn-open-shareoptions"
-                aria-label="Diesen Beitrag teilen"
+                aria-label="Share this post"
             >
                 <i class="fa fa-share-alt" aria-hidden="true"></i>
             </a>
@@ -424,7 +424,7 @@
         
         <li class="post-action">
             
-                <a class="post-action-btn btn btn--default" href="#" aria-label="Nach oben">
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
             
                 <i class="fa fa-list" aria-hidden="true"></i>
             </a>
@@ -489,7 +489,7 @@
             <a
                 class="post-action-btn btn btn--default btn-open-shareoptions"
                 href="#btn-open-shareoptions"
-                aria-label="Diesen Beitrag teilen"
+                aria-label="Share this post"
             >
                 <i class="fa fa-share-alt" aria-hidden="true"></i>
             </a>
@@ -539,7 +539,7 @@
         
         <li class="post-action">
             
-                <a class="post-action-btn btn btn--default" href="#" aria-label="Nach oben">
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
             
                 <i class="fa fa-list" aria-hidden="true"></i>
             </a>
