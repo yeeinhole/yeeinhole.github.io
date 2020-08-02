@@ -43,9 +43,9 @@ Laravel提供了幾個函式，
 [Laravel之旅 - 認識Laravel資料夾結構](https://yeeinhole.github.io/2020/04/25/laravel-1/)
 [Laravel之旅 - 善用Migration管理資料表](https://yeeinhole.github.io/2020/04/25/laravel-2/)
 [Laravel之旅 - 生成Migration的懶人包](https://yeeinhole.github.io/2020/04/25/laravel-2-2/)
-[Laravel之旅 - DB的操作(1) DB Query builder](https://yeeinhole.github.io/2020/04/25/laravel-3/)
-[Laravel之旅 - DB的操作(2) Eloquent ORM](https://yeeinhole.github.io/2020/04/25/laravel-3-2/)
-[Laravel之旅 - DB的操作(3) Relationships](https://yeeinhole.github.io/2020/04/25/laravel-3-3/)
+[Laravel之旅 - DB的操作(1) DB Query builder](https://yeeinhole.github.io/2020/05/17/laravel-3/)
+[Laravel之旅 - DB的操作(2) Eloquent ORM](https://yeeinhole.github.io/2020/05/24/laravel-3-2/)
+[Laravel之旅 - DB的操作(3) Relationships](https://yeeinhole.github.io/2020/07/19/laravel-3-3/)
 ***
 
 首先我們需要有這樣情境
@@ -114,6 +114,6 @@ Laravel真的提供很多方便的函式，
 
 寫在官方文件中等著大家去挖掘，
 
-每當要寫一些需求匙，都會去查一下是否已經有寫好的函式可以使用，
+每當要寫一些需求時，都會去查一下是否已經有寫好的函式可以使用，
 
 節省慢慢寫code的時間，也避免自己寫了神奇的bug出來 😂

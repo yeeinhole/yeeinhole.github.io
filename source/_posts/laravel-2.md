@@ -1,6 +1,6 @@
 ---
 title: Laravel之旅 - 善用Migration管理資料表
-date: 2020-04-25 21:11:35
+date: 2020-05-02 15:22:28
 categories:
     - Laravel
 tags: 

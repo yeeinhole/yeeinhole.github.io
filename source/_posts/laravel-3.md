@@ -35,7 +35,7 @@ comments: true
 本系列文章
 [Laravel之旅 - 認識Laravel資料夾結構](https://yeeinhole.github.io/2020/04/25/laravel-1/)
 [Laravel之旅 - 善用Migration管理資料表](https://yeeinhole.github.io/2020/04/25/laravel-2/)
-[Laravel之旅 - 生成Migration的懶人包](https://yeeinhole.github.io/2020/04/25/laravel-2-2/)
+[Laravel之旅 - 生成Migration的懶人包](https://yeeinhole.github.io/2020/05/09/laravel-2-1/)
 ***
 在Laravel中有兩種操作DB的方法，
 1. DB Query builder

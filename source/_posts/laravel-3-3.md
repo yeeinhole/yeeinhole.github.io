@@ -39,9 +39,9 @@ comments: true
 本系列文章
 [Laravel之旅 - 認識Laravel資料夾結構](https://yeeinhole.github.io/2020/04/25/laravel-1/)
 [Laravel之旅 - 善用Migration管理資料表](https://yeeinhole.github.io/2020/04/25/laravel-2/)
-[Laravel之旅 - 生成Migration的懶人包](https://yeeinhole.github.io/2020/04/25/laravel-2-2/)
-[Laravel之旅 - DB的操作(1) DB Query builder](https://yeeinhole.github.io/2020/04/25/laravel-3/)
-[Laravel之旅 - DB的操作(2) Eloquent ORM](https://yeeinhole.github.io/2020/04/25/laravel-3-2/)
+[Laravel之旅 - 生成Migration的懶人包](https://yeeinhole.github.io/2020/05/09/laravel-2-1/)
+[Laravel之旅 - DB的操作(1) DB Query builder](https://yeeinhole.github.io/2020/05/17/laravel-3/)
+[Laravel之旅 - DB的操作(2) Eloquent ORM](https://yeeinhole.github.io/2020/05/24/laravel-3-2/)
 ***
 
 通常我們在資料比中的關聯，要不是1對1不然就是1對多，
