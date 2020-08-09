@@ -91,7 +91,7 @@ group可以減少每段route的長度，也可以針對某些group設定上middl
 // prefix 這個group都擁有的路徑
 // namespace 這個group裡的檔案路徑
 // middleware 這個group要套用的中介層
-Route::group(['prefix' => '/backend/', 'namespace' => 'Backend', ['middleware' => ['auth']]], function()
+Route::group(['prefix' => '/backend/', 'namespace' => 'Backend', ['middleware' => ['auth']], function()
 {
     // middleware用陣列的原因是可以加入很多個middleware
     // 裡面的寫法也是跟平常一樣
