@@ -114,8 +114,7 @@ Route::get('test/{param1?}}/{param2}', 'UserController@user');
 // 這樣寫route時，function要這樣配合，就可以抓到值了
 public function user($param1, $param2)
 {
-    $users = $this->userModel->all();
-    dd($users);
+    dd($param1);
 }
 
 {% endcodeblock %}
