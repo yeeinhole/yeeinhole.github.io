@@ -13,7 +13,7 @@
     
     
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg"},"articleBody":"已經說明DB Query和ORM操作的不同，\n讓我們來聊聊 ORM 厲害的地方，\n就是 relationships 的關聯設定，\n可以很快速的join資料。\n\n\n\n\n本文所採用的環境\b\n\nMax OSX 10.15\nDocker version 19.03.5\nLaradock\nLaravel 6.0 以上 (5.8適用)\nMysql Workbanch 8.0.19\n\n本系列不從部署環境開始說起，\n部署環境可參考以下\n\nLaradock - 更快速優雅的建立Laravel\nInstall Apache, MySQL, PHP on macOS Catalina 10.15\nWin10請服用XAMPP，非專業版的Win裝docker會比較麻煩，不過也可以試試～～\n\n\n本系列文章Laravel之旅 - 認識Laravel資料夾結構Laravel之旅 - 善用Migration管理資料表Laravel之旅 - 生成Migration的懶人包Laravel之旅 - DB的操作(1) DB Query builderLaravel之旅 - DB的操作(2) Eloquent ORM\n\n通常我們在資料比中的關聯，要不是1對1不然就是1對多，\n通常遇到這種形態的資料時，往往第一個想到的是join這個DB語法，\n在Laravel ORM中，則提供了快速的方法，可以進行join撈資料，\n其實方法很簡單，只要到Model中建立function，並使用對應的語法即可。\n12345678910// 回到前幾篇提到的 User.php中加入以下use App\\Post;public function post()&#123;    return $this-&gt;hasMany(Post::class);    // 這樣寫也可以     // return $this-&gt;hasMany('App\\Post');&#125;\n\n接著只要在Query的時候加上\n12345$post = User::where('name', 'Yee')-&gt;get()[0]-&gt;post;// 執行get後才會從 Illuminate\\Database\\Eloquent\\Builder 型態 轉變成 Illuminate\\Database\\Eloquent\\Collection// 因為還沒將資料回傳，因此不能幫每一筆資料join上其他表的資料// 故這裡寫get()後取第一筆資料\b\b去取post\n\n參照官方文件的方法如下，這樣的方法是可以再使用\b relationships 取資料\n123$post = App\\User::find(1)-&gt;post;// 我在想應該是這樣的用法下回傳的是單一筆資料，因此可以使用relationships取得關聯資料\n\n如果要取得所有使用者和使用者的所有post可以用迴圈這樣做\n123456$user = User::get();for($i=0; $i&lt;count($user); $i++)&#123;    $user[$i] = $user[$i]-&gt;post;&#125;// 你也可以用 collection 或 foreach 都可以達成目的\n\n也可以用預載入的方式\n123User::with('post')-&gt;get()// User::with('post') 的時候還是屬於 Illuminate\\Database\\Eloquent\\Builder 型態// 但他會預載入B資料表，因此可以減少查詢的次數\n\n這樣就可以取得User這張表的資料，並且將每一筆資料都join上post這張表的資料，非常的方便和快速。\n\bRelationships的部分官方文件中列了以下幾種方式\n\nOne To One , hasOne()\nOne To Many , hasMany()\nOne To Many 逆向 , 即以B表取得A資料表, belongsTo()\nMany To Many , belongsToMany()\n\n上面的這些寫法都是處在於\n\nA資料表的主鍵為”id”\nB資料表的外來鍵為”tableName_id”，\n\n因為他會自動以 “tableName_id” 作為B資料表的外來鍵，\n若不符合以上情境可以這樣寫\n123return $this-&gt;hasMany('App\\Post', 'foreign_key', 'local_key');// foreign_key 指的是B資料表中屬於A資料表的主鍵欄位// local_key A資料表的主鍵欄位\n\n以上是我比較常用跟常見的操作方法，\n更多方法可以看這邊Laravel - Eloquent: Relationships\n\n後記\n以前剛學laravel時，大多使用DB Query進行DB的操作，\n後面接觸ORM後了解到他的快速後，大部分都使用ORM進行操作，\n預載入的部分雖然比較快速，不過也是要看系統架構與情境，\n只有符合情境才是最佳的操作。\n","dateCreated":"2020-07-19T18:22:52+08:00","dateModified":"2020-08-02T16:20:30+08:00","datePublished":"2020-07-19T18:22:52+08:00","description":"已經說明DB Query和ORM操作的不同，\n讓我們來聊聊 ORM 厲害的地方，\n就是 relationships 的關聯設定，\n可以很快速的join資料。","headline":"Laravel之旅 - DB的操作(3) Relationships","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yeeinhole.github.io/2020/07/19/laravel-3-3/"},"publisher":{"@type":"Organization","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg","logo":{"@type":"ImageObject","url":"yee.jpeg"}},"url":"https://yeeinhole.github.io/2020/07/19/laravel-3-3/","keywords":"w3HexSchool, laravel"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg"},"articleBody":"已經說明DB Query和ORM操作的不同，\n讓我們來聊聊 ORM 厲害的地方，\n就是 relationships 的關聯設定，\n可以很快速的join資料。\n\n\n\n\n本文所採用的環境\b\n\nMax OSX 10.15\nDocker version 19.03.5\nLaradock\nLaravel 6.0 以上 (5.8適用)\nMysql Workbanch 8.0.19\n\n本系列不從部署環境開始說起，\n部署環境可參考以下\n\nLaradock - 更快速優雅的建立Laravel\nInstall Apache, MySQL, PHP on macOS Catalina 10.15\nWin10請服用XAMPP，非專業版的Win裝docker會比較麻煩，不過也可以試試～～\n\n\n本系列文章Laravel之旅 - 認識Laravel資料夾結構Laravel之旅 - 善用Migration管理資料表Laravel之旅 - 生成Migration的懶人包Laravel之旅 - DB的操作(1) DB Query builderLaravel之旅 - DB的操作(2) Eloquent ORM\n\n通常我們在資料比中的關聯，要不是1對1不然就是1對多，\n通常遇到這種形態的資料時，往往第一個想到的是join這個DB語法，\n在Laravel ORM中，則提供了快速的方法，可以進行join撈資料，\n其實方法很簡單，只要到Model中建立function，並使用對應的語法即可。\n12345678910// 回到前幾篇提到的 User.php中加入以下use App\\Post;public function post()&#123;    return $this-&gt;hasMany(Post::class);    // 這樣寫也可以     // return $this-&gt;hasMany('App\\Post');&#125;\n\n接著只要在Query的時候加上\n12345$post = User::where('name', 'Yee')-&gt;get()[0]-&gt;post;// 執行get後才會從 Illuminate\\Database\\Eloquent\\Builder 型態 轉變成 Illuminate\\Database\\Eloquent\\Collection// 因為還沒將資料回傳，因此不能幫每一筆資料join上其他表的資料// 故這裡寫get()後取第一筆資料\b\b去取post\n\n參照官方文件的方法如下，這樣的方法是可以再使用\b relationships 取資料\n123$post = App\\User::find(1)-&gt;post;// 我在想應該是這樣的用法下回傳的是單一筆資料，因此可以使用relationships取得關聯資料\n\n如果要取得所有使用者和使用者的所有post可以用迴圈這樣做\n123456$user = User::get();for($i=0; $i&lt;count($user); $i++)&#123;    $user[$i] = $user[$i]-&gt;post;&#125;// 你也可以用 collection 或 foreach 都可以達成目的\n\n也可以用預載入的方式\n123User::with('post')-&gt;get()// User::with('post') 的時候還是屬於 Illuminate\\Database\\Eloquent\\Builder 型態// 但他會預載入B資料表，因此可以減少查詢的次數\n\n這樣就可以取得User這張表的資料，並且將每一筆資料都join上post這張表的資料，非常的方便和快速。\n\bRelationships的部分官方文件中列了以下幾種方式\n\nOne To One , hasOne()\nOne To Many , hasMany()\nOne To Many 逆向 , 即以B表取得A資料表, belongsTo()\nMany To Many , belongsToMany()\n\n上面的這些寫法都是處在於\n\nA資料表的主鍵為”id”\nB資料表的外來鍵為”tableName_id”，\n\n因為他會自動以 “tableName_id” 作為B資料表的外來鍵，\n若不符合以上情境可以這樣寫\n123return $this-&gt;hasMany('App\\Post', 'foreign_key', 'local_key');// foreign_key 指的是B資料表中屬於A資料表的主鍵欄位// local_key A資料表的主鍵欄位\n\n以上是我比較常用跟常見的操作方法，\n更多方法可以看這邊Laravel - Eloquent: Relationships\n\n後記\n以前剛學laravel時，大多使用DB Query進行DB的操作，\n後面接觸ORM後了解到他的快速後，大部分都使用ORM進行操作，\n預載入的部分雖然比較快速，不過也是要看系統架構與情境，\n只有符合情境才是最佳的操作。\n","dateCreated":"2020-07-19T18:22:52+08:00","dateModified":"2020-08-02T16:20:30+08:00","datePublished":"2020-07-19T18:22:52+08:00","description":"已經說明DB Query和ORM操作的不同，\n讓我們來聊聊 ORM 厲害的地方，\n就是 relationships 的關聯設定，\n可以很快速的join資料。","headline":"Laravel之旅 - DB的操作(3) Relationships","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yeeinhole.github.io/2020/07/19/laravel-3-3/"},"publisher":{"@type":"Organization","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg","logo":{"@type":"ImageObject","url":"yee.jpeg"}},"url":"https://yeeinhole.github.io/2020/07/19/laravel-3-3/","keywords":"laravel, w3HexSchool"}</script>
     <meta name="description" content="已經說明DB Query和ORM操作的不同， 讓我們來聊聊 ORM 厲害的地方， 就是 relationships 的關聯設定， 可以很快速的join資料。">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Laravel之旅 - DB的操作(3) Relationships">
@@ -24,8 +24,8 @@
 <meta property="article:published_time" content="2020-07-19T10:22:52.000Z">
 <meta property="article:modified_time" content="2020-08-02T08:20:30.844Z">
 <meta property="article:author" content="Yee">
-<meta property="article:tag" content="w3HexSchool">
 <meta property="article:tag" content="laravel">
+<meta property="article:tag" content="w3HexSchool">
 <meta name="twitter:card" content="summary">
     
     
@@ -370,7 +370,7 @@
             <a
                 class="post-action-btn btn btn--default btn-open-shareoptions"
                 href="#btn-open-shareoptions"
-                aria-label="Diesen Beitrag teilen"
+                aria-label="Share this post"
             >
                 <i class="fa fa-share-alt" aria-hidden="true"></i>
             </a>
@@ -420,7 +420,7 @@
         
         <li class="post-action">
             
-                <a class="post-action-btn btn btn--default" href="#" aria-label="Nach oben">
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
             
                 <i class="fa fa-list" aria-hidden="true"></i>
             </a>
@@ -485,7 +485,7 @@
             <a
                 class="post-action-btn btn btn--default btn-open-shareoptions"
                 href="#btn-open-shareoptions"
-                aria-label="Diesen Beitrag teilen"
+                aria-label="Share this post"
             >
                 <i class="fa fa-share-alt" aria-hidden="true"></i>
             </a>
@@ -535,7 +535,7 @@
         
         <li class="post-action">
             
-                <a class="post-action-btn btn btn--default" href="#" aria-label="Nach oben">
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
             
                 <i class="fa fa-list" aria-hidden="true"></i>
             </a>

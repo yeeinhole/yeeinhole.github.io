@@ -13,7 +13,7 @@
     
     
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg"},"articleBody":"一直想寫一系列如何認識與上手Laravel，\n自認自己的學法特殊，師父只教了如何CRUD，剩下的就由它任意發展了～～\n\n最後決定開寫的原因是，\n整理手邊的筆記 &amp; 讓自己更加認識 Laravel，\n除了基本的開發，其實還有很多很多個地方沒有用到，\n就趁著個機會，多少接觸些。\n\n本文所採用的環境\b\n\nMax OSX 10.15\nDocker version 19.03.5\nLaradock\nLaravel 6.0 以上 (5.8適用)\n\n本系列不從部署環境開始說起，\n部署環境可參考以下\n\nLaradock - 更快速優雅的建立Laravel\nInstall Apache, MySQL, PHP on macOS Catalina 10.15\nWin10請服用XAMPP，非專業版的Win裝docker會比較麻煩，不過也可以試試～～\n\n\n我們先來說說Laravel的資料夾結構，\n\n\n\n資料夾名稱\n說明\n\n\n\napp\n開發程式的地方，裡面有Controller、Exceptions… 待會再詳細說明\n\n\nbootstrap\n啟動laravel的地方，基本的開發不會改動到這區塊\n\n\nconfig\n設置系統參數的地方，可以定義一些文字或變數，供程式使用，改變參數就不需要改程式\n\n\ndatabase\n存放DB的scheme與設定假資料的地方\n\n\npublic\nweb的進入點，圖檔、js、css、編譯過的檔案都會放在這裡\n\n\nresources\n前台資源的地方，編譯前的js、scss、語言檔、views\n\n\nrouter\n路由參數，設置url對應controller的地方\n\n\nstorage\n存放編譯過的blade、logs、暫存檔的地方，基本的開發不會改動到這區塊\n\n\ntests\n撰寫測試程式的地方\n\n\nvendor\npackage的目錄，與node_modules的用途一樣\n\n\n\n\n\n檔案\n說明\n\n\n\n.env .env.example\n系統參數的檔案\n\n\ncomposer.json .lock\nLaravel版本、已安裝的package，一些composer的設定， .lock則是編譯過後的.json檔，供部署或其他開發者，安裝相同版本的package\n\n\npackage(-lock).json\n用npm管理js套件的地方，用途跟composer相似\n\n\nphpunit.xml\n設定php unit test的檔案\n\n\nserver.php\n模擬一個apache或nginx的設定，可以快速建立一個測試環境來執行laravel\n\n\nwebpack.mix.js\nwebpack打包js、scss的設定檔，需要搭配node和npm服用\n\n\n以上是laravel預設給予的資料夾與檔案，\n通常開發中比較常用到的是 app、config、database、resources、router、test((除非不寫測試，\napp這個資料夾預設只有 Console、Exception、Http、Providers跟一個User.php，\n而這些的用途如下\n\n\n\n資料夾\n說明\n\n\n\nConsole\n可以用來撰寫atrisan指令與排成指令\n\n\nExceptions\n例外處理，可以自定錯誤文字或者錯誤後該做什麼動作的地方，預設會將exception向上丟出(如果.env設置debug=true時就會呈現在畫面中)也會把錯誤記錄到log中\b\b\b\n\n\nHttp\n撰寫Controller、Middleware的地方，預設會給一套登入/註冊系統的Controller，Middelware則有常見的是否已登入、Cookie加密、CSRF白名單…等的判斷\n\n\nProviders\n提供自訂provider的地方，laravel啟動時會載入許多providers來建置整個系統，providers的清單在config/app.php中，官方文件是說大部分的providers都是緩載入的情況，當被使用時才會真實載入\n\n\nUser.php\n是一個Eloquent ORM的Model，\b可以操作預設的users資料表\n\n\n這些是預先載入的資料夾，\n其實還有一些資料夾沒有載入，讓我來逐一說明其功能，\n\n\n\n資料夾\n說明\n\n\n\nBroadcasting\n顧名思義是指廣播系統，也就是跟webSocket有關係，可以讓後端程式發訊息到前端的socket，可以搭配Laravel Echo、Pusher來使用\n\n\nEvents\n定義事件的地方，可以說是 當…時，通常會配合listener使用\n\n\nListeners\n定義一些邏輯被觸發執行，也就是當event時做…，跟隨著event發生時做某件事情\n\n\nMail\n建置與封裝跟mail有關的程式邏輯\n\n\nNotifications\n\b可以設定當系統觸發什麼事件就發送一個簡單的通知，官方舉例：寄mail、Slack…等\n\n\nPolicies\n可以寫條件規則，限制使用者的操作，可搭配Gate使用，讓router受到條件限制使用\b\b\n\n\nHttp\\Requests(Rules)\n\b\b撰寫Form Validation的規則，讓post進來的變數只留下有定義的，也可以透過 http method 增減驗證規則\n\n\n以上是官方文件中提到不會預設載入的功能資料夾，\n那～ 應該有人會好奇說… 為什麼沒有提到Models，\n官方的說明是 Model 一詞的定義較分辨不清，\n原因是在於有些人定義為 “業務邏輯” 有些人定義為 “資料庫數據”，\n因此laravel不預設定義Model為何，留給開發人員自行定義，\n而我… 是把它定義成資料庫的那一派，\n我把業務邏輯定義到Service或Helper中。\n\b\b\b\b\b\b再來要說明的是程式的資料夾，\n這部分我大致上看到兩種派別，\n一種是依照 “系統功能” 另一種則是 “程式功能”，\n其實兩者字面上的意思很相近，((我也忘記這兩種分法的正確名稱，這是我自己理解出來的名稱\n以 “會員管理” 這個功能來說會有這些程式\n\nMember.php (Model)\nMemberController.php (Controller)\nMemberService.php (Service業務邏輯)\n…\n\n當 “系統功能” 做區分時資料夾結構長這樣\n123456app|   |Http   |----|Member   |----|------|Member.php   |----|------|MemberController.php   |----|------|MemberService.php\n當 “程式功能” 做區分時資料夾結構長這樣\n12345678910111213app|   |Http|   |----|Controller|   |----|----------|MemberController.php   |----|----------|OOXXController.php   |   |Models|   |------|Member.php   |------|OOXX.php   |   |Services|   |------|MemberService.php   |------|OOXXService.php\n\n至於哪一種比較好，見仁見智，視專案狀況決定，\n當你的專案功能數目龐大，我覺得採用 “系統功能” 會比較好，\n而專案沒有那麼大的情況下，用 “程式功能” 來做區分就可以了，\n那我呢… 目前是 “程式功能” 這一派的，\n或許當我某天遇到什麼瓶頸時，就會更改我的作法了吧～～\n今天就先說到這裡吧！！ \n\nRefLaravel6.0 - directory\n\n後記\n摁～ 透過去仔細查閱官方文件，才發現到其實還有很多功能沒有運用到，\n很多時候都在Controller或Service做完這些事情，\n但其實laravel早就幫你想好了，\n後續在逐一嘗試一些官方所提供的功能吧！\n","dateCreated":"2020-04-25T21:11:35+08:00","dateModified":"2020-05-03T22:37:35+08:00","datePublished":"2020-04-25T21:11:35+08:00","description":"一直想寫一系列如何認識與上手Laravel，\n自認自己的學法特殊，師父只教了如何CRUD，剩下的就由它任意發展了～～","headline":"Laravel之旅 - 認識Laravel資料夾結構","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yeeinhole.github.io/2020/04/25/laravel-1/"},"publisher":{"@type":"Organization","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg","logo":{"@type":"ImageObject","url":"yee.jpeg"}},"url":"https://yeeinhole.github.io/2020/04/25/laravel-1/","keywords":"w3HexSchool, laravel"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg"},"articleBody":"一直想寫一系列如何認識與上手Laravel，\n自認自己的學法特殊，師父只教了如何CRUD，剩下的就由它任意發展了～～\n\n最後決定開寫的原因是，\n整理手邊的筆記 &amp; 讓自己更加認識 Laravel，\n除了基本的開發，其實還有很多很多個地方沒有用到，\n就趁著個機會，多少接觸些。\n\n本文所採用的環境\b\n\nMax OSX 10.15\nDocker version 19.03.5\nLaradock\nLaravel 6.0 以上 (5.8適用)\n\n本系列不從部署環境開始說起，\n部署環境可參考以下\n\nLaradock - 更快速優雅的建立Laravel\nInstall Apache, MySQL, PHP on macOS Catalina 10.15\nWin10請服用XAMPP，非專業版的Win裝docker會比較麻煩，不過也可以試試～～\n\n\n我們先來說說Laravel的資料夾結構，\n\n\n\n資料夾名稱\n說明\n\n\n\napp\n開發程式的地方，裡面有Controller、Exceptions… 待會再詳細說明\n\n\nbootstrap\n啟動laravel的地方，基本的開發不會改動到這區塊\n\n\nconfig\n設置系統參數的地方，可以定義一些文字或變數，供程式使用，改變參數就不需要改程式\n\n\ndatabase\n存放DB的scheme與設定假資料的地方\n\n\npublic\nweb的進入點，圖檔、js、css、編譯過的檔案都會放在這裡\n\n\nresources\n前台資源的地方，編譯前的js、scss、語言檔、views\n\n\nrouter\n路由參數，設置url對應controller的地方\n\n\nstorage\n存放編譯過的blade、logs、暫存檔的地方，基本的開發不會改動到這區塊\n\n\ntests\n撰寫測試程式的地方\n\n\nvendor\npackage的目錄，與node_modules的用途一樣\n\n\n\n\n\n檔案\n說明\n\n\n\n.env .env.example\n系統參數的檔案\n\n\ncomposer.json .lock\nLaravel版本、已安裝的package，一些composer的設定， .lock則是編譯過後的.json檔，供部署或其他開發者，安裝相同版本的package\n\n\npackage(-lock).json\n用npm管理js套件的地方，用途跟composer相似\n\n\nphpunit.xml\n設定php unit test的檔案\n\n\nserver.php\n模擬一個apache或nginx的設定，可以快速建立一個測試環境來執行laravel\n\n\nwebpack.mix.js\nwebpack打包js、scss的設定檔，需要搭配node和npm服用\n\n\n以上是laravel預設給予的資料夾與檔案，\n通常開發中比較常用到的是 app、config、database、resources、router、test((除非不寫測試，\napp這個資料夾預設只有 Console、Exception、Http、Providers跟一個User.php，\n而這些的用途如下\n\n\n\n資料夾\n說明\n\n\n\nConsole\n可以用來撰寫atrisan指令與排成指令\n\n\nExceptions\n例外處理，可以自定錯誤文字或者錯誤後該做什麼動作的地方，預設會將exception向上丟出(如果.env設置debug=true時就會呈現在畫面中)也會把錯誤記錄到log中\b\b\b\n\n\nHttp\n撰寫Controller、Middleware的地方，預設會給一套登入/註冊系統的Controller，Middelware則有常見的是否已登入、Cookie加密、CSRF白名單…等的判斷\n\n\nProviders\n提供自訂provider的地方，laravel啟動時會載入許多providers來建置整個系統，providers的清單在config/app.php中，官方文件是說大部分的providers都是緩載入的情況，當被使用時才會真實載入\n\n\nUser.php\n是一個Eloquent ORM的Model，\b可以操作預設的users資料表\n\n\n這些是預先載入的資料夾，\n其實還有一些資料夾沒有載入，讓我來逐一說明其功能，\n\n\n\n資料夾\n說明\n\n\n\nBroadcasting\n顧名思義是指廣播系統，也就是跟webSocket有關係，可以讓後端程式發訊息到前端的socket，可以搭配Laravel Echo、Pusher來使用\n\n\nEvents\n定義事件的地方，可以說是 當…時，通常會配合listener使用\n\n\nListeners\n定義一些邏輯被觸發執行，也就是當event時做…，跟隨著event發生時做某件事情\n\n\nMail\n建置與封裝跟mail有關的程式邏輯\n\n\nNotifications\n\b可以設定當系統觸發什麼事件就發送一個簡單的通知，官方舉例：寄mail、Slack…等\n\n\nPolicies\n可以寫條件規則，限制使用者的操作，可搭配Gate使用，讓router受到條件限制使用\b\b\n\n\nHttp\\Requests(Rules)\n\b\b撰寫Form Validation的規則，讓post進來的變數只留下有定義的，也可以透過 http method 增減驗證規則\n\n\n以上是官方文件中提到不會預設載入的功能資料夾，\n那～ 應該有人會好奇說… 為什麼沒有提到Models，\n官方的說明是 Model 一詞的定義較分辨不清，\n原因是在於有些人定義為 “業務邏輯” 有些人定義為 “資料庫數據”，\n因此laravel不預設定義Model為何，留給開發人員自行定義，\n而我… 是把它定義成資料庫的那一派，\n我把業務邏輯定義到Service或Helper中。\n\b\b\b\b\b\b再來要說明的是程式的資料夾，\n這部分我大致上看到兩種派別，\n一種是依照 “系統功能” 另一種則是 “程式功能”，\n其實兩者字面上的意思很相近，((我也忘記這兩種分法的正確名稱，這是我自己理解出來的名稱\n以 “會員管理” 這個功能來說會有這些程式\n\nMember.php (Model)\nMemberController.php (Controller)\nMemberService.php (Service業務邏輯)\n…\n\n當 “系統功能” 做區分時資料夾結構長這樣\n123456app|   |Http   |----|Member   |----|------|Member.php   |----|------|MemberController.php   |----|------|MemberService.php\n當 “程式功能” 做區分時資料夾結構長這樣\n12345678910111213app|   |Http|   |----|Controller|   |----|----------|MemberController.php   |----|----------|OOXXController.php   |   |Models|   |------|Member.php   |------|OOXX.php   |   |Services|   |------|MemberService.php   |------|OOXXService.php\n\n至於哪一種比較好，見仁見智，視專案狀況決定，\n當你的專案功能數目龐大，我覺得採用 “系統功能” 會比較好，\n而專案沒有那麼大的情況下，用 “程式功能” 來做區分就可以了，\n那我呢… 目前是 “程式功能” 這一派的，\n或許當我某天遇到什麼瓶頸時，就會更改我的作法了吧～～\n今天就先說到這裡吧！！ \n\nRefLaravel6.0 - directory\n\n後記\n摁～ 透過去仔細查閱官方文件，才發現到其實還有很多功能沒有運用到，\n很多時候都在Controller或Service做完這些事情，\n但其實laravel早就幫你想好了，\n後續在逐一嘗試一些官方所提供的功能吧！\n","dateCreated":"2020-04-25T21:11:35+08:00","dateModified":"2020-05-03T22:37:35+08:00","datePublished":"2020-04-25T21:11:35+08:00","description":"一直想寫一系列如何認識與上手Laravel，\n自認自己的學法特殊，師父只教了如何CRUD，剩下的就由它任意發展了～～","headline":"Laravel之旅 - 認識Laravel資料夾結構","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yeeinhole.github.io/2020/04/25/laravel-1/"},"publisher":{"@type":"Organization","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg","logo":{"@type":"ImageObject","url":"yee.jpeg"}},"url":"https://yeeinhole.github.io/2020/04/25/laravel-1/","keywords":"laravel, w3HexSchool"}</script>
     <meta name="description" content="一直想寫一系列如何認識與上手Laravel， 自認自己的學法特殊，師父只教了如何CRUD，剩下的就由它任意發展了～～">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Laravel之旅 - 認識Laravel資料夾結構">
@@ -24,8 +24,8 @@
 <meta property="article:published_time" content="2020-04-25T13:11:35.000Z">
 <meta property="article:modified_time" content="2020-05-03T14:37:35.623Z">
 <meta property="article:author" content="Yee">
-<meta property="article:tag" content="w3HexSchool">
 <meta property="article:tag" content="laravel">
+<meta property="article:tag" content="w3HexSchool">
 <meta name="twitter:card" content="summary">
     
     
@@ -512,7 +512,7 @@
             <a
                 class="post-action-btn btn btn--default btn-open-shareoptions"
                 href="#btn-open-shareoptions"
-                aria-label="Diesen Beitrag teilen"
+                aria-label="Share this post"
             >
                 <i class="fa fa-share-alt" aria-hidden="true"></i>
             </a>
@@ -562,7 +562,7 @@
         
         <li class="post-action">
             
-                <a class="post-action-btn btn btn--default" href="#" aria-label="Nach oben">
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
             
                 <i class="fa fa-list" aria-hidden="true"></i>
             </a>
@@ -627,7 +627,7 @@
             <a
                 class="post-action-btn btn btn--default btn-open-shareoptions"
                 href="#btn-open-shareoptions"
-                aria-label="Diesen Beitrag teilen"
+                aria-label="Share this post"
             >
                 <i class="fa fa-share-alt" aria-hidden="true"></i>
             </a>
@@ -677,7 +677,7 @@
         
         <li class="post-action">
             
-                <a class="post-action-btn btn btn--default" href="#" aria-label="Nach oben">
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
             
                 <i class="fa fa-list" aria-hidden="true"></i>
             </a>
