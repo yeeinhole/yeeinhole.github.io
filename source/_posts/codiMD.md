@@ -86,8 +86,9 @@ manage_users 就是管理使用者的指令集，
 對於小團隊來說已經足夠了～～
 ***
 Ref
-1. [辛西亞的技能樹 -【CodiMD】安裝踩雷筆記...](https://cynthiachuang.github.io/How-to-Setup-CodiMD/)
-
+1. [Docker Deployment](https://hackmd.io/c/codimd-documentation/%2Fs%2Fcodimd-docker-deployment)
+2. [辛西亞的技能樹 -【CodiMD】安裝踩雷筆記...](https://cynthiachuang.github.io/How-to-Setup-CodiMD/)
+3. [HackMD Business v.s. CodiMD得差異](https://hackmd.io/@docs/hackmd-vs-codimd)
 ***
 
 後記
@@ -102,4 +103,4 @@ Ref
 
 因此讓我想推動markdown的平台～～～
 
-找個個時間點將這平台架設完成。
+所以找個時間點將這平台給架設完成。
