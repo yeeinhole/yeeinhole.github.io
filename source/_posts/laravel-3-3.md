@@ -26,7 +26,6 @@ comments: true
 2. Docker version 19.03.5
 3. Laradock
 4. Laravel 6.0 以上 (5.8適用)
-5. Mysql Workbanch 8.0.19
 
 本系列不從部署環境開始說起，
 
