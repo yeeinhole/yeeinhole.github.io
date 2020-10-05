@@ -13,7 +13,7 @@
     
     
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg"},"articleBody":"好的route帶你上天堂～～\n為什麼呢！？\n因為好好規劃後可以不用再為了不知道用哪個單子而苦惱了，\n也會在維護的時候清楚明瞭問題在哪。\n\n\n本文所採用的環境\b\n\nMax OSX 10.15\nDocker version 19.03.5\nLaradock\nLaravel 6.0 以上 (5.8適用)\n\n本系列不從部署環境開始說起，\n部署環境可參考以下\n\nLaradock - 更快速優雅的建立Laravel\nInstall Apache, MySQL, PHP on macOS Catalina 10.15\nWin10請服用XAMPP，非專業版的Win裝docker會比較麻煩，不過也可以試試～～\n\n\n本系列文章Laravel之旅 - 認識Laravel資料夾結構Laravel之旅 - 善用Migration管理資料表Laravel之旅 - 生成Migration的懶人包Laravel之旅 - DB的操作(1) DB Query builderLaravel之旅 - DB的操作(2) Eloquent ORMLaravel之旅 - DB的操作(3) RelationshipsLaravel之旅 - DB的操作(4) Relationships 特別篇Laravel之旅 - 在Controller中開始寫寫code摟\n\nLaravel比起原生的php，他不是以檔名作為路由的根據，\n它提供了routes去建置維護整個專案的路由，\n而且非常方便，有很多方法可以減少重複寫的情況，\n也可以針對特定路由加上權限(can)或者是中介層(middleware)，\n甚至在api的路由中，也可以寫上scope(搭配laravel passport)，\n來看看routes/web.php有什麼吧！！！\n12345&lt;?phpRoute::get('/', function () &#123;    return view('welcome');&#125;);\n建立好laravel的專案，都會有這個route，\n可以在route中直接寫一個function且回傳值或view，\n要debug一些東西或者小測試時都很方便，不用再開一隻Controller，\n一般情況則是這樣寫路由的\n12345678910&lt;?php// 或者是 post、put、delete 這些http methodRoute::get('test', 'UserController@user');// 可以幫路由取別名，用在 return route('test');Route::get('test', 'UserController@user')-&gt;name('test');// 可以加上middlewareRoute::get('test', 'UserController@user')-&gt;name('test')-&gt;middleware('auth');\n這是一般的寫法，當路徑有很多的時候可以善用group的功能，\ngroup可以減少每段route的長度，也可以針對某些group設定上middleware和scope，\n這樣就不需要每個route都要寫得很長或者要重複加上其他的設定。\n123456789// prefix 這個group都擁有的路徑// namespace 這個group裡的檔案路徑// middleware 這個group要套用的中介層Route::group(['prefix' =&gt; '/backend/', 'namespace' =&gt; 'Backend', ['middleware' =&gt; ['auth']], function()&#123;    // middleware用陣列的原因是可以加入很多個middleware    // 裡面的寫法也是跟平常一樣    Route::get('test', 'UserController@user');&#125;);\n\n也可以在路由中帶上參數\n12345678910111213141516// 用&#123;&#125;就可以作為參數，可以帶很多個// e.g. http://localhost/test/123Route::get('test/&#123;param&#125;', 'UserController@user');// 帶上許多參數時，但其中可能會沒有值得時候// e.g. http://localhost/test/123// 看上去跟前一個範例一樣，但是在程式中，需要用 $param2 才能得到值Route::get('test/&#123;param1?&#125;&#125;/&#123;param2&#125;', 'UserController@user');// 這樣寫route時，function要這樣配合，就可以抓到值了public function user($param1, $param2)&#123;    dd($param1);&#125;\n\n以上是我在laravel中常用到的route寫法，\n官方很貼心的把api、\bconsole、channels分開來，這樣就不會導致web有很多路徑分不清楚，\nlocalhost/api/XXX這樣寫就會是讀api.php的設定，其他兩個也是這樣，但其實我也還沒用到這兩個部分。\n\n後記\n想當初在寫route的時候，不知道哪根筋不對，\n很有強迫症的把它tab的漂漂亮亮的，\n覺得整齊看起來很舒壓 ＸＤ～\n","dateCreated":"2020-08-07T18:07:48+08:00","dateModified":"2020-08-30T23:09:30+08:00","datePublished":"2020-08-07T18:07:48+08:00","description":"好的route帶你上天堂～～\n為什麼呢！？\n因為好好規劃後可以不用再為了不知道用哪個單子而苦惱了，\n也會在維護的時候清楚明瞭問題在哪。","headline":"Laravel之旅 - 好的Route帶你上天堂","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yeeinhole.github.io/2020/08/07/laravel-4-1/"},"publisher":{"@type":"Organization","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg","logo":{"@type":"ImageObject","url":"yee.jpeg"}},"url":"https://yeeinhole.github.io/2020/08/07/laravel-4-1/","keywords":"w3HexSchool, laravel"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg"},"articleBody":"好的route帶你上天堂～～\n為什麼呢！？\n因為好好規劃後可以不用再為了不知道用哪個單子而苦惱了，\n也會在維護的時候清楚明瞭問題在哪。\n\n\n本文所採用的環境\b\n\nMax OSX 10.15\nDocker version 19.03.5\nLaradock\nLaravel 6.0 以上 (5.8適用)\n\n本系列不從部署環境開始說起，\n部署環境可參考以下\n\nLaradock - 更快速優雅的建立Laravel\nInstall Apache, MySQL, PHP on macOS Catalina 10.15\nWin10請服用XAMPP，非專業版的Win裝docker會比較麻煩，不過也可以試試～～\n\n\n本系列文章Laravel之旅 - 認識Laravel資料夾結構Laravel之旅 - 善用Migration管理資料表Laravel之旅 - 生成Migration的懶人包Laravel之旅 - DB的操作(1) DB Query builderLaravel之旅 - DB的操作(2) Eloquent ORMLaravel之旅 - DB的操作(3) RelationshipsLaravel之旅 - DB的操作(4) Relationships 特別篇Laravel之旅 - 在Controller中開始寫寫code摟\n\nLaravel比起原生的php，他不是以檔名作為路由的根據，\n它提供了routes去建置維護整個專案的路由，\n而且非常方便，有很多方法可以減少重複寫的情況，\n也可以針對特定路由加上權限(can)或者是中介層(middleware)，\n甚至在api的路由中，也可以寫上scope(搭配laravel passport)，\n來看看routes/web.php有什麼吧！！！\n12345&lt;?phpRoute::get('/', function () &#123;    return view('welcome');&#125;);\n建立好laravel的專案，都會有這個route，\n可以在route中直接寫一個function且回傳值或view，\n要debug一些東西或者小測試時都很方便，不用再開一隻Controller，\n一般情況則是這樣寫路由的\n12345678910&lt;?php// 或者是 post、put、delete 這些http methodRoute::get('test', 'UserController@user');// 可以幫路由取別名，用在 return route('test');Route::get('test', 'UserController@user')-&gt;name('test');// 可以加上middlewareRoute::get('test', 'UserController@user')-&gt;name('test')-&gt;middleware('auth');\n這是一般的寫法，當路徑有很多的時候可以善用group的功能，\ngroup可以減少每段route的長度，也可以針對某些group設定上middleware和scope，\n這樣就不需要每個route都要寫得很長或者要重複加上其他的設定。\n123456789// prefix 這個group都擁有的路徑// namespace 這個group裡的檔案路徑// middleware 這個group要套用的中介層Route::group(['prefix' =&gt; '/backend/', 'namespace' =&gt; 'Backend', ['middleware' =&gt; ['auth']], function()&#123;    // middleware用陣列的原因是可以加入很多個middleware    // 裡面的寫法也是跟平常一樣    Route::get('test', 'UserController@user');&#125;);\n\n也可以在路由中帶上參數\n12345678910111213141516// 用&#123;&#125;就可以作為參數，可以帶很多個// e.g. http://localhost/test/123Route::get('test/&#123;param&#125;', 'UserController@user');// 帶上許多參數時，但其中可能會沒有值得時候// e.g. http://localhost/test/123// 看上去跟前一個範例一樣，但是在程式中，需要用 $param2 才能得到值Route::get('test/&#123;param1?&#125;&#125;/&#123;param2&#125;', 'UserController@user');// 這樣寫route時，function要這樣配合，就可以抓到值了public function user($param1, $param2)&#123;    dd($param1);&#125;\n\n以上是我在laravel中常用到的route寫法，\n官方很貼心的把api、\bconsole、channels分開來，這樣就不會導致web有很多路徑分不清楚，\nlocalhost/api/XXX這樣寫就會是讀api.php的設定，其他兩個也是這樣，但其實我也還沒用到這兩個部分。\n\n後記\n想當初在寫route的時候，不知道哪根筋不對，\n很有強迫症的把它tab的漂漂亮亮的，\n覺得整齊看起來很舒壓 ＸＤ～\n","dateCreated":"2020-08-07T18:07:48+08:00","dateModified":"2020-08-30T23:09:30+08:00","datePublished":"2020-08-07T18:07:48+08:00","description":"好的route帶你上天堂～～\n為什麼呢！？\n因為好好規劃後可以不用再為了不知道用哪個單子而苦惱了，\n也會在維護的時候清楚明瞭問題在哪。","headline":"Laravel之旅 - 好的Route帶你上天堂","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yeeinhole.github.io/2020/08/07/laravel-4-1/"},"publisher":{"@type":"Organization","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg","logo":{"@type":"ImageObject","url":"yee.jpeg"}},"url":"https://yeeinhole.github.io/2020/08/07/laravel-4-1/","keywords":"laravel, w3HexSchool"}</script>
     <meta name="description" content="好的route帶你上天堂～～ 為什麼呢！？ 因為好好規劃後可以不用再為了不知道用哪個單子而苦惱了， 也會在維護的時候清楚明瞭問題在哪。">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Laravel之旅 - 好的Route帶你上天堂">
@@ -24,8 +24,8 @@
 <meta property="article:published_time" content="2020-08-07T10:07:48.000Z">
 <meta property="article:modified_time" content="2020-08-30T15:09:30.890Z">
 <meta property="article:author" content="Yee">
-<meta property="article:tag" content="w3HexSchool">
 <meta property="article:tag" content="laravel">
+<meta property="article:tag" content="w3HexSchool">
 <meta name="twitter:card" content="summary">
     
     
@@ -352,7 +352,7 @@
             <a
                 class="post-action-btn btn btn--default btn-open-shareoptions"
                 href="#btn-open-shareoptions"
-                aria-label="Diesen Beitrag teilen"
+                aria-label="Share this post"
             >
                 <i class="fa fa-share-alt" aria-hidden="true"></i>
             </a>
@@ -402,7 +402,7 @@
         
         <li class="post-action">
             
-                <a class="post-action-btn btn btn--default" href="#" aria-label="Nach oben">
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
             
                 <i class="fa fa-list" aria-hidden="true"></i>
             </a>
@@ -467,7 +467,7 @@
             <a
                 class="post-action-btn btn btn--default btn-open-shareoptions"
                 href="#btn-open-shareoptions"
-                aria-label="Diesen Beitrag teilen"
+                aria-label="Share this post"
             >
                 <i class="fa fa-share-alt" aria-hidden="true"></i>
             </a>
@@ -517,7 +517,7 @@
         
         <li class="post-action">
             
-                <a class="post-action-btn btn btn--default" href="#" aria-label="Nach oben">
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
             
                 <i class="fa fa-list" aria-hidden="true"></i>
             </a>

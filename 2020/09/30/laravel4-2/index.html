@@ -6,44 +6,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Yee的補坑筆記">
-    <title>Heroku - 快速部署python - Yee的補坑筆記</title>
+    <title>Laravel之旅 - 靈活的產生美麗的畫面吧 - Yee的補坑筆記</title>
     <meta name="author" content="Yee">
     
         <meta name="keywords" content="laravel,docker,">
     
     
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg"},"articleBody":"當開發好小腳本或小工具時，\n我們可以來使用Heroku來建置執行的環境～～ \n\n\n為什麼選擇Heroku，\n因為他目前支援的語言也蠻多的，建置過程中也不會太麻煩，\n類似Git的方法就能部署，也可以串接github來自動部署。\n\n本文所採用的環境\b\n\nMax OSX 10.15\nHomebrew 2.2.5\nheroku/7.39.0 darwin-x64 node-v12.13.0\n\n本次沒有測過其他平台，windows官方有提供cli工具，至於linux大概也是裝指令吧！？\n準備好一個heroku的帳號\n\n首先我們先來裝heroku的指令這裡我一樣使用brew來安裝～ 讓子彈飛一下最後出現了brew的酒杯，順利完成安裝\n接著用treminal登入heroku吧！照著指令的提示，按下任意鍵就會跳出瀏覽器(我以為跟git一樣可以在treminal登入呢！)照著上面的流程後，就可以在treminal中順利的登入heroku了！\n這樣heroku的指令都會對應到heroku的帳號中，\n讓我們來開一個APP吧，可以用heroku create也可以登入到heroku建立，\n這裡我就到heroku中建立吧！建立完成後，到setting頁籤中找到Buildpacks的部分，\n這裡也是可以用指令去做，既然我們已經在後台了，就直接在這邊設定吧！\nBuildpacks我的理解是，設定app的語言，之後會在建立相關的檔案，讓app的環境建立起來我們這裡要用python，所以選擇python完成這些設定後，接著建置該app需要的環境，\nheroku的部署會使用到git指令，\n1234567mkdir trelloxlinecd trelloxlinegit initgit add -Agit commit -am &quot;Heroku&quot;&#x2F;&#x2F; 這裡的指令背後跟 git remote add ... 一樣，只是透過heroku指令去抓heroku git:remote -a trelloxline\n到這邊我想跟著官方的指令，應該會下git push heroku master，\n但… 事實沒那麼簡單，因為是第一次部署，我們需要先建立一個檔案，讓heroku幫我們部署App的環境，\n1pip3 freeze &gt; requirements.txt\n將我們本機端開發所使用到的套件…等都丟到requirements.txt這個檔案中，\n接著我們就可以進行部署拉～\n1git push heroku master\n登登登～ 這樣heroku就會幫我們初始化App，(為了測試環境是否成功，我們先建立個hello.py這個檔案，裡頭就寫個 print(&#39;Hello&#39;)\n然後一樣git add ….. ((省略git 步驟\n接著回到heroku的介面中，右上角這個more裡中，有終端機指令的選項，我們來測試看看檔案有沒有部署上去，老樣子先來個ls -al檔案都有順利上去，接著就是嘗試執行py了，python hello.py\nすばらし～～ \n這樣就可以部署自己做的py工具摟！！！\n\n後記\n之前上課的時候，就有用過heroku這工具，映像中當時git push就可以部署一個html or php，\n沒想到現在部署變得比較小麻煩些，不過可能也是因為要執行python，\nheroku必須知道本機端是用哪個版本的py、pip跟package，\n在部署過程中爬了一下文才綜合出解決的方法 @@\n","dateCreated":"2020-03-14T16:21:54+08:00","dateModified":"2020-03-20T14:08:56+08:00","datePublished":"2020-03-14T16:21:54+08:00","description":"當開發好小腳本或小工具時，\n我們可以來使用Heroku來建置執行的環境～～ ","headline":"Heroku - 快速部署python","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yeeinhole.github.io/2020/03/14/heroku-python/"},"publisher":{"@type":"Organization","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg","logo":{"@type":"ImageObject","url":"yee.jpeg"}},"url":"https://yeeinhole.github.io/2020/03/14/heroku-python/","keywords":"w3HexSchool, devops, heroku, python"}</script>
-    <meta name="description" content="當開發好小腳本或小工具時， 我們可以來使用Heroku來建置執行的環境～～">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg"},"articleBody":"能在Controller中寫寫code也串完router了，\n那接下來就是該把漂亮的畫面呈現出來了！！！\n\n\n本文所採用的環境\b\n\nMax OSX 10.15\nDocker version 19.03.5\nLaradock\nLaravel 6.0 以上 (5.8適用)\n\n本系列不從部署環境開始說起，\n部署環境可參考以下\n\nLaradock - 更快速優雅的建立Laravel\nInstall Apache, MySQL, PHP on macOS Catalina 10.15\nWin10請服用XAMPP，非專業版的Win裝docker會比較麻煩，不過也可以試試～～\n\n\nLaravel之旅 - 認識Laravel資料夾結構Laravel之旅 - 善用Migration管理資料表Laravel之旅 - 生成Migration的懶人包Laravel之旅 - DB的操作(1) DB Query builderLaravel之旅 - DB的操作(2) Eloquent ORMLaravel之旅 - DB的操作(3) RelationshipsLaravel之旅 - DB的操作(4) Relationships 特別篇Laravel之旅 - 在Controller中開始寫寫code摟Laravel之旅 - 在Controller中開始寫寫code摟\n\n在laravel中，resource/view/這個資料夾是在放畫面檔案的部分，\nlaravel的blade可以將畫面切分成好幾個小塊再import進主要的畫面中，\n所以我都會把設計的版切分成 main header body footer，如果左右還有選單的話也會切進去，\n簡單來說main我會放主體，並寫下載入blade的標籤，\n1234567891011&lt;html&gt;    &lt;head&gt;        @yield(&#39;head&#39;)    &lt;&#x2F;head&gt;    &lt;body&gt;        &lt;div&gt;            @yield(&#39;content&#39;)        &lt;&#x2F;div&gt;        @yield(&#39;body_script&#39;)    &lt;&#x2F;body&gt;&lt;&#x2F;html&gt;\n\b通常我會埋下這些標籤，讓子模板去使用，\n將整體會使用的JS、CSS放在這裡，再額外寫上head跟body_script這兩個標籤，\n讓子模板插入他們各自的JS與CSS，\n標籤主要是用來說明，該區塊是子模板插入的位置，1234子模板只要使用section並使用這個標籤的名稱，就可以將html插入至這個區塊。在子模板，我的blade通常都會是這樣\n@extends(‘defaults.index’)\n@section(‘head’)@endsection\n@section(‘content’)    @include(‘some_blade’)@endsection\n@section(‘body_script’)@endsection\n\n```@extends``` 標籤主要用來說明該模板會繼承哪一個blade，\n\n```@section &amp; @endsection``` 包覆起來的html最終會出現在父層blade對應的區塊中。\n\n``` @include ``` include一個blade到這個區塊中，如果blade中有共用的部分，就可以在抽出來變成blade去載入。\n\n通常都用這幾個標籤，官網還有```@component```...等，\n\n在7.0開始多了 components 章節，大致上瞭解的功能有點像 vue ～～～～ 吧，\n\n似乎可以為了這個模板獨立寫一支程式，讓畫面更容易去渲染對應的資訊之類的。\n\n***\n後記\n\n因為開始接觸一些Vue後，比較少來研究laravel的blade，\n\n\b沒想到除了上面常用的，還多了很多，這篇先介紹我常用的，\n\n後面有機會再寫寫新的用法，\n\n畢竟我覺得有應用在專案中，才會更了解該標籤～～ \n\n否則讀完跟小嘗試後還不夠有感覺～～","dateCreated":"2020-09-30T18:12:15+08:00","dateModified":"2020-10-04T15:13:15+08:00","datePublished":"2020-09-30T18:12:15+08:00","description":"能在Controller中寫寫code也串完router了，\n那接下來就是該把漂亮的畫面呈現出來了！！！","headline":"Laravel之旅 - 靈活的產生美麗的畫面吧","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yeeinhole.github.io/2020/09/30/laravel4-2/"},"publisher":{"@type":"Organization","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg","logo":{"@type":"ImageObject","url":"yee.jpeg"}},"url":"https://yeeinhole.github.io/2020/09/30/laravel4-2/","keywords":"laravel, w3HexSchool"}</script>
+    <meta name="description" content="能在Controller中寫寫code也串完router了， 那接下來就是該把漂亮的畫面呈現出來了！！！">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="Heroku - 快速部署python">
-<meta property="og:url" content="https://yeeinhole.github.io/2020/03/14/heroku-python/index.html">
+<meta property="og:title" content="Laravel之旅 - 靈活的產生美麗的畫面吧">
+<meta property="og:url" content="https://yeeinhole.github.io/2020/09/30/laravel4-2/index.html">
 <meta property="og:site_name" content="Yee的補坑筆記">
-<meta property="og:description" content="當開發好小腳本或小工具時， 我們可以來使用Heroku來建置執行的環境～～">
+<meta property="og:description" content="能在Controller中寫寫code也串完router了， 那接下來就是該把漂亮的畫面呈現出來了！！！">
 <meta property="og:locale" content="zh_TW">
-<meta property="og:image" content="https://yeeinhole.github.io/image/heroku-python/heroku_install1.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/heroku-python/heroku_install2.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/heroku-python/heroku_login1.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/heroku-python/heroku_login2.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/heroku-python/heroku_login3.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/heroku-python/heroku_login4.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/heroku-python/heroku_cerate.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/heroku-python/heroku_buildpacks1.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/heroku-python/heroku_buildpacks2.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/heroku-python/heroku_git_push.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/heroku-python/heroku_index.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/heroku-python/heroku_console1.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/heroku-python/heroku_console2.png">
-<meta property="og:image" content="https://yeeinhole.github.io/image/heroku-python/heroku_console3.png">
-<meta property="article:published_time" content="2020-03-14T08:21:54.000Z">
-<meta property="article:modified_time" content="2020-03-20T06:08:56.319Z">
+<meta property="article:published_time" content="2020-09-30T10:12:15.000Z">
+<meta property="article:modified_time" content="2020-10-04T07:13:15.131Z">
 <meta property="article:author" content="Yee">
+<meta property="article:tag" content="laravel">
 <meta property="article:tag" content="w3HexSchool">
-<meta property="article:tag" content="devops">
-<meta property="article:tag" content="heroku">
-<meta property="article:tag" content="python">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://yeeinhole.github.io/image/heroku-python/heroku_install1.png">
     
     
         
@@ -239,20 +222,20 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title">
-            Heroku - 快速部署python
+            Laravel之旅 - 靈活的產生美麗的畫面吧
         </h1>
     
     
         <div class="post-meta">
-    <time datetime="2020-03-14T16:21:54+08:00">
+    <time datetime="2020-09-30T18:12:15+08:00">
 	
-		    3月 14, 2020
+		    9月 30, 2020
     	
     </time>
     
         <span>分類 </span>
         
-    <a class="category-link" href="/categories/devops/">devops</a>
+    <a class="category-link" href="/categories/Laravel/">Laravel</a>
 
 
     
@@ -264,50 +247,65 @@
     
     <div class="post-content markdown">
         <div class="main-content-wrap">
-            <p>當開發好小腳本或小工具時，</p>
-<p>我們可以來使用Heroku來建置執行的環境～～ </p>
+            <p>能在Controller中寫寫code也串完router了，</p>
+<p>那接下來就是該把漂亮的畫面呈現出來了！！！</p>
 <a id="more"></a>
-
-<p>為什麼選擇Heroku，</p>
-<p>因為他目前支援的語言也蠻多的，建置過程中也不會太麻煩，</p>
-<p>類似Git的方法就能部署，也可以串接github來自動部署。</p>
 <hr>
 <p>本文所採用的環境<br></p>
 <ol>
 <li>Max OSX 10.15</li>
-<li>Homebrew 2.2.5</li>
-<li>heroku/7.39.0 darwin-x64 node-v12.13.0</li>
+<li>Docker version 19.03.5</li>
+<li>Laradock</li>
+<li>Laravel 6.0 以上 (5.8適用)</li>
 </ol>
-<p>本次沒有測過其他平台，windows官方有提供cli工具，至於linux大概也是裝指令吧！？</p>
-<p>準備好一個heroku的帳號</p>
+<p>本系列不從部署環境開始說起，</p>
+<p>部署環境可參考以下</p>
+<ol>
+<li><a href="https://yeeinhole.github.io/2020/01/27/laradock/">Laradock - 更快速優雅的建立Laravel</a></li>
+<li><a href="https://coolestguidesontheplanet.com/install-apache-mysql-php-on-macos-catalina-10-15/" target="_blank" rel="noopener">Install Apache, MySQL, PHP on macOS Catalina 10.15</a></li>
+<li>Win10請服用XAMPP，非專業版的Win裝docker會比較麻煩，不過也可以試試～～</li>
+</ol>
 <hr>
-<p>首先我們先來裝heroku的指令<br><img src="../../../../image/heroku-python/heroku_install1.png" alt="heroku_install" title="heroku_install"><br>這裡我一樣使用brew來安裝～ 讓子彈飛一下<br><img src="../../../../image/heroku-python/heroku_install2.png" alt="heroku_install" title="heroku_install"><br>最後出現了brew的酒杯，順利完成安裝</p>
-<p>接著用treminal登入heroku吧！<br><img src="../../../../image/heroku-python/heroku_login1.png" alt="heroku_login" title="heroku_login"><br>照著指令的提示，按下任意鍵就會跳出瀏覽器(我以為跟git一樣可以在treminal登入呢！)<br><img src="../../../../image/heroku-python/heroku_login2.png" alt="heroku_login" title="heroku_login"><br><img src="../../../../image/heroku-python/heroku_login3.png" alt="heroku_login" title="heroku_login"><br><img src="../../../../image/heroku-python/heroku_login4.png" alt="heroku_login" title="heroku_login"><br>照著上面的流程後，就可以在treminal中順利的登入heroku了！</p>
-<p>這樣heroku的指令都會對應到heroku的帳號中，</p>
-<p>讓我們來開一個APP吧，可以用<code>heroku create</code>也可以登入到heroku建立，</p>
-<p>這裡我就到heroku中建立吧！<br><img src="../../../../image/heroku-python/heroku_cerate.png" alt="heroku_cerate" title="heroku_cerate"><br>建立完成後，到setting頁籤中找到Buildpacks的部分，</p>
-<p>這裡也是可以用指令去做，既然我們已經在後台了，就直接在這邊設定吧！</p>
-<p>Buildpacks我的理解是，設定app的語言，之後會在建立相關的檔案，讓app的環境建立起來<br><img src="../../../../image/heroku-python/heroku_buildpacks1.png" alt="heroku_buildpacks" title="heroku_buildpacks"><br>我們這裡要用python，所以選擇python<br><img src="../../../../image/heroku-python/heroku_buildpacks2.png" alt="heroku_buildpacks" title="heroku_buildpacks"><br>完成這些設定後，接著建置該app需要的環境，</p>
-<p>heroku的部署會使用到git指令，</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mkdir trelloxline</span><br><span class="line">cd trelloxline</span><br><span class="line">git init</span><br><span class="line">git add -A</span><br><span class="line">git commit -am &quot;Heroku&quot;</span><br><span class="line">&#x2F;&#x2F; 這裡的指令背後跟 git remote add ... 一樣，只是透過heroku指令去抓</span><br><span class="line">heroku git:remote -a trelloxline</span><br></pre></td></tr></table></figure>
-<p>到這邊我想跟著官方的指令，應該會下<code>git push heroku master</code>，</p>
-<p>但… 事實沒那麼簡單，因為是第一次部署，我們需要先建立一個檔案，讓heroku幫我們部署App的環境，</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 freeze &gt; requirements.txt</span><br></pre></td></tr></table></figure>
-<p>將我們本機端開發所使用到的套件…等都丟到<code>requirements.txt</code>這個檔案中，</p>
-<p>接著我們就可以進行部署拉～</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push heroku master</span><br></pre></td></tr></table></figure>
-<p><img src="../../../../image/heroku-python/heroku_git_push.png" alt="heroku_git_push" title="heroku_git_push"><br>登登登～ 這樣heroku就會幫我們初始化App，<br>(<br>為了測試環境是否成功，我們先建立個hello.py這個檔案，裡頭就寫個 <code>print(&#39;Hello&#39;)</code></p>
-<p>然後一樣git add ….. ((省略git 步驟</p>
-<p>接著回到heroku的介面中，<br><img src="../../../../image/heroku-python/heroku_index.png" alt="heroku_index" title="heroku_index"><br>右上角這個more裡中，有終端機指令的選項，我們來測試看看檔案有沒有部署上去，<br><img src="../../../../image/heroku-python/heroku_console1.png" alt="heroku_console" title="heroku_console"><br>老樣子先來個ls -al<br><img src="../../../../image/heroku-python/heroku_console2.png" alt="heroku_console" title="heroku_console"><br>檔案都有順利上去，接著就是嘗試執行py了，<code>python hello.py</code><br><img src="../../../../image/heroku-python/heroku_console3.png" alt="heroku_console" title="heroku_console"></p>
-<p>すばらし～～ </p>
-<p>這樣就可以部署自己做的py工具摟！！！</p>
+<p><a href="https://yeeinhole.github.io/2020/04/25/laravel-1/">Laravel之旅 - 認識Laravel資料夾結構</a><br><a href="https://yeeinhole.github.io/2020/04/25/laravel-2/">Laravel之旅 - 善用Migration管理資料表</a><br><a href="https://yeeinhole.github.io/2020/04/25/laravel-2-2/">Laravel之旅 - 生成Migration的懶人包</a><br><a href="https://yeeinhole.github.io/2020/05/17/laravel-3/">Laravel之旅 - DB的操作(1) DB Query builder</a><br><a href="https://yeeinhole.github.io/2020/05/24/laravel-3-2/">Laravel之旅 - DB的操作(2) Eloquent ORM</a><br><a href="https://yeeinhole.github.io/2020/07/19/laravel-3-3/">Laravel之旅 - DB的操作(3) Relationships</a><br><a href="https://yeeinhole.github.io/2020/07/26/laravel-3-4/">Laravel之旅 - DB的操作(4) Relationships 特別篇</a><br><a href="https://yeeinhole.github.io/2020/08/02/laravel-4/">Laravel之旅 - 在Controller中開始寫寫code摟</a><br><a href="https://yeeinhole.github.io/2020/08/07/laravel-4-1/">Laravel之旅 - 在Controller中開始寫寫code摟</a></p>
 <hr>
-<p>後記</p>
-<p>之前上課的時候，就有用過heroku這工具，映像中當時git push就可以部署一個html or php，</p>
-<p>沒想到現在部署變得比較小麻煩些，不過可能也是因為要執行python，</p>
-<p>heroku必須知道本機端是用哪個版本的py、pip跟package，</p>
-<p>在部署過程中爬了一下文才綜合出解決的方法 @@</p>
+<p>在laravel中，resource/view/這個資料夾是在放畫面檔案的部分，</p>
+<p>laravel的blade可以將畫面切分成好幾個小塊再import進主要的畫面中，</p>
+<p>所以我都會把設計的版切分成 main header body footer，如果左右還有選單的話也會切進去，</p>
+<p>簡單來說main我會放主體，並寫下載入blade的標籤，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">    &lt;head&gt;</span><br><span class="line">        @yield(&#39;head&#39;)</span><br><span class="line">    &lt;&#x2F;head&gt;</span><br><span class="line">    &lt;body&gt;</span><br><span class="line">        &lt;div&gt;</span><br><span class="line">            @yield(&#39;content&#39;)</span><br><span class="line">        &lt;&#x2F;div&gt;</span><br><span class="line">        @yield(&#39;body_script&#39;)</span><br><span class="line">    &lt;&#x2F;body&gt;</span><br><span class="line">&lt;&#x2F;html&gt;</span><br></pre></td></tr></table></figure>
+<p>通常我會埋下這些標籤，讓子模板去使用，</p>
+<p>將整體會使用的JS、CSS放在這裡，再額外寫上<code>head</code>跟<code>body_script</code>這兩個標籤，</p>
+<p>讓子模板插入他們各自的JS與CSS，</p>
+<figure class="highlight plain"><figcaption><span>標籤主要是用來說明，該區塊是子模板插入的位置，</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">子模板只要使用section並使用這個標籤的名稱，就可以將html插入至這個區塊。</span><br><span class="line"></span><br><span class="line">在子模板，我的blade通常都會是這樣</span><br></pre></td></tr></table></figure>
+<p>@extends(‘defaults.index’)</p>
+<p>@section(‘head’)<br>@endsection</p>
+<p>@section(‘content’)<br>    @include(‘some_blade’)<br>@endsection</p>
+<p>@section(‘body_script’)<br>@endsection</p>
+<pre><code>
+```@extends``` 標籤主要用來說明該模板會繼承哪一個blade，
 
+```@section &amp; @endsection``` 包覆起來的html最終會出現在父層blade對應的區塊中。
+
+``` @include ``` include一個blade到這個區塊中，如果blade中有共用的部分，就可以在抽出來變成blade去載入。
+
+通常都用這幾個標籤，官網還有```@component```...等，
+
+在7.0開始多了 components 章節，大致上瞭解的功能有點像 vue ～～～～ 吧，
+
+似乎可以為了這個模板獨立寫一支程式，讓畫面更容易去渲染對應的資訊之類的。
+
+***
+後記
+
+因為開始接觸一些Vue後，比較少來研究laravel的blade，
+
+沒想到除了上面常用的，還多了很多，這篇先介紹我常用的，
+
+後面有機會再寫寫新的用法，
+
+畢竟我覺得有應用在專案中，才會更了解該標籤～～ 
+
+否則讀完跟小嘗試後還不夠有感覺～～</code></pre>
             
 
 
@@ -318,7 +316,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">標籤</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/devops/" rel="tag">devops</a> <a class="tag tag--primary tag--small t-link" href="/tags/heroku/" rel="tag">heroku</a> <a class="tag tag--primary tag--small t-link" href="/tags/python/" rel="tag">python</a> <a class="tag tag--primary tag--small t-link" href="/tags/w3HexSchool/" rel="tag">w3HexSchool</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/laravel/" rel="tag">laravel</a> <a class="tag tag--primary tag--small t-link" href="/tags/w3HexSchool/" rel="tag">w3HexSchool</a>
 
             </div>
         
@@ -328,14 +326,11 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                <a
-                    class="post-action-btn btn btn--default tooltip--top"
-                    href="/2020/03/20/heroku-trelloXline/"
-                    data-tooltip="Heroku - 自動執行python腳本"
-                    aria-label="上一篇: Heroku - 自動執行python腳本"
-                >
-                    
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
                     </a>
@@ -345,9 +340,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2020/03/08/ngrok/"
-                    data-tooltip="Ngrok - 再也不用擔心開發遇到Webhook"
-                    aria-label="下一篇: Ngrok - 再也不用擔心開發遇到Webhook"
+                    href="/2020/08/30/codiMD/"
+                    data-tooltip="建立團隊專屬的CodiMD"
+                    aria-label="下一篇: 建立團隊專屬的CodiMD"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
@@ -372,7 +367,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://yeeinhole.github.io/2020/03/14/heroku-python/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://yeeinhole.github.io/2020/09/30/laravel4-2/"
                     title="分享到 Facebook"
                     aria-label="分享到 Facebook"
                 >
@@ -385,7 +380,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://yeeinhole.github.io/2020/03/14/heroku-python/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://yeeinhole.github.io/2020/09/30/laravel4-2/"
                     title="分享到 Twitter"
                     aria-label="分享到 Twitter"
                 >
@@ -398,7 +393,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://yeeinhole.github.io/2020/03/14/heroku-python/"
+                    target="new" href="https://plus.google.com/share?url=https://yeeinhole.github.io/2020/09/30/laravel4-2/"
                     title="分享到 Google+"
                     aria-label="分享到 Google+"
                 >
@@ -443,14 +438,11 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                <a
-                    class="post-action-btn btn btn--default tooltip--top"
-                    href="/2020/03/20/heroku-trelloXline/"
-                    data-tooltip="Heroku - 自動執行python腳本"
-                    aria-label="上一篇: Heroku - 自動執行python腳本"
-                >
-                    
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
                     </a>
@@ -460,9 +452,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2020/03/08/ngrok/"
-                    data-tooltip="Ngrok - 再也不用擔心開發遇到Webhook"
-                    aria-label="下一篇: Ngrok - 再也不用擔心開發遇到Webhook"
+                    href="/2020/08/30/codiMD/"
+                    data-tooltip="建立團隊專屬的CodiMD"
+                    aria-label="下一篇: 建立團隊專屬的CodiMD"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
@@ -487,7 +479,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://yeeinhole.github.io/2020/03/14/heroku-python/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://yeeinhole.github.io/2020/09/30/laravel4-2/"
                     title="分享到 Facebook"
                     aria-label="分享到 Facebook"
                 >
@@ -500,7 +492,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://yeeinhole.github.io/2020/03/14/heroku-python/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://yeeinhole.github.io/2020/09/30/laravel4-2/"
                     title="分享到 Twitter"
                     aria-label="分享到 Twitter"
                 >
@@ -513,7 +505,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://yeeinhole.github.io/2020/03/14/heroku-python/"
+                    target="new" href="https://plus.google.com/share?url=https://yeeinhole.github.io/2020/09/30/laravel4-2/"
                     title="分享到 Google+"
                     aria-label="分享到 Google+"
                 >
@@ -547,7 +539,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://www.facebook.com/sharer/sharer.php?u=https://yeeinhole.github.io/2020/03/14/heroku-python/"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://yeeinhole.github.io/2020/09/30/laravel4-2/"
                         aria-label="分享到 Facebook"
                     >
                         <i class="fab fa-facebook" aria-hidden="true"></i><span>分享到 Facebook</span>
@@ -560,7 +552,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://twitter.com/intent/tweet?text=https://yeeinhole.github.io/2020/03/14/heroku-python/"
+                        href="https://twitter.com/intent/tweet?text=https://yeeinhole.github.io/2020/09/30/laravel4-2/"
                         aria-label="分享到 Twitter"
                     >
                         <i class="fab fa-twitter" aria-hidden="true"></i><span>分享到 Twitter</span>
@@ -573,7 +565,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://plus.google.com/share?url=https://yeeinhole.github.io/2020/03/14/heroku-python/"
+                        href="https://plus.google.com/share?url=https://yeeinhole.github.io/2020/09/30/laravel4-2/"
                         aria-label="分享到 Google+"
                     >
                         <i class="fab fa-google-plus" aria-hidden="true"></i><span>分享到 Google+</span>

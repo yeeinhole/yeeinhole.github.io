@@ -13,7 +13,7 @@
     
     
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg"},"articleBody":"無意間發現團隊成員有在使用HackMD紀錄筆記，\n後來想說直接開一個group，\n結果… 免費的人數只有3位呀～～～～～～  T_T\n\n\n本文所採用的環境\b\n\nMax OSX 10.15\nDocker version 19.03.5\n\n\n然後就發現了CodiMD，其實就是HackMd的open版，\n需要自行架設與維護，\n不過，\n官方也是很貼心得整理各種部署的方法，\n本文採用 docker 的方法進行架設，\n這邊有一篇分析 HackMD Business v.s. CodiMD得差異\n可以看過這篇後再決定怎麼建置。\n\n我們直接來看看CodiMD提供的docker composer吧\nDocker Deployment\n官方說明很簡單的說了，直接把內文製作成一份docker-compose.yml，\n這邊要注意的是，記得修改資料庫的帳號與密碼，\n也就是POSTGRES_USER和POSTGRES_PASSWORD，\n特別注意CMD_DB_URL=postgres://codimd:change_password@database/codimd 這段的 codimd:change_password 也要記得修改\ndatabase的部分完成後，接著設定CodiMD圖檔上傳的位置，\n123&#x2F;&#x2F; upload-dat 請寫上主機上存放CodiMD檔案的位置volumes:      - upload-data:&#x2F;home&#x2F;hackmd&#x2F;app&#x2F;public&#x2F;uploads\n\n修改好位置後，記得將資料夾的權限設為 uid 1500、gid 1500 的使用者權限與群組，\n然後看想把服務開在哪一個 port 上，這邊預設是 3000 port，\n以上建置好了之後，就直接啟動它吧 docker-compose up -d\n啟動後 3000 port 應該就可以看到 CodiMD的主頁了，\n預設是可以看到 login，不過因為內部使用，我就把它給關掉了\n關掉後該怎麼註冊呢！？\n登入進 container，\nls -al一下bin這個資料夾，\nmanage_users 就是管理使用者的指令集，\n對他 --help 你就會發現\n他提供 新增、刪除、重置密碼、最後一個--pass沒有很懂意思ＸＤ，\n畢竟這是open source版本，不像HackMD提供完善的管理介面，\n對於小團隊來說已經足夠了～～\n\nRef\n\nDocker Deployment\n辛西亞的技能樹 -【CodiMD】安裝踩雷筆記…\nHackMD Business v.s. CodiMD得差異\n\n\n後記\n團隊中一直都沒有共享資源的平台，大部分都使用gsuit，\n雖然可以達到共享，不過程式碼的紀錄，就不能很順暢的排版，\n又沒辦法推hexo，畢竟這比較偏向個人blog，\n後來帶領的新成員會用HackMD將我所教的記錄下來，\n因此讓我想推動markdown的平台～～～\n所以找個時間點將這平台給架設完成。\n","dateCreated":"2020-08-30T23:06:41+08:00","dateModified":"2020-08-30T23:49:15+08:00","datePublished":"2020-08-30T23:06:41+08:00","description":"無意間發現團隊成員有在使用HackMD紀錄筆記，\n後來想說直接開一個group，\n結果… 免費的人數只有3位呀～～～～～～  T_T","headline":"建立團隊專屬的CodiMD","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yeeinhole.github.io/2020/08/30/codiMD/"},"publisher":{"@type":"Organization","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg","logo":{"@type":"ImageObject","url":"yee.jpeg"}},"url":"https://yeeinhole.github.io/2020/08/30/codiMD/","keywords":"devops, docker, w3HexSchool"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg"},"articleBody":"無意間發現團隊成員有在使用HackMD紀錄筆記，\n後來想說直接開一個group，\n結果… 免費的人數只有3位呀～～～～～～  T_T\n\n\n本文所採用的環境\b\n\nMax OSX 10.15\nDocker version 19.03.5\n\n\n然後就發現了CodiMD，其實就是HackMd的open版，\n需要自行架設與維護，\n不過，\n官方也是很貼心得整理各種部署的方法，\n本文採用 docker 的方法進行架設，\n這邊有一篇分析 HackMD Business v.s. CodiMD得差異\n可以看過這篇後再決定怎麼建置。\n\n我們直接來看看CodiMD提供的docker composer吧\nDocker Deployment\n官方說明很簡單的說了，直接把內文製作成一份docker-compose.yml，\n這邊要注意的是，記得修改資料庫的帳號與密碼，\n也就是POSTGRES_USER和POSTGRES_PASSWORD，\n特別注意CMD_DB_URL=postgres://codimd:change_password@database/codimd 這段的 codimd:change_password 也要記得修改\ndatabase的部分完成後，接著設定CodiMD圖檔上傳的位置，\n123&#x2F;&#x2F; upload-dat 請寫上主機上存放CodiMD檔案的位置volumes:      - upload-data:&#x2F;home&#x2F;hackmd&#x2F;app&#x2F;public&#x2F;uploads\n\n修改好位置後，記得將資料夾的權限設為 uid 1500、gid 1500 的使用者權限與群組，\n然後看想把服務開在哪一個 port 上，這邊預設是 3000 port，\n以上建置好了之後，就直接啟動它吧 docker-compose up -d\n啟動後 3000 port 應該就可以看到 CodiMD的主頁了，\n預設是可以看到 login，不過因為內部使用，我就把它給關掉了\n關掉後該怎麼註冊呢！？\n登入進 container，\nls -al一下bin這個資料夾，\nmanage_users 就是管理使用者的指令集，\n對他 --help 你就會發現\n他提供 新增、刪除、重置密碼、最後一個--pass沒有很懂意思ＸＤ，\n畢竟這是open source版本，不像HackMD提供完善的管理介面，\n對於小團隊來說已經足夠了～～\n\nRef\n\nDocker Deployment\n辛西亞的技能樹 -【CodiMD】安裝踩雷筆記…\nHackMD Business v.s. CodiMD得差異\n\n\n後記\n團隊中一直都沒有共享資源的平台，大部分都使用gsuit，\n雖然可以達到共享，不過程式碼的紀錄，就不能很順暢的排版，\n又沒辦法推hexo，畢竟這比較偏向個人blog，\n後來帶領的新成員會用HackMD將我所教的記錄下來，\n因此讓我想推動markdown的平台～～～\n所以找個時間點將這平台給架設完成。\n","dateCreated":"2020-08-30T23:06:41+08:00","dateModified":"2020-08-30T23:49:15+08:00","datePublished":"2020-08-30T23:06:41+08:00","description":"無意間發現團隊成員有在使用HackMD紀錄筆記，\n後來想說直接開一個group，\n結果… 免費的人數只有3位呀～～～～～～  T_T","headline":"建立團隊專屬的CodiMD","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yeeinhole.github.io/2020/08/30/codiMD/"},"publisher":{"@type":"Organization","name":"Yee","sameAs":["mailto:amung966w@gmail.com"],"image":"yee.jpeg","logo":{"@type":"ImageObject","url":"yee.jpeg"}},"url":"https://yeeinhole.github.io/2020/08/30/codiMD/","keywords":"w3HexSchool, devops, docker"}</script>
     <meta name="description" content="無意間發現團隊成員有在使用HackMD紀錄筆記， 後來想說直接開一個group， 結果… 免費的人數只有3位呀～～～～～～  T_T">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="建立團隊專屬的CodiMD">
@@ -27,9 +27,9 @@
 <meta property="article:published_time" content="2020-08-30T15:06:41.000Z">
 <meta property="article:modified_time" content="2020-08-30T15:49:15.416Z">
 <meta property="article:author" content="Yee">
+<meta property="article:tag" content="w3HexSchool">
 <meta property="article:tag" content="devops">
 <meta property="article:tag" content="docker">
-<meta property="article:tag" content="w3HexSchool">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://yeeinhole.github.io/image/codimd/codimd1.png">
     
@@ -329,11 +329,14 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    <a
-                        class="post-action-btn btn btn--disabled"
-                        aria-hidden="true"
-                    >
-                        
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2020/09/30/laravel4-2/"
+                    data-tooltip="Laravel之旅 - 靈活的產生美麗的畫面吧"
+                    aria-label="上一篇: Laravel之旅 - 靈活的產生美麗的畫面吧"
+                >
+                    
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
                     </a>
@@ -359,7 +362,7 @@
             <a
                 class="post-action-btn btn btn--default btn-open-shareoptions"
                 href="#btn-open-shareoptions"
-                aria-label="Diesen Beitrag teilen"
+                aria-label="Share this post"
             >
                 <i class="fa fa-share-alt" aria-hidden="true"></i>
             </a>
@@ -409,7 +412,7 @@
         
         <li class="post-action">
             
-                <a class="post-action-btn btn btn--default" href="#" aria-label="Nach oben">
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
             
                 <i class="fa fa-list" aria-hidden="true"></i>
             </a>
@@ -441,11 +444,14 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    <a
-                        class="post-action-btn btn btn--disabled"
-                        aria-hidden="true"
-                    >
-                        
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2020/09/30/laravel4-2/"
+                    data-tooltip="Laravel之旅 - 靈活的產生美麗的畫面吧"
+                    aria-label="上一篇: Laravel之旅 - 靈活的產生美麗的畫面吧"
+                >
+                    
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
                     </a>
@@ -471,7 +477,7 @@
             <a
                 class="post-action-btn btn btn--default btn-open-shareoptions"
                 href="#btn-open-shareoptions"
-                aria-label="Diesen Beitrag teilen"
+                aria-label="Share this post"
             >
                 <i class="fa fa-share-alt" aria-hidden="true"></i>
             </a>
@@ -521,7 +527,7 @@
         
         <li class="post-action">
             
-                <a class="post-action-btn btn btn--default" href="#" aria-label="Nach oben">
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
             
                 <i class="fa fa-list" aria-hidden="true"></i>
             </a>
